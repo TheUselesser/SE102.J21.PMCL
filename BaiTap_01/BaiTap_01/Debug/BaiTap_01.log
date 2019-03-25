@@ -1,0 +1,14 @@
+﻿  Game.cpp
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(32): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(184): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(185): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(186): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(187): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(279): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(280): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(287): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(299): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(304): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_01\baitap_01\game.cpp(305): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  BaiTap_01.vcxproj -> E:\VS2017projects\NhapMonPhatTrienGame\BaiTap_01\Debug\BaiTap_01.exe
