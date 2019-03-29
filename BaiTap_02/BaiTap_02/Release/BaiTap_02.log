@@ -1,0 +1,13 @@
+﻿  Game.cpp
+e:\vs2017projects\nhapmonphattriengame\baitap_02\baitap_02\game.cpp(49): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_02\baitap_02\game.cpp(79): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_02\baitap_02\game.cpp(178): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_02\baitap_02\game.cpp(365): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_02\baitap_02\game.cpp(376): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+e:\vs2017projects\nhapmonphattriengame\baitap_02\baitap_02\game.cpp(377): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Generating code
+  0 of 21 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  BaiTap_02.vcxproj -> E:\VS2017projects\NhapMonPhatTrienGame\BaiTap_02\Release\BaiTap_02.exe
