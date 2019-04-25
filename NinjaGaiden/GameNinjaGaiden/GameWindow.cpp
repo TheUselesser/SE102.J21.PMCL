@@ -16,10 +16,10 @@ GameWindow::~GameWindow()
 {
 }
 
-GameWindow * GameWindow::instance = 0;
+GameWindow * GameWindow::instance = NULL;
 GameWindow * GameWindow::getInstance()
 {
-	if (instance == 0)
+	if (instance == NULL)
 	{
 		instance = new GameWindow();
 	}

@@ -8,15 +8,14 @@ typedef struct {
 
 class Sprite
 {
-	myPoint position;
 	myPoint * animation;
+	float posX, posY;
 	float width, height;
 	float velX, velY;
 	int currentAnimation, lastAnimation;
 
 	LPDIRECT3DDEVICE9 d3ddev;
 	LPDIRECT3DTEXTURE9 spriteTexture;
-	D3DXIMAGE_INFO info;
 	LPD3DXSPRITE spriteHandler;
 
 public:
@@ -41,9 +40,13 @@ public:
 
 	void LoadTexture(const char * imagePath, D3DCOLOR transcolor);
 	void SetAnimation(float spriteWidth, float spriteHeight, int animationCount, int animationsPerRow);
+
+	void Draw();
+
+	void Release();
+
+	// . . .
 	void Scale(float scale);
 	void Flip();
-	void Draw();
-	void Release();
 };
 

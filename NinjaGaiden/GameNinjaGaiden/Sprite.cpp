@@ -14,22 +14,22 @@ Sprite::~Sprite()
 
 float Sprite::getX()
 {
-	return position.X;
+	return posX;
 }
 
 void Sprite::setX(float X)
 {
-	this->position.X = X;
+	this->posX = X;
 }
 
 float Sprite::getY()
 {
-	return position.Y;
+	return posY;
 }
 
 void Sprite::setY(float Y)
 {
-	this->position.Y = Y;
+	this->posY = Y;
 }
 
 float Sprite::getWidth()
@@ -94,12 +94,12 @@ void Sprite::setLastAnimation(int lastAnimation)
 
 void Sprite::moveLeft()
 {
-	position.X -= velX;
+	posX -= velX;
 }
 
 void Sprite::moveRight()
 {
-	position.X += velX;
+	posX += velX;
 }
 
 void Sprite::moveUp()
@@ -112,8 +112,10 @@ void Sprite::moveDown()
 
 void Sprite::LoadTexture(const char * imagePath, D3DCOLOR transcolor)
 {
+	this->Release();
 	this->d3ddev = Game::getInstance()->get3DDevice();
 
+	D3DXIMAGE_INFO info;
 	HRESULT result;
 
 	result = D3DXGetImageInfoFromFile(imagePath, &info);
@@ -159,7 +161,7 @@ void Sprite::SetAnimation(float spriteWidth, float spriteHeight, int animationCo
 		animation[0].Y = 0;
 		int i = 0;
 		int j = 1;
-		while (i < animationCount - 1)
+		while (i < lastAnimation)
 		{
 			// Nếu đạt số lượng animation tối đa của dòng thì chuyển X về 0 và tăng Y
 			if (i == animationsPerRow * j)
@@ -183,7 +185,15 @@ void Sprite::Scale(float scale)
 	*	Đang lỗi
 	*/
 
-	
+	//width *= scale;
+	//height *= scale;
+
+	D3DXMATRIX matScale;
+	//D3DXMatrixScaling(&matScale, 1, scale, 1);
+	//D3DXMatrixTranslation(&matScale, scale, scale, 0);
+	D3DXMatrixRotationX(&matScale, D3DXToRadian(180));
+
+	spriteHandler->SetTransform(&matScale);
 }
 
 void Sprite::Flip()
@@ -206,20 +216,27 @@ void Sprite::Draw()
 
 	if (isMoving)
 	{
-		if (currentAnimation == lastAnimation)
-			currentAnimation = 0;
-		currentAnimation++;
+		if (isJumping)
+			if (currentAnimation == lastAnimation)
+				currentAnimation = 0;
+			else
+				currentAnimation++;
+		else
+		{
+			if (currentAnimation == lastAnimation)
+				currentAnimation = 0;
+			currentAnimation++;
+		}
 	}
 	else
 	{
 		currentAnimation = 0;
 	}
 
-	D3DXVECTOR3 pos(position.X, position.Y, 0);
+	D3DXVECTOR3 pos(posX, posY, 0);
 
 	// Bắt đầu vẽ sprite
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
 
 	result = spriteHandler->Draw(
 		spriteTexture,
