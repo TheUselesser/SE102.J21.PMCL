@@ -1,11 +1,30 @@
-﻿  Game.cpp
+﻿  Camera.cpp
+  DXInput.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(58): warning C4101: 'result': unreferenced local variable
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(92): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(142): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(144): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(164): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(165): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(166): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-e:\000_1studying\ptgame\ninjagaiden\gameninjagaiden\game.cpp(167): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-  GameNinjaGaiden.vcxproj -> E:\000_1Studying\PTGame\NinjaGaiden\Debug\GameNinjaGaiden.exe
+  Game.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(58): warning C4101: 'result': unreferenced local variable
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(92): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(142): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(144): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(164): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(165): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(166): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\game.cpp(167): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  GameObject.cpp
+  GameWindow.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Player.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Sprite.cpp
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\sprite.cpp(212): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\sprite.cpp(213): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\sprite.cpp(214): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\sprite.cpp(215): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  Stage.cpp
+e:\000_1studying\se102.j21.pmcl\ninjagaiden\gameninjagaiden\stage.cpp(37): warning C4244: '=': conversion from 'UINT' to 'float', possible loss of data
+  TileMap.cpp
+  winmain.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Generating Code...
+  GameNinjaGaiden.vcxproj -> E:\000_1Studying\SE102.J21.PMCL\NinjaGaiden\Debug\GameNinjaGaiden.exe
