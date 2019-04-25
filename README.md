@@ -1,4 +1,3 @@
 # SE102.J21.PMCL
 
-Nhập môn phát triển game
-Sáng thứ 7 hàng tuần tại phòng B2.02
+Nhập môn phát triển game \nSáng thứ 7 hàng tuần tại phòng B2.02
