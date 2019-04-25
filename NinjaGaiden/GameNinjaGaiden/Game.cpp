@@ -119,20 +119,20 @@ void Game::InitGame()
 	switch (stageIndex)
 	{
 	case 0:	// stage 3-1
-		Stage->Release();
+		Stage[stageIndex].Release();
 		Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-1BG.png", D3DCOLOR_XRGB(255, 0, 255));
 		break;
 	case 1:	// stage 3-2
-		Stage->Release();
+		Stage[stageIndex].Release();
 		Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-2BG.png", D3DCOLOR_XRGB(255, 0, 255));
 		break;
 	case 2:	// stage 3-3
-		Stage->Release();
+		Stage[stageIndex].Release();
 		Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-3BG.png", D3DCOLOR_XRGB(255, 0, 255));
 		break;
 	//default: 
 	//	// stage đầu
-	//	Stage->Release();
+	//	Stage[stageIndex].Release();
 	//	Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-1BG.png", D3DCOLOR_XRGB(255, 0, 255)); 
 	//	break;
 	}
