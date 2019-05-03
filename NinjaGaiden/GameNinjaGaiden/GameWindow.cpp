@@ -73,6 +73,9 @@ LRESULT WINAPI GameWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+	case WM_SETFOCUS:
+		if (dikeyboard != NULL) dikeyboard->Acquire();
+		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

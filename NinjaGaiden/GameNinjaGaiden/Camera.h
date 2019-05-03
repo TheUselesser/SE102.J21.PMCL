@@ -1,27 +1,28 @@
 #pragma once
-#include <d3d9.h>
-#include "Player.h"
+#include "Sprite.h"
+#include "Rect.h"
 
 class Camera :
-	public RECT
+	public Rect
 {
-	float posX, posY;
-	float width, height;
+	static Camera * instance;
+
 	float velX, velY;
 
 public:
+	static Camera * getInstance();
+
 	Camera();
 	~Camera();
 
-	float getX(); void setX(float x);
-	float getY(); void setY(float y);
-	float getWidth(); void setWidth(float width);
-	float getHeight(); void setHeight(float height);
-	float getVelX(); void setVelX(float velX);
-	float getVelY(); void setVelY(float velY);
+	float getVelX();	void setVelX(float velX);
+	float getVelY();	void setVelY(float velY);
 	
 	void moveLeft(); void moveRight();
+	void updateRect();
 	void trackSprite(Sprite sprite);
 	void untrackSprite(Sprite sprite);
+
+	void worldToView(float xW, float yW, float &xV, float &yV);
 };
 

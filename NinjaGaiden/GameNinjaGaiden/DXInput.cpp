@@ -92,15 +92,18 @@ int Init_Keyboard(HWND hwnd)
 	HRESULT result = dikeyboard->SetDataFormat(&c_dfDIKeyboard);
 	if (result != DI_OK)
 		return 0;
+
 	//set the cooperative level
 	result = dikeyboard->SetCooperativeLevel(hwnd,
 		DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 	if (result != DI_OK)
 		return 0;
-	//acquire the mouse
+
+	//acquire the keyboard
 	result = dikeyboard->Acquire();
 	if (result != DI_OK)
 		return 0;
+
 	//give the go-ahead
 	return 1;
 }

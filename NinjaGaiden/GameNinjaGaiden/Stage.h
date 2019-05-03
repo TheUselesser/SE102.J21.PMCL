@@ -1,21 +1,28 @@
 ﻿#pragma once
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "Tilemap.h"
+#include "Camera.h"
 
 class Stage
 {
-	LPDIRECT3DSURFACE9 background; // sẽ sửa thành tilemap
+	Tilemap * tilemap;
 
-	float mapWidth;
+	int mapStart, mapEnd;
+	int playerStart, playerEnd;
 
 public:
 	Stage();
 	~Stage();
 
-	float getMapWidth();
-	LPDIRECT3DSURFACE9 getBackground();
+	int getMapStart();	void setMapStart(int mapStart);
+	int getMapEnd();	void setMapEnd(int mapEnd);
+	int getPlayerStart();	void setPlayerStart(int playerStart);
+	int getPlayerEnd();	void setPlayerEnd(int playerEnd);
 
-	void loadBackground(const char * imagePath, D3DCOLOR transcolor);
+
+	void LoadTilemap(const char * imagePath, const char * matrixPath);
+	void Draw(Camera * camera);	// vẽ lên camera
 
 	void Release();
 };

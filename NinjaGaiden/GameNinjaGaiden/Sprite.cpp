@@ -17,9 +17,9 @@ float Sprite::getX()
 	return posX;
 }
 
-void Sprite::setX(float X)
+void Sprite::setX(float x)
 {
-	this->posX = X;
+	this->posX = x;
 }
 
 float Sprite::getY()
@@ -27,9 +27,9 @@ float Sprite::getY()
 	return posY;
 }
 
-void Sprite::setY(float Y)
+void Sprite::setY(float y)
 {
-	this->posY = Y;
+	this->posY = y;
 }
 
 float Sprite::getWidth()
@@ -110,41 +110,9 @@ void Sprite::moveDown()
 {
 }
 
-void Sprite::LoadTexture(const char * imagePath, D3DCOLOR transcolor)
+void Sprite::LoadTexture(const char * imagePath, D3DCOLOR transColor)
 {
-	this->Release();
-	this->d3ddev = Game::getInstance()->get3DDevice();
-
-	D3DXIMAGE_INFO info;
-	HRESULT result;
-
-	result = D3DXGetImageInfoFromFile(imagePath, &info);
-	if (result != D3D_OK)
-		return;
-
-	result = D3DXCreateTextureFromFileEx(
-		d3ddev,
-		imagePath,
-		info.Width,
-		info.Height,
-		1,
-		D3DUSAGE_DYNAMIC,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_DEFAULT,
-		D3DX_DEFAULT,		      // bộ lọc ảnh
-		D3DX_DEFAULT,		      // bộ lọc mip
-		transcolor,				// chỉ ra màu trong suốt
-		&info,			          // thông tin của sprite
-		NULL,			          // đổ màu
-		&spriteTexture			      // texture sẽ chứa sprite
-	);
-
-	if (result != D3D_OK)
-	{
-		MessageBox(NULL, "Texture Error!", "Loi kia", MB_OK);
-		return;
-	}
-	D3DXCreateSprite(d3ddev, &spriteHandler);
+	spriteTexture.LoadTexture(imagePath, true, transColor);
 }
 
 void Sprite::SetAnimation(float spriteWidth, float spriteHeight, int animationCount, int animationsPerRow)
@@ -179,35 +147,8 @@ void Sprite::SetAnimation(float spriteWidth, float spriteHeight, int animationCo
 	}
 }
 
-void Sprite::Scale(float scale)
-{
-	/*
-	*	Đang lỗi
-	*/
-
-	//width *= scale;
-	//height *= scale;
-
-	D3DXMATRIX matScale;
-	//D3DXMatrixScaling(&matScale, 1, scale, 1);
-	//D3DXMatrixTranslation(&matScale, scale, scale, 0);
-	D3DXMatrixRotationX(&matScale, D3DXToRadian(180));
-
-	spriteHandler->SetTransform(&matScale);
-}
-
-void Sprite::Flip()
-{
-	/*
-	*	Đang lỗi
-	*/
-
-	
-}
-
 void Sprite::Draw()
 {
-	HRESULT result;
 	RECT rect;
 	rect.left = animation[currentAnimation].X;
 	rect.top = animation[currentAnimation].Y;
@@ -233,33 +174,6 @@ void Sprite::Draw()
 		currentAnimation = 0;
 	}
 
-	D3DXVECTOR3 pos(posX, posY, 0);
-
-	// Bắt đầu vẽ sprite
-	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
-	result = spriteHandler->Draw(
-		spriteTexture,
-		&rect,							// hiển thị phần này 
-		NULL,				            // đặt tâm ở đây, NULL là góc trên bên trái
-		&pos,							// hiện thị sprite lên tọa độ này trên backbuffer
-		D3DCOLOR_XRGB(255, 255, 255)	// màu thay thế
-	);
-	if (result != D3D_OK)
-	{
-		MessageBox(NULL, "Texture Error!", "Loi kia", MB_OK);
-		spriteHandler->End();
-		return;
-	}
-
-	// Kết thúc vẽ sprite
-	spriteHandler->End();
+	spriteTexture.Draw(posX, posY, &rect);
 }
-
-void Sprite::Release()
-{
-	if (spriteTexture != NULL)	spriteTexture->Release();
-	if (spriteHandler != NULL)	spriteHandler->Release();
-}
-
 

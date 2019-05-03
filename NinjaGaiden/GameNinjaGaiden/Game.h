@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Camera.h"
 #include "Stage.h"
+#include "Tilemap.h"
 
 class Game
 {
@@ -19,16 +20,19 @@ class Game
 	D3DPRESENT_PARAMETERS d3dpp;
 	LPDIRECT3DSURFACE9 backbuffer = NULL;
 
+	LPD3DXSPRITE spriteHandler;
+
 	// Camera
-	Camera camera;
+	float cameraX, cameraY, cameraWidth, cameraHeight;
 	RECT placeOfTheCameraOnTheScreen;
 
 	// Stage
-	Stage Stage[3];	// tạm set mảng 3
+	Stage Stage;
 	int stageIndex = 0;
+	int numberOfStages = 3; // set cứng bằng 3 luôn
 
 	// 
-	Player _Ryu;
+	Sprite _Ryu;
 
 	float groundLine;
 	int directionX, directionY;
@@ -46,6 +50,7 @@ public:
 	Game();
 	~Game();
 	LPDIRECT3DDEVICE9 get3DDevice();
+	LPD3DXSPRITE getSpriteHandler();
 
 	void init();
 	void run();

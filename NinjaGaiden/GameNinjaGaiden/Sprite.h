@@ -1,12 +1,15 @@
 ﻿#pragma once
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "Rect.h"
+#include "GameTexture.h"
 
 typedef struct {
 	float X, Y;
 } myPoint;
 
-class Sprite
+class Sprite :
+	public Rect
 {
 	myPoint * animation;
 	float posX, posY;
@@ -14,9 +17,7 @@ class Sprite
 	float velX, velY;
 	int currentAnimation, lastAnimation;
 
-	LPDIRECT3DDEVICE9 d3ddev;
-	LPDIRECT3DTEXTURE9 spriteTexture;
-	LPD3DXSPRITE spriteHandler;
+	GameTexture spriteTexture;
 
 public:
 	float currentHeight;
@@ -27,10 +28,10 @@ public:
 	Sprite();
 	~Sprite();
 
-	float getX();		void setX(float X);
-	float getY();		void setY(float Y);
-	float getWidth();	void setWidth(float width);
+	float getX();		void setX(float x);
+	float getY();		void setY(float y);
 	float getHeight();	void setHeight(float height);
+	float getWidth();	void setWidth(float width);
 	float getVelX();	void setVelX(float velX);
 	float getVelY();	void setVelY(float velY);
 	int getCurrentAnimation();	void setCurrentAnimation(int currentAnimation);
@@ -38,15 +39,9 @@ public:
 
 	void moveLeft(); void moveRight(); void moveUp(); void moveDown();
 
-	void LoadTexture(const char * imagePath, D3DCOLOR transcolor);
+	void LoadTexture(const char * imagePath, D3DCOLOR transColor);
 	void SetAnimation(float spriteWidth, float spriteHeight, int animationCount, int animationsPerRow);
 
 	void Draw();
-
-	void Release();
-
-	// . . .
-	void Scale(float scale);
-	void Flip();
 };
 

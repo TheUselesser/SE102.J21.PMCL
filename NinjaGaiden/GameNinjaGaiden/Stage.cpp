@@ -4,6 +4,7 @@
 
 Stage::Stage()
 {
+	mapStart = mapEnd = playerStart = playerEnd = 0;
 }
 
 
@@ -11,62 +12,61 @@ Stage::~Stage()
 {
 }
 
-float Stage::getMapWidth()
+int Stage::getMapStart()
 {
-	return mapWidth;
+	return mapStart;
 }
 
-LPDIRECT3DSURFACE9 Stage::getBackground()
+void Stage::setMapStart(int mapStart)
 {
-	return background;
+	this->mapStart = mapStart;
 }
 
-void Stage::loadBackground(const char * imagePath, D3DCOLOR transcolor)
+int Stage::getMapEnd()
 {
-	D3DXIMAGE_INFO info;
-	HRESULT result;
+	return mapEnd;
+}
 
-	// get width and height from bitmap file
-	result = D3DXGetImageInfoFromFile(imagePath, &info);
-	if (result != D3D_OK)
-	{
-		MessageBox(NULL, "ImageInfo Error!", "Loi kia", MB_OK);
-		return;
-	}
+void Stage::setMapEnd(int mapEnd)
+{
+	this->mapEnd = mapEnd;
+}
 
-	mapWidth = info.Width;
+int Stage::getPlayerStart()
+{
+	return playerStart;
+}
 
-	// create surface
-	result = Game::getInstance()->get3DDevice()->CreateOffscreenPlainSurface(
-		info.Width,
-		info.Height,
-		D3DFMT_X8R8G8B8,
-		D3DPOOL_DEFAULT,
-		&background,
-		NULL);
-	if (result != D3D_OK)
-	{
-		MessageBox(NULL, "Image Error!", "Loi kia", MB_OK);
-		return;
-	}
+void Stage::setPlayerStart(int playerStart)
+{
+	this->playerStart = playerStart;
+}
 
-	result = D3DXLoadSurfaceFromFile(
-		background,
-		NULL,
-		NULL,
-		imagePath,
-		NULL,
-		D3DX_DEFAULT,
-		transcolor,
-		&info);
-	if (result != D3D_OK)
-	{
-		MessageBox(NULL, "LoadSurface Error!", "Loi kia", MB_OK);
-		return;
-	}
+int Stage::getPlayerEnd()
+{
+	return playerEnd;
+}
+
+void Stage::setPlayerEnd(int playerEnd)
+{
+	this->playerEnd = playerEnd;
+}
+
+void Stage::LoadTilemap(const char * imagePath, const char * matrixPath)
+{
+	tilemap = new Tilemap();
+	tilemap->LoadTilemap(imagePath, matrixPath);
+
+	mapStart = 0;
+	mapEnd = tilemap->mapWidth;
+}
+
+void Stage::Draw(Camera * camera)
+{
+	tilemap->Draw(camera);
 }
 
 void Stage::Release()
 {
-	if (background != NULL) background->Release();
+	//...
 }

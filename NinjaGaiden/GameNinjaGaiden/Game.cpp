@@ -1,13 +1,12 @@
 ﻿#include "Game.h"
 #include <time.h>
-#include <math.h>
 #include "DXInput.h"
+
+#include <string>
 
 #define BACKBUFFER_WIDTH 256
 #define BACKBUFFER_HEIGHT 192
 #define FPS 60
-
-#define PI 3.14159265
 
 #define WINDOW_CLASS "GameWindow"
 #define WINDOW_TITLE "Game"
@@ -35,6 +34,11 @@ Game::~Game()
 LPDIRECT3DDEVICE9 Game::get3DDevice()
 {
 	return this->d3ddev;
+}
+
+LPD3DXSPRITE Game::getSpriteHandler()
+{
+	return this->spriteHandler;
 }
 
 void Game::init()
@@ -85,20 +89,55 @@ void Game::InitDirectX()
 
 	// backbuffer
 	d3ddev->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backbuffer);
+	D3DXCreateSprite(d3ddev, &spriteHandler);
 }
 
 void Game::InitGame()
 {
 	srand(time(NULL));
 
-	groundLine = 152;
+	groundLine = 40;	// ^_^
+	float nonsense = 0;
+	Camera::getInstance()->worldToView(0, groundLine, nonsense, groundLine);
+
 	directionX = 1;
 
-	// init Player
+	// Game Time
+	start = GetTickCount();
+	countPerFrame = 1000 / FPS;
+	maxHeightReached = false;
+
+	// Load stage
+	switch (stageIndex)
+	{
+	case 0:	// stage 3-1
+		Stage.Release();
+		Stage.LoadTilemap("images/Stage31/tilesheet.png", "images/Stage31/matrix.dat");
+		Stage.setMapStart(0);
+		Stage.setPlayerStart(8);
+		//Stage.setPlayerEnd(Stage.getMapEnd());
+		break;
+	case 1:	// stage 3-2
+		Stage.Release();
+		Stage.LoadTilemap("images/Stage32/tilesheet.png", "images/Stage32/matrix.dat");
+		Stage.setMapEnd(Stage.getMapEnd() - 512);
+		Stage.setPlayerStart(0);
+		//Stage.setPlayerEnd(224);
+		break;
+	case 2:	// stage 3-3
+		Stage.Release();
+		Stage.LoadTilemap("images/Stage33/tilesheet.png", "images/Stage33/matrix.dat");
+		Stage.setMapStart(512);
+		Stage.setPlayerStart(8);
+		//Stage.setPlayerEnd(Stage.getMapEnd());
+		break;
+	}
+
+	// Player
 	_Ryu.LoadTexture("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255));
 	_Ryu.SetAnimation(22, 32, 4, 4);
 
-	_Ryu.setX(8);
+	_Ryu.setX(Stage.getPlayerStart());
 	_Ryu.setY(groundLine - _Ryu.getHeight());
 	_Ryu.setVelX(8);
 	_Ryu.setVelY(16);
@@ -110,38 +149,11 @@ void Game::InitGame()
 	_Ryu.currentHeight = 0;
 	_Ryu.maxHeight = 56;	// tạm set cứng vầy để test jump
 
-	// Game Time
-	start = GetTickCount();
-	countPerFrame = 1000 / FPS;
-	maxHeightReached = false;
-
-	// Load stage
-	switch (stageIndex)
-	{
-	case 0:	// stage 3-1
-		Stage[stageIndex].Release();
-		Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-1BG.png", D3DCOLOR_XRGB(255, 0, 255));
-		break;
-	case 1:	// stage 3-2
-		Stage[stageIndex].Release();
-		Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-2BG.png", D3DCOLOR_XRGB(255, 0, 255));
-		break;
-	case 2:	// stage 3-3
-		Stage[stageIndex].Release();
-		Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-3BG.png", D3DCOLOR_XRGB(255, 0, 255));
-		break;
-	//default: 
-	//	// stage đầu
-	//	Stage[stageIndex].Release();
-	//	Stage[stageIndex].loadBackground("images/NinjaGaidenMapStage3-1BG.png", D3DCOLOR_XRGB(255, 0, 255)); 
-	//	break;
-	}
-
 	// Phạm vi vẽ game
 	placeOfTheCameraOnTheScreen.left = 0;
-	placeOfTheCameraOnTheScreen.right = placeOfTheCameraOnTheScreen.left + camera.getWidth();
+	placeOfTheCameraOnTheScreen.right = placeOfTheCameraOnTheScreen.left + cameraWidth;
 	placeOfTheCameraOnTheScreen.top = 16;
-	placeOfTheCameraOnTheScreen.bottom = placeOfTheCameraOnTheScreen.top + camera.getHeight();
+	placeOfTheCameraOnTheScreen.bottom = placeOfTheCameraOnTheScreen.top + cameraHeight;
 }
 
 void Game::run()
@@ -149,6 +161,12 @@ void Game::run()
 	// Kiểm tra device
 	if (d3ddev == NULL)
 		return;
+
+	// Lay thong so camera
+	cameraX = Camera::getInstance()->getX();
+	cameraY = Camera::getInstance()->getY();
+	cameraWidth = Camera::getInstance()->getWidth();
+	cameraHeight = Camera::getInstance()->getHeight();
 
 	// update mouse and keyboard
 	//Poll_Mouse();
@@ -161,12 +179,14 @@ void Game::run()
 
 		if (d3ddev->BeginScene())
 		{
-			camera.left = camera.getX();
-			camera.right = camera.getX() + camera.getWidth();
-			camera.top = camera.getY();
-			camera.bottom = camera.getY() + camera.getHeight();
+			d3ddev->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
-			d3ddev->StretchRect(Stage[stageIndex].getBackground(), &camera, backbuffer, &placeOfTheCameraOnTheScreen, D3DTEXF_NONE);
+			/*d3ddev->StretchRect(
+				Stage[stageIndex].getBackground(),
+				Camera::getInstance(),
+				backbuffer,
+				&placeOfTheCameraOnTheScreen,
+				D3DTEXF_NONE);*/
 
 			// Xử lý nhảy cho Ryu
 			if (_Ryu.isJumping)
@@ -217,8 +237,11 @@ void Game::run()
 				}
 			}
 
-			// Xử lý di chuyển
+			// Xử lý phím
 			KeysControl();
+
+			// Vẽ tilemap
+			Stage.Draw(Camera::getInstance());
 
 			// Vẽ Ryu
 			_Ryu.Draw();
@@ -246,8 +269,6 @@ void Game::run()
 
 void Game::end()
 {
-	_Ryu.Release();
-	
 	if (backbuffer != NULL) backbuffer->Release();
 
 	if (d3ddev != NULL) d3ddev->Release();
@@ -266,6 +287,19 @@ void Game::KeysControl()
 		_Ryu.setVelX(8);
 	}
 
+	// check vị trí camera
+	if (Key_Down(DIK_C))
+	{
+		std::string message = std::to_string(Camera::getInstance()->getX());
+		MessageBox(0, message.c_str(), "camera X", 0);
+	}
+	// check vị trí Ryu
+	if (Key_Down(DIK_V))
+	{
+		std::string message = std::to_string(_Ryu.getX());
+		MessageBox(0, message.c_str(), "Ryu X", 0);
+	}
+
 	// Xử lý Di chuyển
 	// Đi qua phải
 	if (Key_Down(DIK_RIGHTARROW))
@@ -274,23 +308,23 @@ void Game::KeysControl()
 		directionX = 1;
 		if (!_Ryu.isJumping)
 			_Ryu.LoadTexture("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255));
+		Camera::getInstance()->trackSprite(_Ryu);
 
 		// Di chuyển nhân vật khi camera chạm biên
-		if (camera.getX() <= 0 && _Ryu.getX() < (camera.getWidth() - _Ryu.getWidth()) / 2)
+		if (cameraX <= Stage.getMapStart() && _Ryu.getX() < (cameraWidth - _Ryu.getWidth()) / 2)
 		{
 			_Ryu.moveRight();
-			if (_Ryu.getX() >= (camera.getWidth() - _Ryu.getWidth()) / 2)
-				_Ryu.setX((camera.getWidth() - _Ryu.getWidth()) / 2);
+			if (_Ryu.getX() >= (cameraWidth - _Ryu.getWidth()) / 2)
+				_Ryu.setX((cameraWidth - _Ryu.getWidth()) / 2);
 		}
-		else if (camera.getX() >= Stage[stageIndex].getMapWidth() - camera.getWidth())
+		else if (cameraX >= Stage.getMapEnd() - cameraWidth)
 		{
 			_Ryu.moveRight();
 		}
 		// Di chuyển camera
 		else
 		{
-			camera.trackSprite(_Ryu);
-			camera.moveRight();
+			Camera::getInstance()->moveRight();
 		}
 	}
 	// Đi qua trái
@@ -300,31 +334,30 @@ void Game::KeysControl()
 		directionX = -1;
 		if (!_Ryu.isJumping)
 			_Ryu.LoadTexture("images/Ryu_left.png", D3DCOLOR_XRGB(255, 0, 255));
-		
+		Camera::getInstance()->trackSprite(_Ryu);
+
 		// Di chuyển nhân vật khi camera chạm biên
-		if (camera.getX() <= 0)
+		if (cameraX <= Stage.getMapStart())
 		{
 			_Ryu.moveLeft();
 		}
-		else if (camera.getX() >= Stage[stageIndex].getMapWidth() - camera.getWidth() && _Ryu.getX() > (camera.getWidth() - _Ryu.getWidth()) / 2)
+		else if (cameraX >= Stage.getMapEnd() - cameraWidth && _Ryu.getX() > (cameraWidth - _Ryu.getWidth()) / 2)
 		{
-
 			_Ryu.moveLeft();
-			if (_Ryu.getX() <= (camera.getWidth() - _Ryu.getX()) / 2)
-				_Ryu.setX((camera.getWidth() - _Ryu.getWidth()) / 2);
+			if (_Ryu.getX() < (cameraWidth - _Ryu.getX()) / 2)
+				_Ryu.setX((cameraWidth - _Ryu.getWidth()) / 2);
 		}
 		// Di chuyển camera
 		else
 		{
-			camera.trackSprite(_Ryu);
-			camera.moveLeft();
+			Camera::getInstance()->moveLeft();
 		}
 	}
 	else
 	{
 		if (!_Ryu.isJumping)
 			_Ryu.isMoving = false;
-		camera.untrackSprite(_Ryu);
+		Camera::getInstance()->untrackSprite(_Ryu);
 	}
 
 	// Xử lý nhảy
@@ -351,46 +384,33 @@ void Game::KeysControl()
 		}
 	}
 
-	if (Key_Down(DIK_L))
-	{
-		_Ryu.Scale(-16);
-	}
-	if (Key_Down(DIK_K))
-	{
-		_Ryu.Scale(16);
-	}
-
 	// Xử lý giới hạn nhân vật trong camera
-	if (_Ryu.getX() <= 0)
+	if (_Ryu.getX() < 0)
 	{
 		_Ryu.setX(0);
 	}
-	
-	//if (_Ryu.getX() >= camera.getWidth() - _Ryu.getWidth())
-	{
-		//_Ryu.setX(camera.getWidth() - _Ryu.getWidth());
-	}
+
 	// Đến cuối map -> chuyển stage
-	if (camera.getX() >= Stage[stageIndex].getMapWidth() - camera.getWidth() && _Ryu.getX() >= camera.getWidth() - _Ryu.getWidth())
+	if (cameraX >= Stage.getMapEnd() - cameraWidth && _Ryu.getX() >= cameraWidth - _Ryu.getWidth())
 	{
-		if (stageIndex < 3)	// làm sơ sài vì có 3 stage thôi, lý thuyết là hết stage thì làm cái finish game
+		if (stageIndex < numberOfStages)	// Vượt qua tất cả stage
 		{
 			stageIndex++;
-			if (!(stageIndex < 3))	 // ^_^
+			if (!(stageIndex < numberOfStages))	 // ^_^
 				stageIndex = 0;
 
-			camera.setX(0);
+			Camera::getInstance()->setX(Stage.getMapStart());
 			InitGame();
 		}
 	}
 
 	// Xử lý giới hạn camera trong map
-	if (camera.getX() <= 0)
+	if (cameraX < Stage.getMapStart())
 	{
-		camera.setX(0);
+		Camera::getInstance()->setX(Stage.getMapStart());
 	}
-	if (camera.getX() >= Stage[stageIndex].getMapWidth() - camera.getWidth())
+	if (cameraX > Stage.getMapEnd() - cameraWidth)
 	{
-		camera.setX(Stage[stageIndex].getMapWidth() - camera.getWidth());
+		Camera::getInstance()->setX(Stage.getMapEnd() - cameraWidth);
 	}
 }

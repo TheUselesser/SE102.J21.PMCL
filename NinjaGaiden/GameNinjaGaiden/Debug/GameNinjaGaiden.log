@@ -1,0 +1,24 @@
+﻿  Game.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\game.cpp(62): warning C4101: 'result': unreferenced local variable
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\game.cpp(97): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\game.cpp(140): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\game.cpp(154): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\game.cpp(156): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\game.cpp(402): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\game.cpp(410): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  GameTexture.cpp
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\gametexture.cpp(72): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+  GameWindow.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Sprite.cpp
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\sprite.cpp(153): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\sprite.cpp(154): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\sprite.cpp(155): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\sprite.cpp(156): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+e:\000_1studying\se102.j21.pmcl - copy\ninjagaiden\gameninjagaiden\sprite.cpp(177): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Stage.cpp
+  winmain.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Generating Code...
+  GameNinjaGaiden.vcxproj -> E:\000_1Studying\SE102.J21.PMCL - Copy\NinjaGaiden\Debug\GameNinjaGaiden.exe
