@@ -14,7 +14,6 @@ public:
 	float width, height;
 
 	GameTexture();
-	GameTexture(const char* imagePath, bool isSprite = false, D3DCOLOR transColor = 0);
 	~GameTexture();
 
 	void LoadTexture(const char* imagePath, bool isSprite = false, D3DCOLOR transColor = 0);

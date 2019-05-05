@@ -12,46 +12,6 @@ Sprite::~Sprite()
 {
 }
 
-float Sprite::getX()
-{
-	return posX;
-}
-
-void Sprite::setX(float x)
-{
-	this->posX = x;
-}
-
-float Sprite::getY()
-{
-	return posY;
-}
-
-void Sprite::setY(float y)
-{
-	this->posY = y;
-}
-
-float Sprite::getWidth()
-{
-	return width;
-}
-
-void Sprite::setWidth(float width)
-{
-	this->width = width;
-}
-
-float Sprite::getHeight()
-{
-	return height;
-}
-
-void Sprite::setHeight(float height)
-{
-	this->height = height;
-}
-
 float Sprite::getVelX()
 {
 	return velX;
@@ -94,12 +54,12 @@ void Sprite::setLastAnimation(int lastAnimation)
 
 void Sprite::moveLeft()
 {
-	posX -= velX;
+	moveX(-velX);
 }
 
 void Sprite::moveRight()
 {
-	posX += velX;
+	moveX(velX);
 }
 
 void Sprite::moveUp()
@@ -112,7 +72,7 @@ void Sprite::moveDown()
 
 void Sprite::LoadTexture(const char * imagePath, D3DCOLOR transColor)
 {
-	spriteTexture.LoadTexture(imagePath, true, transColor);
+	spriteTexture.LoadTexture(imagePath, false, transColor);
 }
 
 void Sprite::SetAnimation(float spriteWidth, float spriteHeight, int animationCount, int animationsPerRow)

@@ -18,8 +18,8 @@ Tilemap::~Tilemap()
 
 void Tilemap::LoadTilemap(const char * imagePath, const char * matrixPath)
 {
-	//tilesheet->LoadTexture(imagePath);
-	if (tilesheet == NULL) tilesheet = new GameTexture(imagePath);
+	tilesheet = new GameTexture();
+	tilesheet->LoadTexture(imagePath);
 
 	std::ifstream fs(matrixPath);
 
@@ -28,7 +28,7 @@ void Tilemap::LoadTilemap(const char * imagePath, const char * matrixPath)
 		return;
 	}
 
-	fs >> mapRows >> mapCols >> tileWidth >> tileHeight >> tilesheetCols;
+	fs >> mapCols >> mapRows >> tileSize;
 
 	matrix = new int*[mapRows];
 	for (int row = 0; row < mapRows; row++)
@@ -40,7 +40,7 @@ void Tilemap::LoadTilemap(const char * imagePath, const char * matrixPath)
 		}
 	}
 
-	mapWidth = mapCols * tileWidth;
+	mapWidth = mapCols * tileSize;
 
 	fs.close();
 }
@@ -48,55 +48,50 @@ void Tilemap::LoadTilemap(const char * imagePath, const char * matrixPath)
 void Tilemap::Draw(Camera * camera)
 {
 	// Tile 4 rìa camera
-	int left, right, top, bottom;
-	int mapHeight = mapRows * tileHeight;
+	int firstCol, lastCol, firstRow, lastRow;
+	int mapHeight = mapRows * tileSize;
 
-	/*left = camera->left / tileWidth;
-	right = camera->right / tileWidth;
-	top = (mapHeight - camera->top) / tileHeight;
-	bottom = (mapHeight - camera->bottom) / tileHeight;*/
-	left = camera->getLeft() / tileWidth;
-	right = camera->getRight() / tileWidth;
-	top = (mapHeight - camera->getTop()) / tileHeight;
-	bottom = (mapHeight - camera->getBottom()) / tileHeight;
+	firstCol = camera->getLeft() / tileSize;
+	lastCol = camera->getRight() / tileSize;
+	firstRow = (mapHeight - camera->getTop()) / tileSize;
+	lastRow = (mapHeight - camera->getBottom()) / tileSize;
 
-	if (left < 0) {
-		left = 0;
+	if (firstCol < 0) {
+		firstCol = 0;
 	}
-	if (top < 0) {
-		top = 0;
+	if (lastCol >= mapCols) {
+		lastCol = mapCols - 1;
 	}
-	if (right >= mapCols) {
-		right = mapCols - 1;
+	if (firstRow < 0) {
+		firstRow = 0;
 	}
-	if (bottom >= mapRows) {
-		bottom = mapRows - 1;
+	if (lastRow >= mapRows) {
+		lastRow = mapRows - 1;
 	}
 
-	/* duyệt các tile cắt camera và vẽ lên màn hình */
-	for (int row = top; row <= bottom; row++)
+	// xét tọa độ và vẽ tile trên camera
+	for (int row = firstRow; row <= lastRow; row++)
 	{
-		for (int col = left; col <= right; col++)
+		for (int col = firstCol; col <= lastCol; col++)
 		{
-			// Vị trí trong world space
-			int xW = col * tileWidth;
-			int yW = mapHeight - row * tileHeight;
+			// tọa độ World
+			int xW = col * tileSize;
+			int yW = mapHeight - row * tileSize;
 
-			// Chuyển thành vị trí trên camera
-			float xV, yV;
-			camera->worldToView(xW, yW, xV, yV);
+			//if (xW >= camera->getLeft() - tileSize && xW <= camera->getRight())
+			{
+				// Chuyển thành tọa độ View
+				float xV, yV;
+				camera->worldToView(xW, yW, xV, yV);
 
-			// Lấy tile từ tilesheet vẽ lên màn hình
-			int chosenTile = matrix[row][col];
+				// Lấy tile từ tilesheet vẽ lên camera theo tọa độ view
+				int chosenTile = matrix[row][col];
+				int tileInTilesheet_X = chosenTile * tileSize;
 
-			int chosenTileRow = chosenTile / tilesheetCols;
-			int chosenTileCol = chosenTile % tilesheetCols;
-
-			int xTileInTilesheet = chosenTileCol * tileWidth;
-			int yTileInTilesheet = chosenTileRow * tileHeight;
-			RECT rect;
-			SetRect(&rect, xTileInTilesheet, yTileInTilesheet, xTileInTilesheet + tileWidth, yTileInTilesheet + tileHeight);
-			tilesheet->Draw(xV, yV, &rect);
+				RECT rect;
+				SetRect(&rect, tileInTilesheet_X, 0, tileInTilesheet_X + tileSize, tileSize);
+				tilesheet->Draw(xV, yV, &rect);
+			}
 		}
 	}
 }

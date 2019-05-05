@@ -12,8 +12,6 @@ class Sprite :
 	public Rect
 {
 	myPoint * animation;
-	float posX, posY;
-	float width, height;
 	float velX, velY;
 	int currentAnimation, lastAnimation;
 
@@ -28,10 +26,6 @@ public:
 	Sprite();
 	~Sprite();
 
-	float getX();		void setX(float x);
-	float getY();		void setY(float y);
-	float getHeight();	void setHeight(float height);
-	float getWidth();	void setWidth(float width);
 	float getVelX();	void setVelX(float velX);
 	float getVelY();	void setVelY(float velY);
 	int getCurrentAnimation();	void setCurrentAnimation(int currentAnimation);

@@ -7,7 +7,6 @@
 #include "Player.h"
 #include "Camera.h"
 #include "Stage.h"
-#include "Tilemap.h"
 
 class Game
 {
@@ -23,40 +22,39 @@ class Game
 	LPD3DXSPRITE spriteHandler;
 
 	// Camera
-	float cameraX, cameraY, cameraWidth, cameraHeight;
-	RECT placeOfTheCameraOnTheScreen;
+	float cameraX, cameraY;
+	float cameraWidth, cameraHeight;
 
 	// Stage
-	Stage Stage;
+	Stage * stage;
 	int stageIndex = 0;
-	int numberOfStages = 3; // set cứng bằng 3 luôn
+	const int NUMBER_OF_STAGES = 3; // làm có 3 stage thôi
 
 	// 
 	Sprite _Ryu;
 
 	float groundLine;
 	int directionX, directionY;
-
 	bool maxHeightReached;
 	DWORD TickAtMaxHeight;
 
 	DWORD start, countPerFrame;
 
-	void InitGame();
 	void InitDirectX();
+	void InitGame();
 
 public:
 	static Game * getInstance();
+
 	Game();
 	~Game();
+
 	LPDIRECT3DDEVICE9 get3DDevice();
 	LPD3DXSPRITE getSpriteHandler();
 
 	void init();
 	void run();
 	void end();
-
-
 
 	void KeysControl();
 };

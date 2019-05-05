@@ -7,11 +7,6 @@ GameTexture::GameTexture()
 {
 }
 
-GameTexture::GameTexture(const char * imagePath, bool isSprite, D3DCOLOR transColor)
-{
-	LoadTexture(imagePath, isSprite, transColor);
-}
-
 
 GameTexture::~GameTexture()
 {
@@ -54,15 +49,6 @@ void GameTexture::LoadTexture(const char * imagePath, bool isSprite, D3DCOLOR tr
 		return;
 	}
 
-	//if (isSprite)
-	//{
-	//	this->isSprite = isSprite;	// true ^_^
-	//	D3DXCreateSprite(d3ddev, &spriteHandler);
-	//}
-	//else
-	//{
-	//	this->spriteHandler = Game::getInstance()->getSpriteHandler();
-	//}
 	this->spriteHandler = Game::getInstance()->getSpriteHandler();
 }
 

@@ -8,6 +8,7 @@ class Stage
 {
 	Tilemap * tilemap;
 
+
 	int mapStart, mapEnd;
 	int playerStart, playerEnd;
 
