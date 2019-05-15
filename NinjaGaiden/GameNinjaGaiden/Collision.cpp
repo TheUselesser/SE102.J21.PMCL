@@ -1,7 +1,15 @@
-#include "Collision.h"
+﻿#include "Collision.h"
+#include <iostream>
+
+#include "Camera.h"
+#include <string>
+#include "DXInput.h"
 
 
 
+float Collision::CollisionTime = 0;
+float Collision::EntryTime = 0;
+float Collision::ExitTime = 0;
 Collision::Collision()
 {
 }
@@ -9,4 +17,157 @@ Collision::Collision()
 
 Collision::~Collision()
 {
+}
+
+Sprite Collision::GetSweptBroadphaseBox(Sprite box)
+{
+	Sprite broadphaseBox;
+
+	broadphaseBox.setX(box.getVelX() > 0 ? box.getX() : box.getX() + box.getVelX());
+	broadphaseBox.setY(box.getVelY() > 0 ? box.getY() + box.getVelY() : box.getY());
+	broadphaseBox.setWidth(box.getVelX() > 0 ? box.getWidth() + box.getVelX() : box.getWidth() - box.getVelX());
+	broadphaseBox.setHeight(box.getVelY() > 0 ? box.getHeight() + box.getVelY() : box.getHeight() - box.getVelY());
+
+	return broadphaseBox;
+}
+
+float Collision::SweptAABB(Sprite box1, Sprite box2, float & normalx, float & normaly)
+{
+	float xInvEntry, yInvEntry;
+	float xInvExit, yInvExit;
+
+	// tìm khoảng cách giữa 2 vật thể ở cạnh gần và cạnh xa
+	if (box1.getVelX() > 0.0f)
+	{
+		xInvEntry = box2.getLeft() - box1.getRight();
+		xInvExit = box2.getRight() - box1.getLeft();
+	}
+	else
+	{
+		xInvEntry = box2.getRight() - box1.getLeft();
+		xInvExit = box2.getLeft() - box1.getRight();
+	}
+
+	if (box1.getVelY() > 0.0f)	// lưu ý: trục Oy mình đi ngược so với Oy của console
+	{
+		yInvEntry = box2.getBottom() - box1.getTop();	// theo lý thuyết thì box1.vy > 0 thì yInvEntry = box2.top - box1.bottom;
+		yInvExit = box2.getTop() - box1.getBottom();
+	}
+	else
+	{
+		yInvEntry = box2.getTop() - box1.getBottom();
+		yInvExit = box2.getBottom() - box1.getTop();
+	}
+
+	// Tính thời gian xảy ra va chạm và kết thúc va chạm theo các trục (t = s / v);
+	float xEntry, yEntry;
+	float xExit, yExit;
+
+	if (box1.getVelX() == 0.0f)		// để tránh chia vận tốc cho 0;
+	{
+		xEntry = -std::numeric_limits<float>::infinity();
+		xExit = std::numeric_limits<float>::infinity();
+	}
+	else
+	{
+		xEntry = xInvEntry / box1.getVelX();
+		xExit = xInvExit / box1.getVelX();
+	}
+
+	if (box1.getVelY() == 0.0f)		// để tránh chia vận tốc cho 0;
+	{
+		yEntry = -std::numeric_limits<float>::infinity();
+		yExit = std::numeric_limits<float>::infinity();
+	}
+	else
+	{
+		yEntry = yInvEntry / box1.getVelY();
+		yExit = yInvExit / box1.getVelY();
+	}
+
+	// trục nào sẽ xảy ra va chạm trước?
+	float entryTime = std::fmaxf(xEntry, yEntry);
+	float exitTime = std::fminf(xExit, yExit);
+
+	Collision::EntryTime = entryTime;
+	Collision::ExitTime = exitTime;
+
+	// Trường hợp không xảy ra va chạm
+	if (entryTime > exitTime || xEntry < 0.0f && yEntry < 0.0f || xEntry > 1.0f || yEntry > 1.0f)
+	{
+		normalx = 0.0f;
+		normaly = 0.0f;
+		return 1.0f;
+	}
+	// Trường hợp xảy ra va chạm
+	else
+	{
+		// Xác định chiều của vector pháp tuyến khi va chạm
+		if (xEntry > yEntry)
+		{
+			if (xInvEntry < 0.0f)
+			{
+				normalx = 1.0f;
+				normaly = 0.0f;
+			}
+			else
+			{
+				normalx = -1.0f;
+				normaly = 0.0f;
+			}
+		}
+		else
+		{
+			if (yInvEntry < 0.0f)
+			{
+				normalx = 0.0f;
+				normaly = 1.0f;
+			}
+			else
+			{
+				normalx = 0.0f;
+				normaly = -1.0f;
+			}
+		}
+
+		// Trả về thời gian sẽ xảy ra va chạm
+		return entryTime;
+	}
+}
+
+bool Collision::AABBCheck(Rect box1, Rect box2)
+{
+	// trả về true nếu box1 và box2 'giao nhau'
+	return !(box1.getRight() < box2.getLeft() || box1.getLeft() > box2.getRight() ||
+			box1.getBottom() > box2.getTop() || box1.getTop() < box2.getBottom());
+}
+
+void Collision::CollisionHandle(Sprite &box1, Sprite box2)
+{
+	box1.isOnCollisionX = false;
+	box1.isOnCollisionY = false;
+
+	Sprite broadphaseBox = GetSweptBroadphaseBox(box1);
+	if (AABBCheck(broadphaseBox, box2))
+	{
+		float normalx = 0, normaly = 0;
+		float collisionTime = SweptAABB(box1, box2, normalx, normaly);
+
+		Collision::CollisionTime = collisionTime;
+
+		if (collisionTime < 1.0f)
+		{
+			// Xử lý khi va chạm
+			if (normalx != 0)	// va chạm theo trục Ox
+			{
+				box1.isOnCollisionX = true;
+				box1.moveX(box1.getVelX() * collisionTime);
+			}
+			if (normaly == -1.0f)	// va chạm theo trục Oy
+			{
+				box1.isOnCollisionY = true;
+				box1.moveY(box1.getVelY() * collisionTime);
+			}
+		}
+	}
 }

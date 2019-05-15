@@ -22,6 +22,9 @@ public:
 	float maxHeight;
 	bool isMoving;
 	bool isJumping;
+	int directionX, directionY;
+	bool isOnCollisionX;
+	bool isOnCollisionY;
 
 	Sprite();
 	~Sprite();

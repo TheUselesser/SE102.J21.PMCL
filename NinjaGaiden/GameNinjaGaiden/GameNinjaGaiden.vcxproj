@@ -134,6 +134,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTexture.cpp" />
     <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="MovableRect.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTexture.h" />
     <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="MovableRect.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Sprite.h" />

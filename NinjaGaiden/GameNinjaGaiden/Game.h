@@ -8,6 +8,8 @@
 #include "Camera.h"
 #include "Stage.h"
 
+#include "Collision.h"
+
 class Game
 {
 	static Game * instance;
@@ -31,10 +33,9 @@ class Game
 	const int NUMBER_OF_STAGES = 3; // làm có 3 stage thôi
 
 	// 
-	Sprite _Ryu;
+	Sprite _Ryu, cloneRyu;
 
 	float groundLine;
-	int directionX, directionY;
 	bool maxHeightReached;
 	DWORD TickAtMaxHeight;
 
@@ -54,6 +55,7 @@ public:
 
 	void init();
 	void run();
+	void update();
 	void end();
 
 	void KeysControl();

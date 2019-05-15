@@ -57,6 +57,7 @@ void Stage::LoadTilemap(const char * imagePath, const char * matrixPath)
 	tilemap = new Tilemap();
 	tilemap->LoadTilemap(imagePath, matrixPath);
 
+	mapStart = 0;
 	mapEnd = tilemap->mapWidth;
 }
 

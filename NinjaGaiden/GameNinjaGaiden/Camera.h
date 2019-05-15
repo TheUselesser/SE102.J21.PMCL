@@ -18,7 +18,6 @@ public:
 	float getVelX();	void setVelX(float velX);
 	float getVelY();	void setVelY(float velY);
 	
-	void moveLeft(); void moveRight();
 	void updateRect();
 	void trackSprite(Sprite sprite);
 	void untrackSprite(Sprite sprite);

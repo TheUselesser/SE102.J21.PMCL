@@ -44,16 +44,6 @@ void Camera::setVelY(float velY)
 	this->velY = velY;
 }
 
-void Camera::moveLeft()
-{
-	this->posX -= this->velX;
-}
-
-void Camera::moveRight()
-{
-	this->posX += this->velX;
-}
-
 void Camera::trackSprite(Sprite sprite)
 {
 	this->velX = sprite.getVelX();
@@ -71,13 +61,13 @@ void Camera::worldToView(float xW, float yW, float & xV, float & yV)
 
 	D3DXMatrixIdentity(&matrix);
 	matrix._22 = -1;
-	matrix._41 = -getX();		// x0
-	matrix._42 = getY();		// y0
+	matrix._31 = -getX();		// x0
+	matrix._32 = getY();		// y0
 
 	//	1	0	0	0
 	//	0	-1	0	0
-	//	0	0	1	0
-	//	-x0	y0	0	1	
+	//	-x0	y0	1	0
+	//	0	0	0	1	
 
 	// transform nó
 	D3DXVECTOR4 matrixP(xW, yW, 1, 1);

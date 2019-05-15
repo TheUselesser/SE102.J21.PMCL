@@ -5,6 +5,8 @@
 
 Sprite::Sprite()
 {
+	isOnCollisionX = isOnCollisionY = false;
+	directionX = directionY = 1;
 }
 
 
@@ -54,7 +56,7 @@ void Sprite::setLastAnimation(int lastAnimation)
 
 void Sprite::moveLeft()
 {
-	moveX(-velX);
+	moveX(velX);
 }
 
 void Sprite::moveRight()
@@ -72,7 +74,7 @@ void Sprite::moveDown()
 
 void Sprite::LoadTexture(const char * imagePath, D3DCOLOR transColor)
 {
-	spriteTexture.LoadTexture(imagePath, false, transColor);
+	spriteTexture.LoadTexture(imagePath, false, 0);
 }
 
 void Sprite::SetAnimation(float spriteWidth, float spriteHeight, int animationCount, int animationsPerRow)
@@ -134,6 +136,8 @@ void Sprite::Draw()
 		currentAnimation = 0;
 	}
 
-	spriteTexture.Draw(posX, posY, &rect);
+	float xV, yV;
+	Camera::getInstance()->worldToView(posX, posY, xV, yV);
+	spriteTexture.Draw(xV, yV, &rect);
 }
 
