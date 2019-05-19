@@ -12,7 +12,7 @@ GameTexture::~GameTexture()
 {
 }
 
-void GameTexture::LoadTexture(const char * imagePath, bool isSprite, D3DCOLOR transColor)
+void GameTexture::LoadTexture(const char * imagePath, D3DCOLOR transColor)
 {
 	D3DXIMAGE_INFO info;
 	HRESULT result;
@@ -70,4 +70,9 @@ void GameTexture::Draw(int x, int y, RECT * r)
 		return;
 	}
 	spriteHandler->End();
+}
+
+void GameTexture::Release()
+{
+	if (texture != NULL) texture->Release();
 }

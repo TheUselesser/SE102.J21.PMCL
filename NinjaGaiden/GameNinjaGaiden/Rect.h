@@ -2,7 +2,6 @@
 
 class Rect
 {
-protected:
 	float posX, posY;
 	float width, height;
 
@@ -17,9 +16,11 @@ public:
 
 	void setSize(float width, float height);
 
+	// Di chuyển theo khoảng cách nhập vào
 	void move(float dx, float dy);
-	void moveX(float dx);	// Di chuyển ngang 1 đoạn dx nhập vào
+	void moveX(float dx);
 	void moveY(float dy);
+	// Di chuyển tới điểm x,y
 	void moveTo(float x, float y);
 
 	float getLeft();

@@ -1,44 +1,34 @@
 ﻿#pragma once
 #include <d3d9.h>
 #include <d3dx9.h>
-#include "Rect.h"
+#include "MovableRect.h"
 #include "GameTexture.h"
+
 
 typedef struct {
 	float X, Y;
 } myPoint;
 
-class Sprite :
-	public Rect
+class Sprite
 {
 	myPoint * animation;
-	float velX, velY;
-	int currentAnimation, lastAnimation;
+	bool startAnimation;
+	int currentAnimation, firstAnimation, lastAnimation;
 
 	GameTexture spriteTexture;
 
 public:
-	float currentHeight;
-	float maxHeight;
-	bool isMoving;
-	bool isJumping;
-	int directionX, directionY;
-	bool isOnCollisionX;
-	bool isOnCollisionY;
-
 	Sprite();
 	~Sprite();
 
-	float getVelX();	void setVelX(float velX);
-	float getVelY();	void setVelY(float velY);
 	int getCurrentAnimation();	void setCurrentAnimation(int currentAnimation);
+	int getFirstAnimation();	void setFirstAnimation(int firstAnimation);
 	int getLastAnimation();		void setLastAnimation(int lastAnimation);
 
-	void moveLeft(); void moveRight(); void moveUp(); void moveDown();
-
 	void LoadTexture(const char * imagePath, D3DCOLOR transColor);
-	void SetAnimation(float spriteWidth, float spriteHeight, int animationCount, int animationsPerRow);
+	void SetAnimation(float animationWidth, float animationHeight, int animationCount, int animationsPerRow, int firstAnimation, int lastAnimation);
 
-	void Draw();
+	void Draw(float x, float y, Rect * rect);
+	void Release();
 };
 

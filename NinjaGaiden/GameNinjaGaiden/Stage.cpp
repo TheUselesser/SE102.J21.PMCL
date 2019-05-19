@@ -1,6 +1,7 @@
-#include "Stage.h"
+﻿#include "Stage.h"
 #include "Game.h"
-
+#include <fstream>
+#include <string>
 
 Stage::Stage()
 {
@@ -51,6 +52,39 @@ void Stage::setPlayerEnd(int playerEnd)
 {
 	this->playerEnd = playerEnd;
 }
+
+// OBJECT
+
+void Stage::InitGrid(const char * gridInfoPath, const char * cellsInfoPath)
+{
+	grid = new Grid();
+	grid->readGridInfo(gridInfoPath, cellsInfoPath);
+
+	objectList = grid->GetObjectList(Camera::getInstance());
+}
+
+std::vector<GameObject*> Stage::GetObjectList()
+{
+	return grid->GetObjectList(Camera::getInstance());
+}
+
+void Stage::Update(DWORD dt, Player &player)
+{
+	grid->UpdateFirstCellPosition(Camera::getInstance());
+	D3DXVECTOR2 firstCellPosition = grid->GetFirstCellPosition();
+	if (firstCellPosition.x != pevFirstCellPosition.x || firstCellPosition.y != pevFirstCellPosition.y)
+	{
+		objectList = grid->GetObjectList(Camera::getInstance());
+	}
+
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		objectList[i]->Update(dt, player);
+	}
+}
+
+
+// MAP
 
 void Stage::LoadTilemap(const char * imagePath, const char * matrixPath)
 {

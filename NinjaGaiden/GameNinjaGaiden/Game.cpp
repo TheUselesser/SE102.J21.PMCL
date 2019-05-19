@@ -96,60 +96,48 @@ void Game::InitGame()
 {
 	srand(time(NULL));
 
-	// Game Time
-	start = GetTickCount();
-	countPerFrame = 900 / FPS;
-	maxHeightReached = false;
+	// Game Timer
+	timer.startTime = GetTickCount();
+	timer.tickPerFrame = 1000 / FPS;
 
 	// Load stage
 	switch (stageIndex)
 	{
-	case 0:	// stage 3-1
+	// Stage 3-1
+	case 0:
 		stage = new Stage();
 		stage->LoadTilemap("images/Stage31/3_1_tilesheet.png", "images/Stage31/3_1_matrix.txt");
 		stage->setPlayerStart(8);
-		//stage->setPlayerEnd(stage->getMapEnd());
+		
+		groundLine = 40;	// ^_^
+		// add enemy
+		//stage->LoadObjects("images/Stage31/object_spawn.txt");
+		stage->InitGrid("images/Stage31/grid_info.txt", "images/Stage31/cells_info.txt");
+		// the first enemy <3
+		/*lovelyEnemy = SwordMan(200, groundLine);
+		lovelyEnemy.setVelX(-2);
+		lovelyEnemy.isExist = true;
+		*/
 		break;
-	case 1:	// stage 3-2
+	// Stage 3-2
+	case 1:
 		stage = new Stage();
 		stage->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
-		//stage->setMapEnd(stage->getMapEnd());
+		groundLine = 40;	// ^_^
 		stage->setPlayerStart(0);
-		//stage->setPlayerEnd(224);
-		//Camera::getInstance()->setY(Camera::getInstance()->getY() - 16);
 		break;
-	case 2:	// stage 3-3
+	// Stage 3-3
+	case 2:
 		stage = new Stage();
 		stage->LoadTilemap("images/Stage33/3_3_tilesheet.png", "images/Stage33/3_3_matrix.txt");
+		groundLine = 28;	// ^_^
 		stage->setMapStart(512);
-		stage->setPlayerStart(0);
-		//stage->setPlayerEnd(stage->getMapEnd());
+		stage->setPlayerStart(512);
 		break;
 	}
 
-	groundLine = 40;	// ^_^
-
 	// Player Ryu
-	_Ryu.LoadTexture("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255));
-	_Ryu.SetAnimation(22, 32, 4, 4);
-
-	_Ryu.setX(stage->getPlayerStart());
-	_Ryu.setY(groundLine + _Ryu.getHeight());
-	_Ryu.setVelX(4);
-	_Ryu.setVelY(8);
-
-	_Ryu.setCurrentAnimation(0);
-	_Ryu.setLastAnimation(3);
-	_Ryu.isMoving = false;
-	_Ryu.isJumping = false;
-	_Ryu.currentHeight = 0;
-	_Ryu.maxHeight = 48;	// tạm set cứng vầy để test jump
-
-	// clone Ryu
-	cloneRyu.LoadTexture("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255));
-	cloneRyu.SetAnimation(22, 32, 1, 1);
-	cloneRyu.setX(200);
-	cloneRyu.setY(_Ryu.getY());
+	_Ryu.InitPlayer(stage->getPlayerStart(), groundLine);
 }
 
 void Game::run()
@@ -158,20 +146,12 @@ void Game::run()
 	if (d3ddev == NULL)
 		return;
 
-	// Lay thong so camera
-	cameraX = Camera::getInstance()->getX();
-	cameraY = Camera::getInstance()->getY();
-	cameraWidth = Camera::getInstance()->getWidth();
-	cameraHeight = Camera::getInstance()->getHeight();
-
 	// update keyboard
 	Poll_Keyboard();
 
 	// Bắt đầu vẽ 1 frame
-	if (GetTickCount() - start >= countPerFrame)
+	if (timer.isAtTime())
 	{
-		start = GetTickCount();
-
 		if (d3ddev->BeginScene())
 		{
 			// Nếu không vẽ gì thì màn hình sẽ đen thui
@@ -181,18 +161,21 @@ void Game::run()
 			KeysControl();
 
 			// Update các thông số game;
-			update();
+			update(1000);	// Thời gian chưa quan trọng
 
 			// Vẽ tilemap
 			stage->Draw(Camera::getInstance());
 
-			// clone Ryu
-			cloneRyu.Draw();
-
-			Collision::CollisionHandle(_Ryu, cloneRyu);
+			// The First Enemy
+			/*if (lovelyEnemy.isExist)
+			{
+				lovelyEnemy.Update(500, _Ryu);
+			}*/
+			// Update enemy trong stage
+			stage->Update(500, _Ryu);
 
 			// Vẽ Ryu
-			_Ryu.Draw();
+			_Ryu.Update(30);
 
 			// Kết thúc 1 frame
 			d3ddev->EndScene();
@@ -203,13 +186,11 @@ void Game::run()
 	}
 }
 
-void Game::update()
+void Game::update(DWORD dt)
 {
 	// Xử lý nhảy cho Ryu
 	if (_Ryu.isJumping)
 	{
-		_Ryu.isMoving = true;
-
 		// Tăng giảm độ cao
 		_Ryu.setVelY(8 * _Ryu.directionY);		// velY cứng ngắc (temp)
 		_Ryu.currentHeight += _Ryu.getVelY();
@@ -233,9 +214,9 @@ void Game::update()
 		if (_Ryu.currentHeight >= _Ryu.maxHeight)
 		{
 			// Ghi nhận thời điểm lên đỉnh và giữ Ryu ở trên đỉnh 1 xíu
-			if (!maxHeightReached)
+			if (!_Ryu.maxHeightReached)
 			{
-				maxHeightReached = true;
+				_Ryu.maxHeightReached = true;
 				TickAtMaxHeight = GetTickCount();
 
 				_Ryu.directionY = 0;
@@ -243,7 +224,7 @@ void Game::update()
 			if (GetTickCount() - TickAtMaxHeight >= 69)	// giữ 0.069s
 			{
 				_Ryu.directionY = -1;
-				maxHeightReached = false;
+				_Ryu.maxHeightReached = false;
 			}
 		}
 
@@ -252,18 +233,12 @@ void Game::update()
 		{
 			_Ryu.currentHeight = 0;
 			_Ryu.directionY = -1;
-			_Ryu.isJumping = false;
 			_Ryu.isMoving = false;
-			_Ryu.SetAnimation(22, 32, 4, 4);
-			// Đổi lại animation đứng
-			if (_Ryu.directionX == 1)
-			{
-				_Ryu.LoadTexture("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255));
-			}
-			if (_Ryu.directionX == -1)
-			{
-				_Ryu.LoadTexture("images/Ryu_left.png", D3DCOLOR_XRGB(255, 0, 255));
-			}
+			_Ryu.isJumping = false;
+			if (_Ryu.getBottom() <= groundLine) _Ryu.isFalling = false;
+
+			_Ryu.SetStatus(PLAYER_END_JUMPING);
+			_Ryu.SetStatus(PLAYER_STANDING, _Ryu.directionX);
 		}
 	}
 	else
@@ -271,8 +246,8 @@ void Game::update()
 		if (!_Ryu.isOnCollisionY && _Ryu.getBottom() > groundLine)
 		{
 			_Ryu.directionY = -1;
-			if (_Ryu.getVelY() > 0) _Ryu.setVelY(_Ryu.getVelY() * _Ryu.directionY);
-			_Ryu.moveY(_Ryu.getVelY());
+			if (_Ryu.getVelY() > 0) _Ryu.setVelY(-_Ryu.directionY);
+			_Ryu.selfMovingY();
 		}
 	}
 }
@@ -280,19 +255,19 @@ void Game::update()
 void Game::end()
 {
 	if (backbuffer != NULL) backbuffer->Release();
-
+	//if (spriteHandler != NULL) spriteHandler->Release();
 	if (d3ddev != NULL) d3ddev->Release();
 	if (d3d != NULL) d3d->Release();
 }
 
 void Game::KeysControl()
 {
-// ***** Will be deleted ********************************
+	// ***** Will be deleted ********************************
 
-	// Giữ Shift để tăng tốc
+		// Giữ Shift để tăng tốc
 	if (Key_Down(DIK_LSHIFT) || Key_Down(DIK_RSHIFT))
 	{
-		_Ryu.setVelX(40 * _Ryu.directionX);
+		_Ryu.setVelX(20 * _Ryu.directionX);
 	}
 	else
 	{
@@ -304,160 +279,54 @@ void Game::KeysControl()
 		std::string message = std::to_string(Camera::getInstance()->getX());
 		MessageBox(0, message.c_str(), "camera X", 0);
 	}
-	// check vị trí Ryu (camera)
+	// check vị trí Ryu
 	if (Key_Down(DIK_V))
-	{
-		std::string message = std::to_string(_Ryu.getX());
-		MessageBox(0, message.c_str(), "Ryu X in view", 0);
-	}
-	// check vị trí Ryu (world)
-	if (Key_Down(DIK_B))
 	{
 		std::string message = std::to_string(_Ryu.getX() + Camera::getInstance()->getX());
 		MessageBox(0, message.c_str(), "Ryu X in world", 0);
 	}
-	if (Key_Down(DIK_N))
-	{
-		std::string message = std::to_string(Collision::CollisionTime);
-		MessageBox(0, message.c_str(), "collision time", 0);
-		message = std::to_string(Collision::EntryTime);
-		MessageBox(0, message.c_str(), "entry time", 0);
-		message = std::to_string(Collision::ExitTime);
-		MessageBox(0, message.c_str(), "exit time", 0);
-		message = std::to_string(_Ryu.getVelY());
-		MessageBox(0, message.c_str(), "Ryu vy", 0);
-		message = std::to_string(_Ryu.getBottom());
-		MessageBox(0, message.c_str(), "Ryu bottom", 0);
-		message = std::to_string(cloneRyu.getTop());
-		MessageBox(0, message.c_str(), "cloneRyu top", 0);
-	}
 
-// ******************************************************
+	// ******************************************************
 
 	// Xử lý Di chuyển
-	// Đi qua phải
-	if (Key_Down(DIK_RIGHTARROW))
+	if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 	{
-		_Ryu.isMoving = true;
-		_Ryu.directionX = 1;
-		if (_Ryu.getVelX() < 0) _Ryu.setVelX(_Ryu.directionX * _Ryu.getVelX());
-		if (!_Ryu.isJumping)
-			_Ryu.LoadTexture("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255));
+		_Ryu.directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
 
-		if (!_Ryu.isOnCollisionX)	// <--- đây
+		if (_Ryu.getVelX() * _Ryu.directionX < 0)
 		{
-			// Di chuyển nhân vật khi camera chạm biên
-			if (cameraX <= stage->getMapStart() && _Ryu.getX() < (cameraWidth - _Ryu.getWidth()) / 2)
-			{
-				_Ryu.moveRight();
-				if (_Ryu.getX() >= (cameraWidth - _Ryu.getWidth()) / 2)
-					_Ryu.setX((cameraWidth - _Ryu.getWidth()) / 2);
-			}
-			else if (cameraX >= stage->getMapEnd() - cameraWidth)
-			{
-				_Ryu.moveRight();
-			}
-			// Di chuyển camera
-			else
-			{
-				_Ryu.moveRight();
-				Camera::getInstance()->moveX(_Ryu.getVelX());
-			}
+			_Ryu.setVelX(-_Ryu.getVelX());
+			_Ryu.directionChanged = true;
 		}
-	}
-	// Đi qua trái
-	else if (Key_Down(DIK_LEFTARROW))
-	{
-		_Ryu.isMoving = true;
-		_Ryu.directionX = -1;
-		if (_Ryu.getVelX() > 0) _Ryu.setVelX(_Ryu.directionX * _Ryu.getVelX());
-		if (!_Ryu.isJumping)
-			_Ryu.LoadTexture("images/Ryu_left.png", D3DCOLOR_XRGB(255, 0, 255));
 
-		if (!_Ryu.isOnCollisionX)	// <--- đây
+		_Ryu.isMoving = true;
+		if (!_Ryu.isJumping)
 		{
-			// Di chuyển nhân vật khi camera chạm biên
-			if (cameraX <= stage->getMapStart())
-			{
-				_Ryu.moveLeft();
-			}
-			else if (cameraX >= stage->getMapEnd() - cameraWidth &&
-				_Ryu.getX() > (cameraWidth - _Ryu.getWidth()) / 2)
-			{
-				_Ryu.moveLeft();
-				if (_Ryu.getX() < (cameraWidth - _Ryu.getX()) / 2)
-					_Ryu.setX((cameraWidth - _Ryu.getWidth()) / 2);
-			}
-			// Di chuyển camera
-			else
-			{
-				_Ryu.moveLeft();
-				Camera::getInstance()->moveX(_Ryu.getVelX());
-			}
+			_Ryu.SetStatus(PLAYER_MOVING, _Ryu.directionX);
 		}
+		Camera::getInstance()->trackPlayer(_Ryu);
 	}
 	// Không di chuyển
 	else
 	{
+		_Ryu.isMoving = false;
 		if (!_Ryu.isJumping)
-			_Ryu.isMoving = false;
-		Camera::getInstance()->untrackSprite(_Ryu);
+		{
+			_Ryu.SetStatus(PLAYER_STANDING, _Ryu.directionX);
+		}
+		Camera::getInstance()->freeze();
 	}
 
 	// Xử lý nhảy
 	if (Key_Down(DIK_SPACE))
 	{
-		if (!_Ryu.isJumping)
+		if (!_Ryu.isJumping && !_Ryu.isFalling)
 		{
-			_Ryu.directionY = 1;
 			_Ryu.isJumping = true;
-			_Ryu.isMoving = true;
-
-			// Đổi animation nhảy
-			if (_Ryu.directionX == 1)
-			{
-				//_Ryu.Release();
-				_Ryu.LoadTexture("images/Ryu_jump_right.png", D3DCOLOR_XRGB(255, 0, 255));
-			}
-			if (_Ryu.directionX == -1)
-			{
-				//_Ryu.Release();
-				_Ryu.LoadTexture("images/Ryu_jump_left.png", D3DCOLOR_XRGB(255, 0, 255));
-			}
-			_Ryu.SetAnimation(24, 24, 4, 2);
+			_Ryu.SetStatus(PLAYER_JUMPING, _Ryu.directionX);
+			_Ryu.directionY = 1;
 		}
 	}
-
-// quy định giới hạn nhân vật trong camera
-	if (_Ryu.getX() < 0)
-	{
-		_Ryu.setX(0);
-	}
-	// Đến cuối map -> chuyển stage
-	if (cameraX >= stage->getMapEnd() - cameraWidth && _Ryu.getX() >= cameraWidth - _Ryu.getWidth())
-	{
-		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
-		{
-			stageIndex++;
-			if (!(stageIndex < NUMBER_OF_STAGES))	 // ^_^
-				stageIndex = 0;
-
-			InitGame();
-			Camera::getInstance()->setX(stage->getMapStart());
-		}
-	}
-
-// quy định giới hạn camera trong map
-	if (cameraX < stage->getMapStart())
-	{
-		Camera::getInstance()->setX(stage->getMapStart());
-	}
-	if (cameraX > stage->getMapEnd() - cameraWidth)
-	{
-		Camera::getInstance()->setX(stage->getMapEnd() - cameraWidth);
-	}
-
-
 
 	// Nhấn ESC để thoát game
 	if (Key_Down(DIK_ESCAPE))
@@ -469,4 +338,24 @@ void Game::KeysControl()
 		end();
 		PostMessage(hWnd, WM_DESTROY, 0, 0);
 	}
+
+	// Đến cuối map -> chuyển stage
+	if (_Ryu.getRight() >= stage->getMapEnd())
+	{
+		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
+		{
+			stageIndex++;
+			if (!(stageIndex < NUMBER_OF_STAGES))	 // ^_^
+				stageIndex = 0;
+
+			lovelyEnemy.isExist = false;
+			InitGame();
+			Camera::getInstance()->setX(stage->getMapStart());
+		}
+	}
+}
+
+Stage * Game::getStage()
+{
+	return stage;
 }

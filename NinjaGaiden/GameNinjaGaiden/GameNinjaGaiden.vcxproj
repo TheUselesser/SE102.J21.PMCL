@@ -127,34 +127,52 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Banshee.cpp" />
+    <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="BirdBrown.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cat.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="DXInput.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTexture.cpp" />
     <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="GridCell.cpp" />
+    <ClCompile Include="MachineGunGuy.cpp" />
     <ClCompile Include="MovableRect.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="SwordMan.cpp" />
     <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Banshee.h" />
+    <ClInclude Include="Bat.h" />
+    <ClInclude Include="BirdBrown.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cat.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="DXInput.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTexture.h" />
     <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="Grid.h" />
+    <ClInclude Include="GridCell.h" />
+    <ClInclude Include="MachineGunGuy.h" />
     <ClInclude Include="MovableRect.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="SwordMan.h" />
     <ClInclude Include="Tilemap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

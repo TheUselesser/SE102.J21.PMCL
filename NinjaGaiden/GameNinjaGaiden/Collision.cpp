@@ -19,9 +19,9 @@ Collision::~Collision()
 {
 }
 
-Sprite Collision::GetSweptBroadphaseBox(Sprite box)
+MovableRect Collision::GetSweptBroadphaseBox(MovableRect box)
 {
-	Sprite broadphaseBox;
+	MovableRect broadphaseBox;
 
 	broadphaseBox.setX(box.getVelX() > 0 ? box.getX() : box.getX() + box.getVelX());
 	broadphaseBox.setY(box.getVelY() > 0 ? box.getY() + box.getVelY() : box.getY());
@@ -31,7 +31,7 @@ Sprite Collision::GetSweptBroadphaseBox(Sprite box)
 	return broadphaseBox;
 }
 
-float Collision::SweptAABB(Sprite box1, Sprite box2, float & normalx, float & normaly)
+float Collision::SweptAABB(MovableRect box1, MovableRect box2, float & normalx, float & normaly)
 {
 	float xInvEntry, yInvEntry;
 	float xInvExit, yInvExit;
@@ -142,12 +142,12 @@ bool Collision::AABBCheck(Rect box1, Rect box2)
 			box1.getBottom() > box2.getTop() || box1.getTop() < box2.getBottom());
 }
 
-void Collision::CollisionHandle(Sprite &box1, Sprite box2)
+void Collision::CollisionHandle(GameObject &box1, GameObject &box2)
 {
 	box1.isOnCollisionX = false;
 	box1.isOnCollisionY = false;
 
-	Sprite broadphaseBox = GetSweptBroadphaseBox(box1);
+	MovableRect broadphaseBox = GetSweptBroadphaseBox(box1);
 	if (AABBCheck(broadphaseBox, box2))
 	{
 		float normalx = 0, normaly = 0;
@@ -161,12 +161,10 @@ void Collision::CollisionHandle(Sprite &box1, Sprite box2)
 			if (normalx != 0)	// va chạm theo trục Ox
 			{
 				box1.isOnCollisionX = true;
-				box1.moveX(box1.getVelX() * collisionTime);
 			}
-			if (normaly == -1.0f)	// va chạm theo trục Oy
+			if (normaly != 0)	// va chạm theo trục Oy
 			{
 				box1.isOnCollisionY = true;
-				box1.moveY(box1.getVelY() * collisionTime);
 			}
 		}
 	}

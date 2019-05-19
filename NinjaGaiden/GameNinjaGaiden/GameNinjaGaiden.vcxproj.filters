@@ -13,90 +13,159 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="0_DevUtils">
+      <UniqueIdentifier>{9adebbda-dc6b-42ce-b186-661733471dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1_Game Core">
+      <UniqueIdentifier>{2edb76d7-8136-4c96-b970-23b2a25d5090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2_Game Objects">
+      <UniqueIdentifier>{7227c90c-8dae-4333-9223-74a70df22504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1_Game Core\10_Grid">
+      <UniqueIdentifier>{8fdea9db-cec9-47f0-a632-8dc93087f4fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2_Game Objects\20_">
+      <UniqueIdentifier>{cf9b6453-fe86-4126-bada-d161f484b74c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DXInput.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>0_DevUtils</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Stage.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>2_Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>2_Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Player.cpp">
+      <Filter>2_Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Rect.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="SwordMan.cpp">
+      <Filter>2_Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="GameTexture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>1_Game Core</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GameWindow.cpp">
+      <Filter>1_Game Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>1_Game Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>1_Game Core</Filter>
     </ClCompile>
     <ClCompile Include="Tilemap.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>1_Game Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>1_Game Core\10_Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCell.cpp">
+      <Filter>1_Game Core\10_Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.cpp">
+      <Filter>2_Game Objects\20_</Filter>
     </ClCompile>
     <ClCompile Include="MovableRect.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>2_Game Objects\20_</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>2_Game Objects\20_</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>1_Game Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>1_Game Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Banshee.cpp">
+      <Filter>2_Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>2_Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="BirdBrown.cpp">
+      <Filter>2_Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Cat.cpp">
+      <Filter>2_Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="MachineGunGuy.cpp">
+      <Filter>2_Game Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DXInput.h">
-      <Filter>Header Files</Filter>
+      <Filter>0_DevUtils</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SwordMan.h">
+      <Filter>2_Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>Header Files</Filter>
+      <Filter>2_Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>2_Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rect.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Enemy.h">
+      <Filter>2_Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="GameTexture.h">
-      <Filter>Header Files</Filter>
+      <Filter>1_Game Core</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameWindow.h">
+      <Filter>1_Game Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>1_Game Core</Filter>
     </ClInclude>
     <ClInclude Include="Tilemap.h">
-      <Filter>Header Files</Filter>
+      <Filter>1_Game Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>1_Game Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>1_Game Core\10_Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCell.h">
+      <Filter>1_Game Core\10_Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>2_Game Objects\20_</Filter>
     </ClInclude>
     <ClInclude Include="MovableRect.h">
-      <Filter>Header Files</Filter>
+      <Filter>2_Game Objects\20_</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>2_Game Objects\20_</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>1_Game Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>1_Game Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Banshee.h">
+      <Filter>2_Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>2_Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="BirdBrown.h">
+      <Filter>2_Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Cat.h">
+      <Filter>2_Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="MachineGunGuy.h">
+      <Filter>2_Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

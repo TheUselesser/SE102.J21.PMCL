@@ -4,11 +4,29 @@
 #include <d3dx9.h>
 #include "GameWindow.h"
 #include "Sprite.h"
-#include "Player.h"
 #include "Camera.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "SwordMan.h"
 #include "Stage.h"
 
 #include "Collision.h"
+
+typedef struct GameTimer
+{
+	DWORD startTime = 0;
+	DWORD tickPerFrame = 0;
+
+	bool isAtTime()
+	{
+		if (GetTickCount() - startTime >= tickPerFrame)
+		{
+			startTime = GetTickCount();
+			return true;
+		}
+		return false;
+	}
+} Timer;
 
 class Game
 {
@@ -23,23 +41,20 @@ class Game
 
 	LPD3DXSPRITE spriteHandler;
 
-	// Camera
-	float cameraX, cameraY;
-	float cameraWidth, cameraHeight;
-
 	// Stage
 	Stage * stage;
 	int stageIndex = 0;
 	const int NUMBER_OF_STAGES = 3; // làm có 3 stage thôi
 
 	// 
-	Sprite _Ryu, cloneRyu;
+	Player _Ryu;
+	SwordMan lovelyEnemy;
+	SwordMan secondEnemy;
 
 	float groundLine;
-	bool maxHeightReached;
 	DWORD TickAtMaxHeight;
 
-	DWORD start, countPerFrame;
+	Timer timer;
 
 	void InitDirectX();
 	void InitGame();
@@ -50,12 +65,13 @@ public:
 	Game();
 	~Game();
 
+	Stage * getStage();
 	LPDIRECT3DDEVICE9 get3DDevice();
 	LPD3DXSPRITE getSpriteHandler();
 
 	void init();
 	void run();
-	void update();
+	void update(DWORD dt);
 	void end();
 
 	void KeysControl();

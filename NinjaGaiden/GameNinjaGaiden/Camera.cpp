@@ -15,8 +15,8 @@ Camera * Camera::getInstance()
 Camera::Camera()
 {
 	// default setting ? ? ? ?
-	posX = 0; posY = 192;	// điểm góc trên bên trái
-	width = 256; height = 176;
+	setX(0); setY(192);	// điểm góc trên bên trái
+	setSize(DEFAULT_CAMERA_WIDTH, DEFAULT_CAMERA_HEIGHT);
 }
 
 
@@ -24,34 +24,14 @@ Camera::~Camera()
 {
 }
 
-float Camera::getVelX()
+void Camera::trackPlayer(Player player)
 {
-	return this->velX;
+	this->setVelX(player.getVelX());
 }
 
-float Camera::getVelY()
+void Camera::freeze()
 {
-	return this->velY;
-}
-
-void Camera::setVelX(float velX)
-{
-	this->velX = velX;
-}
-
-void Camera::setVelY(float velY)
-{
-	this->velY = velY;
-}
-
-void Camera::trackSprite(Sprite sprite)
-{
-	this->velX = sprite.getVelX();
-}
-
-void Camera::untrackSprite(Sprite sprite)
-{
-	this->velX = 0;
+	this->setVelX(0);
 }
 
 void Camera::worldToView(float xW, float yW, float & xV, float & yV)
