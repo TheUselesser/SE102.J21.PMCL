@@ -10,6 +10,9 @@ Cat::Cat(float x, float y)
 	spawnX = x;
 	setX(x);
 	setY(y + getHeight());
+	minY = getY();
+	maxY = minY + 6;
+	isExist = false;
 }
 
 Cat::~Cat()
@@ -18,19 +21,20 @@ Cat::~Cat()
 
 void Cat::Init()
 {
+	isExist = true;
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
+	directionY = 1;
 	setVelX(DEFAULT_CAT_VELOCITY * directionX);
+	setVelY(DEFAULT_CAT_VELOCITY/2 * directionY);	// mai mốt có gravity thì sửa
 
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
 	if (directionX > 0)
 	{
-		sprite->Release();
 		sprite->LoadTexture("images/enemies/Cat_right.png", D3DCOLOR_XRGB(255, 255, 255));
 	}
 	else
 	{
-		sprite->Release();
 		sprite->LoadTexture("images/enemies/Cat_left.png", D3DCOLOR_XRGB(255, 255, 255));
 	}
 }
@@ -72,7 +76,7 @@ void Cat::Update(DWORD dt, GameObject &player)
 	timer.tickPerAnim = dt;
 
 	SetStatus(ENEMY_MOVING);
-	autoMove(10);
+	autoMove(120);
 	Draw();
 }
 
@@ -84,5 +88,10 @@ void Cat::autoMove(float range)
 		setVelX(-getVelX());
 		directionChanged = true;
 	}
+	if (getY() < minY || getY() >= maxY)
+	{
+		setVelY(-getVelY());
+	}
 	selfMovingX();
+	selfMovingY();
 }

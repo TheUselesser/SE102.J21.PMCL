@@ -15,6 +15,7 @@ public:
 	~Cat();
 
 	void Init();
+
 	void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);
 

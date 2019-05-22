@@ -15,7 +15,8 @@ Camera * Camera::getInstance()
 Camera::Camera()
 {
 	// default setting ? ? ? ?
-	setX(0); setY(192);	// điểm góc trên bên trái
+	setX(0);
+	setY(DEFAULT_CAMERA_HEIGHT);	// điểm góc trên bên trái
 	setSize(DEFAULT_CAMERA_WIDTH, DEFAULT_CAMERA_HEIGHT);
 }
 

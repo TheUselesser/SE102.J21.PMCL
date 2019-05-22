@@ -1,7 +1,7 @@
 ﻿#include "Grid.h"
 #include <fstream>
 #include <string>
-
+#include "DXInput.h"
 Grid::Grid()
 {
 	numberOfColumns = numberOfRows = 0;
@@ -87,9 +87,9 @@ void Grid::readCellsInfo(const char * cellsInfoPath)
 	}
 
 	int row, col;
-	for (row = 0; row < numberOfRows; row++)
+	for (col = 0; col < numberOfColumns; col++)
 	{
-		for (col = 0; col < numberOfColumns; col++)
+		for (row = 0; row < numberOfRows; row++)
 		{
 			if (!cell[row][col].isEmpty)
 			{
@@ -141,7 +141,7 @@ void Grid::readGridInfo(const char * gridInfoPath, const char * cellsInfoPath)
 }
 
 
-void Grid::UpdateFirstCellPosition(Camera * camera)
+void Grid::UpdateCellsSet(Camera * camera)
 {
 	firstColumn = (int)camera->getLeft() / cellSize;
 	firstRow = (int)camera->getBottom() / cellSize;
@@ -154,5 +154,12 @@ D3DXVECTOR2 Grid::GetFirstCellPosition()
 	D3DXVECTOR2 position;
 	position.x = firstColumn;
 	position.y = firstRow;
+	return position;
+}
+D3DXVECTOR2 Grid::GetLastCellPosition()
+{
+	D3DXVECTOR2 position;
+	position.x = lastColumn;
+	position.y = lastRow;
 	return position;
 }

@@ -22,25 +22,24 @@ typedef struct SpriteTimer
 enum GAME_OBJECT_TYPE
 {
 	ENEMY_ARMOR_SWORD_MAN = 1,
-	ENEMY_BANSHEE = 2,
-	ENEMY_BAT_BROWN = 3,
+	ENEMY_BANSHEE = 2,				//
+	ENEMY_BAT_BROWN = 3,			//
 	ENEMY_BAT_MAN = 4,
-	ENEMY_BIRD_BROWN = 5,
+	ENEMY_BIRD_BROWN = 5,			//
 	ENEMY_BIRD_GREY = 6,
 	ENEMY_BOXER = 7,
 	ENEMY_DOG = 8,
 	ENEMY_KNIFE_THROWER = 9,
-	ENEMY_MACHINE_GUN_GUY = 10,
+	ENEMY_MACHINE_GUN_GUY = 10,		//
 	ENEMY_GUNNER = 11,
-	ENEMY_SWORD_MAN = 12,
-	ENEMY_CAT = 13,
-	ITEM_1_UP,
-	ITEM_BONUS_BLUE_500_PTS,
-	// ...
-	ITEM_ITEM_CONTAINER_1,
-	ITEM_ITEM_CONTAINER_2,
-	ITEM_ITEM_CONTAINER_3,
-	ITEM_ITEM_CONTAINER_4
+	ENEMY_SWORD_MAN = 12,			//
+	ENEMY_CAT = 13,					//
+	ENEMY_CANNONEER = 14,
+	ENEMY_RUNNER = 15,
+	ITEM_ITEM_CONTAINER_1 = 21,
+	ITEM_ITEM_CONTAINER_2 = 22,
+	ITEM_ITEM_CONTAINER_3 = 23,
+	ITEM_ITEM_CONTAINER_4 = 24
 };
 
 class GameObject :
@@ -59,6 +58,7 @@ public:
 	bool startAnimation;
 	int directionX, directionY;
 	bool isOnCollisionX, isOnCollisionY;
+	bool isExist;
 
 	GameObject();
 	~GameObject();

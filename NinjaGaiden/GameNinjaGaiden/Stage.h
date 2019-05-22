@@ -19,7 +19,8 @@ class Stage
 	std::vector<GameObject*> objectList;
 
 	Grid * grid;
-	D3DXVECTOR2 pevFirstCellPosition;
+	D3DXVECTOR2 prevFirstCellPosition;
+	D3DXVECTOR2 prevLastCellPosition;
 
 public:
 	Stage();
@@ -30,11 +31,6 @@ public:
 	int getPlayerStart();	void setPlayerStart(int playerStart);
 	int getPlayerEnd();	void setPlayerEnd(int playerEnd);
 
-	// load trực tiếp tất cả enemy từ file
-	/*
-	void LoadObjects(const char * filePath);
-	GameObject getObject(int index);
-	*/
 	void Update(DWORD dt, Player &player);
 
 	// dùng grid

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameObject.h"
 
 
@@ -14,10 +14,10 @@ class Enemy :
 {
 protected: 
 	ENEMY_STATUS status;
-	
+	// Dành cho mấy con có di chuyển lên xuống
+	float minY, maxY;
 public:
 	bool directionChanged;
-	bool isExist;
 	float spawnX;
 
 	Enemy();

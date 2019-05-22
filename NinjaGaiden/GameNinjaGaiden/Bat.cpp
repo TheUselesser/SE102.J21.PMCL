@@ -48,7 +48,7 @@ void Bat::SetStatus(ENEMY_STATUS status)
 	}
 }
 
-void Bat::Update(DWORD dt)
+void Bat::Update(DWORD dt, GameObject &player)
 {
 	timer.tickPerAnim = dt;
 

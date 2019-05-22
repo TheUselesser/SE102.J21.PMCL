@@ -2,6 +2,7 @@
 #include "Game.h"
 #include <fstream>
 #include <string>
+#include "DXInput.h"
 
 Stage::Stage()
 {
@@ -61,6 +62,8 @@ void Stage::InitGrid(const char * gridInfoPath, const char * cellsInfoPath)
 	grid->readGridInfo(gridInfoPath, cellsInfoPath);
 
 	objectList = grid->GetObjectList(Camera::getInstance());
+	prevFirstCellPosition = grid->GetFirstCellPosition();
+	prevLastCellPosition = grid->GetLastCellPosition();
 }
 
 std::vector<GameObject*> Stage::GetObjectList()
@@ -70,10 +73,17 @@ std::vector<GameObject*> Stage::GetObjectList()
 
 void Stage::Update(DWORD dt, Player &player)
 {
-	grid->UpdateFirstCellPosition(Camera::getInstance());
+	grid->UpdateCellsSet(Camera::getInstance());
 	D3DXVECTOR2 firstCellPosition = grid->GetFirstCellPosition();
-	if (firstCellPosition.x != pevFirstCellPosition.x || firstCellPosition.y != pevFirstCellPosition.y)
+	D3DXVECTOR2	lastCellPosition = grid->GetLastCellPosition();
+
+	// Khi camera đi vào cell mới của grid thì load object của cell mới zô objectList 
+	if (firstCellPosition.x != prevFirstCellPosition.x || firstCellPosition.y != prevFirstCellPosition.y ||
+		lastCellPosition.x != prevLastCellPosition.x || lastCellPosition.y != prevLastCellPosition.y)
 	{
+		prevFirstCellPosition = firstCellPosition;
+		prevLastCellPosition = lastCellPosition;
+
 		objectList = grid->GetObjectList(Camera::getInstance());
 	}
 

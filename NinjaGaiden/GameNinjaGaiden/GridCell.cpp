@@ -1,9 +1,14 @@
 ﻿#include "GridCell.h"
+#include "Banshee.h"
+#include "BirdBrown.h"
+#include "MachineGunGuy.h"
 #include "SwordMan.h"
 #include "Cat.h"
+#include "Cannoneer.h"
+#include "Runner.h"
+#include "ItemContainer.h"
 
-#include <fstream>
-#include <string>
+#include<string>
 
 GridCell::GridCell()
 {
@@ -58,6 +63,9 @@ void GridCell::setListSize(int n)
 
 void GridCell::addObject(int objTypeID, float x, float y)
 {
+	// Theo lý thuyết thì không create object, chỉ add số liệu từ file để đến lúc thì mới create
+	//		nhưng thôi cứ create rồi add nguyên con vào list luôn
+
 	GameObject * object = NULL;
 
 	switch (objTypeID)
@@ -65,12 +73,19 @@ void GridCell::addObject(int objTypeID, float x, float y)
 	case 1:
 		break;
 	case 2:
+		object = new Banshee(x, y);
+		object->setObjectType(ENEMY_BANSHEE);
+		object->Init();
 		break;
 	case 3:
+		// Bat (brown)
 		break;
 	case 4:
 		break;
 	case 5:
+		object = new BirdBrown(x, y);
+		object->setObjectType(ENEMY_BIRD_BROWN);
+		object->Init();
 		break;
 	case 6:
 		break;
@@ -81,6 +96,9 @@ void GridCell::addObject(int objTypeID, float x, float y)
 	case 9:
 		break;
 	case 10:
+		object = new MachineGunGuy(x, y);
+		object->setObjectType(ENEMY_MACHINE_GUN_GUY);
+		object->Init();
 		break;
 	case 11:
 		break;
@@ -92,6 +110,22 @@ void GridCell::addObject(int objTypeID, float x, float y)
 	case 13:
 		object = new Cat(x, y);
 		object->setObjectType(ENEMY_CAT);
+		object->Init();
+		break;
+	case 14:
+		object = new Cannoneer(x, y);
+		object->setObjectType(ENEMY_CANNONEER);
+		object->Init();
+		break;
+	case 15:
+		MessageBox(0, "", "15", 0);
+		object = new Runner(x, y);
+		object->setObjectType(ENEMY_RUNNER);
+		object->Init();
+		break;
+	case 24:
+		object = new ItemContainer(x, y);
+		object->setObjectType(ITEM_ITEM_CONTAINER_4);
 		object->Init();
 		break;
 	default:

@@ -1,19 +1,17 @@
 #pragma once
 #include "Enemy.h"
 
-#define DEFAULT_BANSHEE_WIDTH	24
-#define DEFAULT_BANSHEE_HEIGHT	32
-#define DEFAULT_BANSHEE_VELOCITY	2
+#define	DEFAULT_RUNNER_WIDTH	16
+#define DEFAULT_RUNNER_HEIGHT	32
+#define DEFAULT_RUNNER_VELOCITY	4
 
-class Banshee :
+class Runner :
 	public Enemy
 {
-
-
 public:
-	Banshee();
-	Banshee(float x, float y);
-	~Banshee();
+	Runner();
+	Runner(float x, float y);
+	~Runner();
 
 	void Init();
 

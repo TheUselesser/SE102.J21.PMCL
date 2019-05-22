@@ -14,7 +14,7 @@ public:
 	~Bat();
 
 	void SetStatus(ENEMY_STATUS status);
-	void Update(DWORD dt);
+	void Update(DWORD dt, GameObject &player);
 
 	void autoMove(float range);
 };

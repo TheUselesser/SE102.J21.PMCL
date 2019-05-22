@@ -106,25 +106,22 @@ void Game::InitGame()
 	// Stage 3-1
 	case 0:
 		stage = new Stage();
+		// Map
 		stage->LoadTilemap("images/Stage31/3_1_tilesheet.png", "images/Stage31/3_1_matrix.txt");
 		stage->setPlayerStart(8);
-		
 		groundLine = 40;	// ^_^
-		// add enemy
-		//stage->LoadObjects("images/Stage31/object_spawn.txt");
+		// Enemy
 		stage->InitGrid("images/Stage31/grid_info.txt", "images/Stage31/cells_info.txt");
-		// the first enemy <3
-		/*lovelyEnemy = SwordMan(200, groundLine);
-		lovelyEnemy.setVelX(-2);
-		lovelyEnemy.isExist = true;
-		*/
 		break;
 	// Stage 3-2
 	case 1:
 		stage = new Stage();
+		// Map
 		stage->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
 		groundLine = 40;	// ^_^
 		stage->setPlayerStart(0);
+		// Enemy
+		stage->InitGrid("images/Stage32/grid_info.txt", "images/stage32/cells_info.txt");
 		break;
 	// Stage 3-3
 	case 2:
@@ -166,11 +163,6 @@ void Game::run()
 			// Vẽ tilemap
 			stage->Draw(Camera::getInstance());
 
-			// The First Enemy
-			/*if (lovelyEnemy.isExist)
-			{
-				lovelyEnemy.Update(500, _Ryu);
-			}*/
 			// Update enemy trong stage
 			stage->Update(500, _Ryu);
 
@@ -282,7 +274,7 @@ void Game::KeysControl()
 	// check vị trí Ryu
 	if (Key_Down(DIK_V))
 	{
-		std::string message = std::to_string(_Ryu.getX() + Camera::getInstance()->getX());
+		std::string message = std::to_string(_Ryu.getX());
 		MessageBox(0, message.c_str(), "Ryu X in world", 0);
 	}
 

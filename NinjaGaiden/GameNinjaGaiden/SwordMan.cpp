@@ -22,6 +22,7 @@ SwordMan::~SwordMan()
 
 void SwordMan::Init()
 {
+	isExist = true;
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
 	setVelX(DEFAULT_SWORD_MAN_VELOCITY * directionX);
 	

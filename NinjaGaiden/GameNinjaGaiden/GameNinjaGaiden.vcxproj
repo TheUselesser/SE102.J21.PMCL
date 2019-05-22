@@ -131,6 +131,7 @@
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="BirdBrown.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cannoneer.cpp" />
     <ClCompile Include="Cat.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="DXInput.cpp" />
@@ -141,10 +142,13 @@
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="GridCell.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemContainer.cpp" />
     <ClCompile Include="MachineGunGuy.cpp" />
     <ClCompile Include="MovableRect.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="Runner.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="SwordMan.cpp" />
@@ -156,6 +160,7 @@
     <ClInclude Include="Bat.h" />
     <ClInclude Include="BirdBrown.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cannoneer.h" />
     <ClInclude Include="Cat.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="DXInput.h" />
@@ -166,10 +171,13 @@
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="GridCell.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemContainer.h" />
     <ClInclude Include="MachineGunGuy.h" />
     <ClInclude Include="MovableRect.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rect.h" />
+    <ClInclude Include="Runner.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="SwordMan.h" />

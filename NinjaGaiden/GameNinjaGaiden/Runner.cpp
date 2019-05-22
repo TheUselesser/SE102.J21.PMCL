@@ -1,45 +1,47 @@
-﻿#include "Banshee.h"
-Banshee::Banshee()
+﻿#include "Runner.h"
+
+
+
+Runner::Runner()
 {
-	setSize(DEFAULT_BANSHEE_WIDTH, DEFAULT_BANSHEE_HEIGHT);
+	setSize(DEFAULT_RUNNER_WIDTH, DEFAULT_RUNNER_HEIGHT);
 }
 
-Banshee::Banshee(float x, float y)
+Runner::Runner(float x, float y)
 {
-	setSize(DEFAULT_BANSHEE_WIDTH, DEFAULT_BANSHEE_HEIGHT);
+	setSize(DEFAULT_RUNNER_WIDTH, DEFAULT_RUNNER_HEIGHT);
 	spawnX = x;
 	setX(x);
 	setY(y + getHeight());
 	isExist = false;
 }
 
-Banshee::~Banshee()
+Runner::~Runner()
 {
 }
 
-void Banshee::Init()
+void Runner::Init()
 {
 	isExist = true;
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
-	setVelX(DEFAULT_BANSHEE_VELOCITY * directionX);
+	setVelX(DEFAULT_RUNNER_VELOCITY * directionX);
 
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
 	if (directionX > 0)
 	{
 		sprite->Release();
-		sprite->LoadTexture("images/enemies/Banshee_right.png", D3DCOLOR_XRGB(255, 255, 255));
+		sprite->LoadTexture("images/enemies/Runner_right.png", D3DCOLOR_XRGB(255, 255, 255));
 	}
 	else
 	{
 		sprite->Release();
-		sprite->LoadTexture("images/enemies/Banshee_left.png", D3DCOLOR_XRGB(255, 255, 255));
+		sprite->LoadTexture("images/enemies/Runner_left.png", D3DCOLOR_XRGB(255, 255, 255));
 	}
 }
 
-void Banshee::SetStatus(ENEMY_STATUS status)
-{
-	//if (this->status != status || directionChanged)
+void Runner::SetStatus(ENEMY_STATUS status)
+{//if (this->status != status || directionChanged)
 	{
 		this->status = status;
 
@@ -55,12 +57,12 @@ void Banshee::SetStatus(ENEMY_STATUS status)
 			if (getVelX() > 0)
 			{
 				sprite->Release();
-				sprite->LoadTexture("images/enemies/Banshee_right.png", D3DCOLOR_XRGB(255, 255, 255));
+				sprite->LoadTexture("images/enemies/Runner_right.png", D3DCOLOR_XRGB(255, 255, 255));
 			}
 			else
 			{
 				sprite->Release();
-				sprite->LoadTexture("images/enemies/Banshee_left.png", D3DCOLOR_XRGB(255, 255, 255));
+				sprite->LoadTexture("images/enemies/Runner_left.png", D3DCOLOR_XRGB(255, 255, 255));
 			}
 			break;
 		default:
@@ -69,18 +71,18 @@ void Banshee::SetStatus(ENEMY_STATUS status)
 	}
 }
 
-void Banshee::Update(DWORD dt, GameObject &player)
+void Runner::Update(DWORD dt, GameObject & player)
 {
 	timer.tickPerAnim = dt;
 
 	SetStatus(ENEMY_MOVING);
-	autoMove(28);
+	autoMove(80);
 	Draw();
 }
 
-void Banshee::autoMove(float range)
+void Runner::autoMove(float range)
 {
-	// ?i qua l?i ? ?i?m ban ??u ph?m vi range  |<---range---spawnX---range--->|
+	// đi qua lại ở điểm ban đâu phạm vi range  |<---range---spawnX---range--->|
 	if (getX() <= spawnX - range || getX() >= spawnX + range - getWidth())
 	{
 		setVelX(-getVelX());
