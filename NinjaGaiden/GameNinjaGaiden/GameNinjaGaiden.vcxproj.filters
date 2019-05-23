@@ -28,6 +28,9 @@
     <Filter Include="2_Game Objects\20_">
       <UniqueIdentifier>{cf9b6453-fe86-4126-bada-d161f484b74c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2_Game Objects\21_Enemies">
+      <UniqueIdentifier>{93f138b1-2ae1-45ef-bd1f-243077faa5b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winmain.cpp">
@@ -43,9 +46,6 @@
       <Filter>2_Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>2_Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="SwordMan.cpp">
       <Filter>2_Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="GameTexture.cpp">
@@ -84,40 +84,46 @@
     <ClCompile Include="Game.cpp">
       <Filter>1_Game Core</Filter>
     </ClCompile>
-    <ClCompile Include="Banshee.cpp">
-      <Filter>2_Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Bat.cpp">
-      <Filter>2_Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="BirdBrown.cpp">
-      <Filter>2_Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Cat.cpp">
-      <Filter>2_Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="MachineGunGuy.cpp">
-      <Filter>2_Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ItemContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GroundBlock.cpp">
+      <Filter>2_Game Objects\20_</Filter>
+    </ClCompile>
+    <ClCompile Include="Banshee.cpp">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="BirdBrown.cpp">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClCompile>
     <ClCompile Include="Cannoneer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Cat.cpp">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="MachineGunGuy.cpp">
+      <Filter>2_Game Objects\21_Enemies</Filter>
     </ClCompile>
     <ClCompile Include="Runner.cpp">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordMan.cpp">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="GroundBlocks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXInput.h">
       <Filter>0_DevUtils</Filter>
-    </ClInclude>
-    <ClInclude Include="SwordMan.h">
-      <Filter>2_Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>2_Game Objects</Filter>
@@ -164,31 +170,40 @@
     <ClInclude Include="Game.h">
       <Filter>1_Game Core</Filter>
     </ClInclude>
-    <ClInclude Include="Banshee.h">
-      <Filter>2_Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Bat.h">
-      <Filter>2_Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="BirdBrown.h">
-      <Filter>2_Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Cat.h">
-      <Filter>2_Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="MachineGunGuy.h">
-      <Filter>2_Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ItemContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GroundBlock.h">
+      <Filter>2_Game Objects\20_</Filter>
+    </ClInclude>
+    <ClInclude Include="Banshee.h">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="BirdBrown.h">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
     <ClInclude Include="Cannoneer.h">
-      <Filter>Header Files</Filter>
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Cat.h">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="MachineGunGuy.h">
+      <Filter>2_Game Objects\21_Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Runner.h">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordMan.h">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundBlocks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

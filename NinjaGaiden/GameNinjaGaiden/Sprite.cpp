@@ -61,7 +61,7 @@ void Sprite::SetAnimation(float animationWidth, float animationHeight, int anima
 		animation[0].Y = 0;
 		int i = 0;
 		int j = 1;
-		while (i < lastAnimation)
+		do
 		{
 			// Nếu đạt số lượng animation tối đa của dòng thì chuyển X về 0 và tăng Y
 			if (i == animationsPerRow * j)
@@ -75,7 +75,7 @@ void Sprite::SetAnimation(float animationWidth, float animationHeight, int anima
 			animation[i + 1].X = animation[i].X + animationWidth;
 			animation[i + 1].Y = animation[i].Y;
 			i++;
-		}
+		} while (i < lastAnimation);
 	}
 }
 

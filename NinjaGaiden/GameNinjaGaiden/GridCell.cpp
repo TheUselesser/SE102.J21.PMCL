@@ -118,7 +118,6 @@ void GridCell::addObject(int objTypeID, float x, float y)
 		object->Init();
 		break;
 	case 15:
-		MessageBox(0, "", "15", 0);
 		object = new Runner(x, y);
 		object->setObjectType(ENEMY_RUNNER);
 		object->Init();

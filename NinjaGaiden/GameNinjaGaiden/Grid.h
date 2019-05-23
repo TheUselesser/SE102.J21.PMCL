@@ -17,6 +17,8 @@ class Grid
 	void InitGrid();
 
 public:
+	bool isEmpty;
+
 	Grid();
 	~Grid();
 

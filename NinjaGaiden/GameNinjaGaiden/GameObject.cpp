@@ -25,14 +25,24 @@ void GameObject::CreateObject(const char * imagePath, D3DCOLOR transColor, float
 	sprite->LoadTexture(imagePath, transColor);
 }
 
-void GameObject::setObjectType(GAME_OBJECT_TYPE objType)
+void GameObject::setObjectType(GAME_OBJECT_TYPE objectType)
 {
-	this->objType = objType;
+	this->objType = objectType;
 }
 
 GAME_OBJECT_TYPE GameObject::getObjectType()
 {
 	return objType;
+}
+
+void GameObject::setCollisionType(COLLISION_TYPE collisionType)
+{
+	this->clsType = collisionType;
+}
+
+COLLISION_TYPE GameObject::getCollisionType()
+{
+	return clsType;
 }
 
 void GameObject::Init()

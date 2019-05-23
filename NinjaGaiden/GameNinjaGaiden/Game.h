@@ -6,8 +6,6 @@
 #include "Sprite.h"
 #include "Camera.h"
 #include "Player.h"
-#include "Enemy.h"
-#include "SwordMan.h"
 #include "Stage.h"
 
 #include "Collision.h"
@@ -48,9 +46,6 @@ class Game
 
 	// 
 	Player _Ryu;
-	SwordMan lovelyEnemy;
-	SwordMan secondEnemy;
-
 	float groundLine;
 	DWORD TickAtMaxHeight;
 

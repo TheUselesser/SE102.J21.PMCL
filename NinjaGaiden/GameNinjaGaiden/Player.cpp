@@ -17,6 +17,7 @@ Player::Player()
 	currentHeight = 0;
 	maxHeight = 48;
 	maxHeightReached = false;
+	isOnGround = true;
 }
 
 
@@ -101,6 +102,7 @@ void Player::Update(DWORD dt)
 {
 	timer.tickPerAnim = dt;
 
+	// Xử lý di chuyển
 	if (isMoving)
 	{
 		float cameraX = Camera::getInstance()->getX();
@@ -108,7 +110,7 @@ void Player::Update(DWORD dt)
 		int mapStart = Game::getInstance()->getStage()->getMapStart();
 		int mapEnd = Game::getInstance()->getStage()->getMapEnd();
 
-		if (!isOnCollisionX)
+		if (!isOnCollisionX && !collideGroundX)
 		{
 			// Di chuyển nhân vật khi camera chạm biên
 			if ((cameraX >= mapEnd - cameraWidth && this->getX() >= mapEnd - (cameraWidth + this->getWidth()) / 2) ||
@@ -145,6 +147,19 @@ void Player::Update(DWORD dt)
 	{
 		SetStatus(this->status, directionX);
 		directionChanged = false;
+	}
+	
+	// Xử lý nhảy
+
+	// Gravity?
+	if (!isOnGround)
+	{
+		if (getVelY() > 0) setVelY(-getVelY());
+		setY(getY() + getVelY());
+	}
+	else 
+	{
+		if (getVelY() < 0) setVelY(-getVelY());
 	}
 
 	// Vẽ lên camera

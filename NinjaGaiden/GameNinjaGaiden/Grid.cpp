@@ -7,6 +7,7 @@ Grid::Grid()
 	numberOfColumns = numberOfRows = 0;
 	cellSize = DEFAULT_CELL_SIZE;
 	numberOfObjects = 0;
+	isEmpty = true;
 }
 
 
@@ -93,6 +94,8 @@ void Grid::readCellsInfo(const char * cellsInfoPath)
 		{
 			if (!cell[row][col].isEmpty)
 			{
+				if (isEmpty)	isEmpty = false;
+
 				for (int i = 0; i < cell[row][col].getListSize();)
 				{
 					fs >> columnIndex >> rowIndex >> objTypeID >> nonsense >> objX >> objY;
@@ -119,6 +122,12 @@ void Grid::readGridInfo(const char * gridInfoPath, const char * cellsInfoPath)
 	}
 
 	fs >> numberOfColumns >> numberOfRows;
+
+	if (numberOfColumns == 0 || numberOfRows == 0)
+	{
+		isEmpty = true;
+		return;
+	}
 
 	InitGrid();
 

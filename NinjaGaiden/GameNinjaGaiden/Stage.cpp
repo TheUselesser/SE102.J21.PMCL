@@ -61,9 +61,12 @@ void Stage::InitGrid(const char * gridInfoPath, const char * cellsInfoPath)
 	grid = new Grid();
 	grid->readGridInfo(gridInfoPath, cellsInfoPath);
 
-	objectList = grid->GetObjectList(Camera::getInstance());
-	prevFirstCellPosition = grid->GetFirstCellPosition();
-	prevLastCellPosition = grid->GetLastCellPosition();
+	if (!grid->isEmpty)
+	{
+		objectList = grid->GetObjectList(Camera::getInstance());
+		prevFirstCellPosition = grid->GetFirstCellPosition();
+		prevLastCellPosition = grid->GetLastCellPosition();
+	}
 }
 
 std::vector<GameObject*> Stage::GetObjectList()
@@ -73,24 +76,30 @@ std::vector<GameObject*> Stage::GetObjectList()
 
 void Stage::Update(DWORD dt, Player &player)
 {
-	grid->UpdateCellsSet(Camera::getInstance());
-	D3DXVECTOR2 firstCellPosition = grid->GetFirstCellPosition();
-	D3DXVECTOR2	lastCellPosition = grid->GetLastCellPosition();
-
-	// Khi camera đi vào cell mới của grid thì load object của cell mới zô objectList 
-	if (firstCellPosition.x != prevFirstCellPosition.x || firstCellPosition.y != prevFirstCellPosition.y ||
-		lastCellPosition.x != prevLastCellPosition.x || lastCellPosition.y != prevLastCellPosition.y)
+	if (!grid->isEmpty)
 	{
-		prevFirstCellPosition = firstCellPosition;
-		prevLastCellPosition = lastCellPosition;
+		grid->UpdateCellsSet(Camera::getInstance());
+		D3DXVECTOR2 firstCellPosition = grid->GetFirstCellPosition();
+		D3DXVECTOR2	lastCellPosition = grid->GetLastCellPosition();
 
-		objectList = grid->GetObjectList(Camera::getInstance());
+		// Khi camera đi vào cell mới của grid thì load object của cell mới zô objectList 
+		if (firstCellPosition.x != prevFirstCellPosition.x || firstCellPosition.y != prevFirstCellPosition.y ||
+			lastCellPosition.x != prevLastCellPosition.x || lastCellPosition.y != prevLastCellPosition.y)
+		{
+			prevFirstCellPosition = firstCellPosition;
+			prevLastCellPosition = lastCellPosition;
+
+			objectList = grid->GetObjectList(Camera::getInstance());
+		}
+
+		// lần lượt update các object
+		for (int i = 0; i < objectList.size(); i++)
+		{
+			objectList[i]->Update(dt, player);
+		}
 	}
 
-	for (int i = 0; i < objectList.size(); i++)
-	{
-		objectList[i]->Update(dt, player);
-	}
+	groundBlocks->Update(dt, player);
 }
 
 
@@ -103,6 +112,11 @@ void Stage::LoadTilemap(const char * imagePath, const char * matrixPath)
 
 	mapStart = 0;
 	mapEnd = tilemap->mapWidth;
+}
+
+void Stage::LoadGroundBlocks(const char * filePath)
+{
+	groundBlocks = new GroundBlocks(filePath);
 }
 
 void Stage::Draw(Camera * camera)

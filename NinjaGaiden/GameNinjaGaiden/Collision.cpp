@@ -6,10 +6,6 @@
 #include "DXInput.h"
 
 
-
-float Collision::CollisionTime = 0;
-float Collision::EntryTime = 0;
-float Collision::ExitTime = 0;
 Collision::Collision()
 {
 }
@@ -89,9 +85,6 @@ float Collision::SweptAABB(MovableRect box1, MovableRect box2, float & normalx, 
 	float entryTime = std::fmaxf(xEntry, yEntry);
 	float exitTime = std::fminf(xExit, yExit);
 
-	Collision::EntryTime = entryTime;
-	Collision::ExitTime = exitTime;
-
 	// Trường hợp không xảy ra va chạm
 	if (entryTime > exitTime || xEntry < 0.0f && yEntry < 0.0f || xEntry > 1.0f || yEntry > 1.0f)
 	{
@@ -153,8 +146,6 @@ void Collision::CollisionHandle(GameObject &box1, GameObject &box2)
 		float normalx = 0, normaly = 0;
 		float collisionTime = SweptAABB(box1, box2, normalx, normaly);
 
-		Collision::CollisionTime = collisionTime;
-
 		if (collisionTime < 1.0f)
 		{
 			// Xử lý khi va chạm
@@ -167,5 +158,18 @@ void Collision::CollisionHandle(GameObject &box1, GameObject &box2)
 				box1.isOnCollisionY = true;
 			}
 		}
+	}
+}
+
+void Collision::GroundCollisionCheck(GameObject &box, GameObject &groundBlock)
+{
+	box.isOnGround = true;
+	float normalx = 0, normaly = 0;
+	float collisionTime = SweptAABB(box, groundBlock, normalx, normaly);
+
+	if (collisionTime < 1.0f)
+	{
+		box.collideGroundX = normalx != 0 ? true : false;
+		//box.isOnGround = normaly != 0 ? true : false;
 	}
 }

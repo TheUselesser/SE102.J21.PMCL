@@ -31,12 +31,12 @@ void Cannoneer::Init()
 	if (directionX > 0)
 	{
 		//sprite->Release();
-		sprite->LoadTexture("images/enemies/Cannoneer_right.png", D3DCOLOR_XRGB(255, 255, 255));
+		sprite->LoadTexture("images/enemies/Cannoneer_right.png", D3DCOLOR_XRGB(255, 163, 177));
 	}
 	else
 	{
 		//sprite->Release();
-		sprite->LoadTexture("images/enemies/Cannoneer_left.png", D3DCOLOR_XRGB(255, 255, 255));
+		sprite->LoadTexture("images/enemies/Cannoneer_left.png", D3DCOLOR_XRGB(255, 163, 177));
 	}
 }
 

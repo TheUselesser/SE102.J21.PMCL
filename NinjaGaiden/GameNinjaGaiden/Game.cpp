@@ -118,23 +118,29 @@ void Game::InitGame()
 		stage = new Stage();
 		// Map
 		stage->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
+		stage->LoadGroundBlocks("images/Stage32/ground_blocks.txt");
 		groundLine = 40;	// ^_^
 		stage->setPlayerStart(0);
 		// Enemy
-		stage->InitGrid("images/Stage32/grid_info.txt", "images/stage32/cells_info.txt");
+		stage->InitGrid("images/Stage32/grid_info.txt", "images/Stage32/cells_info.txt");
 		break;
 	// Stage 3-3
 	case 2:
 		stage = new Stage();
+		// Map
 		stage->LoadTilemap("images/Stage33/3_3_tilesheet.png", "images/Stage33/3_3_matrix.txt");
 		groundLine = 28;	// ^_^
 		stage->setMapStart(512);
 		stage->setPlayerStart(512);
+		// Enemy
+		stage->InitGrid("images/Stage33/grid_info.txt", "images/Stage33/cells_info.txt");
 		break;
 	}
 
 	// Player Ryu
 	_Ryu.InitPlayer(stage->getPlayerStart(), groundLine);
+	// Camera
+	Camera::getInstance()->setX(0);
 }
 
 void Game::run()
@@ -265,6 +271,11 @@ void Game::KeysControl()
 	{
 		_Ryu.setVelX(4 * _Ryu.directionX);
 	}
+	// Restart game
+	if (Key_Down(DIK_R))
+	{
+		init();
+	}
 	// check vị trí camera
 	if (Key_Down(DIK_C))
 	{
@@ -276,6 +287,11 @@ void Game::KeysControl()
 	{
 		std::string message = std::to_string(_Ryu.getX());
 		MessageBox(0, message.c_str(), "Ryu X in world", 0);
+	}
+	if (Key_Down(DIK_B))
+	{
+		std::string message = std::to_string(_Ryu.getTop()) + " " + std::to_string(_Ryu.getBottom());
+		MessageBox(0, message.c_str(), "Ryu top & bottom", 0);
 	}
 
 	// ******************************************************
@@ -317,6 +333,7 @@ void Game::KeysControl()
 			_Ryu.isJumping = true;
 			_Ryu.SetStatus(PLAYER_JUMPING, _Ryu.directionX);
 			_Ryu.directionY = 1;
+			if (_Ryu.getVelY() < 0) _Ryu.setVelY(-_Ryu.getVelY());
 		}
 	}
 
@@ -340,7 +357,6 @@ void Game::KeysControl()
 			if (!(stageIndex < NUMBER_OF_STAGES))	 // ^_^
 				stageIndex = 0;
 
-			lovelyEnemy.isExist = false;
 			InitGame();
 			Camera::getInstance()->setX(stage->getMapStart());
 		}

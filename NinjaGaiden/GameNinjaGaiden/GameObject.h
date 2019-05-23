@@ -34,12 +34,20 @@ enum GAME_OBJECT_TYPE
 	ENEMY_GUNNER = 11,
 	ENEMY_SWORD_MAN = 12,			//
 	ENEMY_CAT = 13,					//
-	ENEMY_CANNONEER = 14,
-	ENEMY_RUNNER = 15,
+	ENEMY_CANNONEER = 14,			//
+	ENEMY_RUNNER = 15,				//
 	ITEM_ITEM_CONTAINER_1 = 21,
 	ITEM_ITEM_CONTAINER_2 = 22,
 	ITEM_ITEM_CONTAINER_3 = 23,
-	ITEM_ITEM_CONTAINER_4 = 24
+	ITEM_ITEM_CONTAINER_4 = 24,		//
+	OBJECT_GROUND,
+};
+// loại va chạm
+enum COLLISION_TYPE
+{
+	COLLISION_TYPE_GROUND,
+	COLLISION_TYPE_ENEMY,
+	COLLISION_TYPE_ITEM
 };
 
 class GameObject :
@@ -50,6 +58,7 @@ protected:
 	ObjTimer timer;
 
 	GAME_OBJECT_TYPE objType;
+	COLLISION_TYPE clsType;
 
 	void Draw();
 	void CreateObject(const char * imagePath, D3DCOLOR transColor, float width, float height);
@@ -59,12 +68,17 @@ public:
 	int directionX, directionY;
 	bool isOnCollisionX, isOnCollisionY;
 	bool isExist;
+	bool isOnGround;
+
+	bool collideGroundX;
 
 	GameObject();
 	~GameObject();
 
-	void setObjectType(GAME_OBJECT_TYPE objType);
+	void setObjectType(GAME_OBJECT_TYPE objectType);
 	GAME_OBJECT_TYPE getObjectType();
+	void setCollisionType(COLLISION_TYPE collisionType);
+	COLLISION_TYPE getCollisionType();
 
 	virtual void Init();
 	virtual void setSpawned(bool isSpawned) {}	// dành cho enemy	

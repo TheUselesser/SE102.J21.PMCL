@@ -5,13 +5,14 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include <vector>
-#include "SwordMan.h"
 #include "Player.h"
 #include "Grid.h"
+#include "GroundBlocks.h"
 
 class Stage
 {
 	Tilemap * tilemap;
+	GroundBlocks * groundBlocks;
 
 	int mapStart, mapEnd;
 	int playerStart, playerEnd;
@@ -39,6 +40,7 @@ public:
 
 	// Tilemap
 	void LoadTilemap(const char * imagePath, const char * matrixPath);
+	void LoadGroundBlocks(const char * filePath);
 	void Draw(Camera * camera);	// vẽ lên camera
 
 	void Release();
