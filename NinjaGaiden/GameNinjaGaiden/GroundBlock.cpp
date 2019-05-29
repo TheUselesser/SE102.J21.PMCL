@@ -51,10 +51,10 @@ void GroundBlock::CheckCollisionStatus(GameObject * player)
 	{
 		if (ny == 1)
 		{
-			if (player->getBottom() <= this->getTop() && player->getBottom() >= this->getTop() - 8)
+			if (player->getBottom() <= this->getTop() && player->getBottom() >= this->getTop() - 4)
 			{
-				player->setY(this->getTop() + player->getDefaultPlayerHeight());
 				player->isOnGround = true;
+				player->setY(this->getTop() + player->getDefaultPlayerHeight());
 			}
 		}
 
@@ -63,14 +63,14 @@ void GroundBlock::CheckCollisionStatus(GameObject * player)
 			if (player->getBottom() < this->getTop())
 			{
 				// va chạm bên trái block
-				if (player->getRight() > this->getLeft() && player->getLeft() < this->getLeft())
+				if (player->getX() + player->getRealWidth() > this->getLeft() && player->getLeft() < this->getLeft())
 				{
-					player->setX(this->getLeft() - player->getWidth());
+					player->setX(this->getLeft() - player->getRealWidth());
 				}
 				// va chạm bên phải block
-				if (player->getLeft() < this->getRight() && player->getRight() > this->getRight())
+				if (player->getRight() - player->getRealWidth() < this->getRight() && player->getRight() > this->getRight())
 				{
-					player->setX(this->getRight());
+					player->setX(this->getRight() - player->getWidth() + player->getRealWidth());
 				}
 			}
 		}

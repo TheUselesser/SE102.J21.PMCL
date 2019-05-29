@@ -32,7 +32,7 @@ public:
 	int getPlayerStart();	void setPlayerStart(int playerStart);
 	int getPlayerEnd();	void setPlayerEnd(int playerEnd);
 
-	void Update(DWORD dt, Player &player);
+	void Update(DWORD dt, Player * player);
 
 	// dùng grid
 	void InitGrid(const char * gridInfoPath, const char * cellsInfoPath);

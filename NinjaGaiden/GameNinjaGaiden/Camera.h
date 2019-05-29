@@ -16,7 +16,7 @@ public:
 	Camera();
 	~Camera();
 
-	void trackPlayer(Player player);
+	void trackPlayer(Player * player);
 
 	void worldToView(float xW, float yW, float &xV, float &yV);
 };

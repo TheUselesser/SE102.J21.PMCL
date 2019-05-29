@@ -130,7 +130,7 @@ void GridCell::addObject(int objTypeID, float x, float y)
 	default:
 		break;
 	}
-
+	object->isExist = true;
 	objectList.push_back(object);
 }
 

@@ -25,16 +25,17 @@ GroundBlocks::GroundBlocks(const char * filePath)
 	}
 
 	groundBlocks = new GroundBlock*[numberOfBlocks];
+	currentHeight = new float[numberOfBlocks];
 
 	for (int i = 0; i < numberOfBlocks; i++)
 	{
 		fs >> id >> x >> y >> width >> height >> blockType;
 		groundBlocks[i] = new GroundBlock(x, y, width, height, blockType);
+		currentHeight[i] = 0;
 	}
 
 	fs.close();
 	currentBlock = groundBlocks[0];
-	currentHeight = 0;
 }
 
 
@@ -58,49 +59,58 @@ void GroundBlocks::Update(DWORD dt, GameObject &player)
 	GroundBlock * block;
 	// count để kiểm tra xem có cái gì để giữ nhân vật đừng rơi xuống hay không (nếu = 0 thì là không có gì cả)
 	int count = 0;
+	minHeight = -1;
 
-	if (player.getMinJumpHeight() > 0 || !player.isOnGround)
+	for (i = 0; i < numberOfBlocks; i++)
 	{
-		for (i = 0; i < numberOfBlocks; i++)
+		if (player.isJumping)
 		{
-			if (player.isJumping)
-				count++;
+			count++;
+		}
 
-			// player ở trong phạm vi X của ground block
-			if (player.getLeft() > groundBlocks[i]->getLeft() - player.getWidth() &&
-				player.getLeft() < groundBlocks[i]->getRight())
+		// player ở trong phạm vi X của ground block
+		if (player.getLeft() > groundBlocks[i]->getLeft() - player.getWidth() &&
+			player.getLeft() < groundBlocks[i]->getRight())
+		{
+
+			if (player.getBottom() >= groundBlocks[i]->getTop())
 			{
-				if (player.getBottom() >= groundBlocks[i]->getTop())
-					count++;
+				count++;
+				currentHeight[i] = player.getBottom() - groundBlocks[i]->getTop();
+				if (minHeight == -1) minHeight = currentHeight[i];
+			}
 
-				// xác định block đang đứng
-				if (player.getBottom() >= groundBlocks[i]->getTop() && player.isOnGround && !player.isJumping)
+			// xác định block đang đứng
+			if (player.getBottom() >= groundBlocks[i]->getTop() && player.isOnGround && !player.isJumping)
+			{
+				if (currentHeight[i] <= minHeight)
 				{
+					minHeight = currentHeight[i];
 					currentBlock = groundBlocks[i];
 					player.setMinJumpHeight(currentBlock->getTop());
 					player.resetMaxJumpHeight();
 				}
-
-				//if (groundBlocks[i] != currentBlock)
-				{
-					if (player.getBottom() >= groundBlocks[i]->getTop() &&
-						((player.getBottom() < currentBlock->getTop() && !player.isOnGround) ||
-						(groundBlocks[i]->getTop() > currentBlock->getTop() && player.isJumping)))
-					{
-						player.setMinJumpHeight(groundBlocks[i]->getTop());
-					}
-				}
-
-				groundBlocks[i]->Update(dt, player);
 			}
+
+			if (!player.isOnGround || player.isJumping)
+			{
+				if (player.getBottom() >= groundBlocks[i]->getTop() &&
+					(player.getBottom() < currentBlock->getTop() ||
+					(groundBlocks[i]->getTop() > currentBlock->getTop())))
+				{
+					player.setMinJumpHeight(groundBlocks[i]->getTop());
+				}
+			}
+
+			groundBlocks[i]->Update(dt, player);
 		}
 	}
 
 	// không đứng trên mảnh đất nào;
 	if (count == 0)
 	{
-		player.setMinJumpHeight(-player.getHeight()*5);
+		player.setMinJumpHeight(-player.getHeight() * 5);
 		player.resetMaxJumpHeight();
-		// player.SetStatus(PLAYER_DIE);
+		if (player.getY() < 0) player.SetStatus(PLAYER_DIE);
 	}
 }

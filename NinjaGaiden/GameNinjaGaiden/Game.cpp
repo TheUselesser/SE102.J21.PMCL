@@ -52,7 +52,7 @@ void Game::init()
 	// Keyboard init
 	if (!Init_Keyboard(hWnd))
 	{
-		MessageBox(hWnd, "Error initializing the keyboard", "Error", MB_OK);
+		//MessageBox(hWnd, "Error initializing the keyboard", "Error", MB_OK);
 			return;
 	}
 }
@@ -140,7 +140,7 @@ void Game::InitGame()
 	}
 
 	// Player Ryu
-	_Ryu.InitPlayer(stage->getPlayerStart(), groundLine);
+	Player::getInstance()->InitPlayer(stage->getPlayerStart(), groundLine);
 	// Camera
 	Camera::getInstance()->setX(0);
 }
@@ -183,10 +183,10 @@ void Game::update()
 	stage->Draw(Camera::getInstance());
 
 	// Update enemy trong stage
-	stage->Update(300, _Ryu);
+	stage->Update(300, Player::getInstance());
 
 	// Vẽ Ryu
-	_Ryu.Update(60);
+	Player::getInstance()->Update(60);
 }
 
 void Game::end()
@@ -204,21 +204,26 @@ void Game::KeysControl()
 	// Hold [Shift] to speed up
 	if (Key_Down(DIK_LSHIFT) || Key_Down(DIK_RSHIFT))
 	{
-		_Ryu.setVelX(20 * _Ryu.directionX);
+		Player::getInstance()->setVelX(20 * Player::getInstance()->directionX);
 	}
 	else
 	{
-		_Ryu.setVelX(4 * _Ryu.directionX);
+		Player::getInstance()->setVelX(4 * Player::getInstance()->directionX);
 	}
 	// [R] restart stage
 	if (Key_Down(DIK_R))
 	{
 		init();
 	}
+	if (Key_Down(DIK_B))
+	{
+		std::string msg = std::to_string(Player::getInstance()->isJumping) + " " + std::to_string(Player::getInstance()->isOnGround) + " " + std::to_string(Player::getInstance()->getMinJumpHeight()) + " " + std::to_string(Player::getInstance()->getMaxJumpHeight());
+		MessageBox(0, msg.c_str(), "checking", 0);
+	}
 	// Hold [Q] to be invincible
 	if (Key_Down(DIK_Q))
 	{
-		_Ryu.isInvincible = true;
+		Player::getInstance()->isInvincible = true;
 	}
 
 	// ******************************************************
@@ -226,47 +231,57 @@ void Game::KeysControl()
 	// [LEFT ARROW] [RIGHT ARROW] di chuyển trái phải
 	if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 	{
-		if (!_Ryu.isKnockback)
+		if (!Player::getInstance()->isKnockback)
 		{
-			_Ryu.directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
+			Player::getInstance()->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
 
-			if (_Ryu.getVelX() * _Ryu.directionX < 0)
+			if (Player::getInstance()->getVelX() * Player::getInstance()->directionX < 0)
 			{
-				_Ryu.directionChanged = true;
+				Player::getInstance()->directionChanged = true;
 			}
 
-			_Ryu.isMoving = true;
-			if (!_Ryu.isJumping)
+			Player::getInstance()->isMoving = true;
+			if (!Player::getInstance()->isJumping && !Player::getInstance()->isAttacking)
 			{
-				_Ryu.SetStatus(PLAYER_MOVING, _Ryu.directionX);
+				Player::getInstance()->SetStatus(PLAYER_MOVING, Player::getInstance()->directionX);
 			}
 		}
 	}
 	// Không di chuyển
 	else
 	{
-		_Ryu.isMoving = false;
-		if (!_Ryu.isJumping && !_Ryu.isKnockback)
+		Player::getInstance()->isMoving = false;
+		if (!Player::getInstance()->isJumping && !Player::getInstance()->isKnockback)
 		{
-			_Ryu.SetStatus(PLAYER_STANDING, _Ryu.directionX);
+			Player::getInstance()->SetStatus(PLAYER_STANDING, Player::getInstance()->directionX);
 		}
 	}
 
 	// [Z] tấn công
 	if (Key_Down(DIK_Z))
 	{
-
+		if (!Player::getInstance()->isAttacking)
+		{
+			if (Player::getInstance()->isOnGround && !Player::getInstance()->isJumping)
+			{
+				Player::getInstance()->SetStatus(PLAYER_ATTACK, Player::getInstance()->directionX);
+			}
+			else
+			{
+				Player::getInstance()->SetStatus(PLAYER_JUMP_ATTACK, Player::getInstance()->directionX);
+			}
+		}
 	}
 
 	// [Space] [X] nhảy
 	if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
 	{
-		if (!_Ryu.isKnockback)
+		if (!Player::getInstance()->isAttacking && !Player::getInstance()->isKnockback)
 		{
-			if (!_Ryu.isJumping && _Ryu.isOnGround)
+			if (!Player::getInstance()->isJumping && Player::getInstance()->isOnGround)
 			{
-				_Ryu.directionY = 1;
-				_Ryu.SetStatus(PLAYER_JUMPING, _Ryu.directionX);
+				Player::getInstance()->directionY = 1;
+				Player::getInstance()->SetStatus(PLAYER_JUMPING, Player::getInstance()->directionX);
 			}
 		}
 	}
@@ -283,7 +298,7 @@ void Game::KeysControl()
 	}
 
 	// Đến cuối map -> chuyển stage
-	if (_Ryu.getRight() >= stage->getMapEnd())
+	if (Player::getInstance()->getRight() >= stage->getMapEnd())
 	{
 		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
 		{
@@ -292,7 +307,6 @@ void Game::KeysControl()
 				stageIndex = 0;
 
 			InitGame();
-			//Camera::getInstance()->setX(stage->getMapStart());
 		}
 	}
 }

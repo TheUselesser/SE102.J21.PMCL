@@ -41,11 +41,9 @@ class Game
 
 	// Stage
 	Stage * stage;
-	int stageIndex = 0;
+	int stageIndex = 1;
 	const int NUMBER_OF_STAGES = 3; // làm có 3 stage thôi
 
-	// 
-	Player _Ryu;
 	float groundLine;
 
 	Timer timer;

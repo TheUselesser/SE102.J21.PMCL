@@ -78,17 +78,22 @@ protected:
 	void Draw();
 	void CreateObject(const char * imagePath, D3DCOLOR transColor, float width, float height);
 
+	float realWidth;
 public:
 	float nx = 0.0f, ny = 0.0f;
 	float collisionTime = 1.0f;
-	bool isInvincible;
-	bool isKnockback;
 
 	bool startAnimation;
 	int directionX, directionY;
 	bool isExist;
-	bool isOnGround;
+
+	// player only
 	bool isJumping;
+	bool isInvincible;
+	bool isKnockback;
+	bool isOnGround;
+	bool isAttacking;
+	bool isDead;
 
 	bool collideGroundX;
 
@@ -100,8 +105,10 @@ public:
 	virtual float getMinJumpHeight() { return 0.0f; }
 	virtual void resetMaxJumpHeight() {}
 	virtual float getMaxJumpHeight() { return 0.0f; }
+	virtual float getDefaultPlayerWidth() { return 0.0f; }
 	virtual float getDefaultPlayerHeight() { return 0.0f; }
-	virtual void SetStatus(PLAYER_STATUS, int) {}
+	virtual void SetStatus(PLAYER_STATUS, int = 1) {}
+	virtual float getRealWidth() { return 0.0f; }
 
 	// Dùng trong Collision.cpp để lấy thông tin va chạm (cụ thể là với nhân vật)
 	void UpdateCollisionStatus(int nx, int ny, float collisionTime);

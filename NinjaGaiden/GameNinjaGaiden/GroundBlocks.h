@@ -7,7 +7,8 @@ class GroundBlocks
 	GroundBlock * *groundBlocks;
 	int numberOfBlocks;
 	GroundBlock * currentBlock;
-	float currentHeight;
+	float * currentHeight;
+	float minHeight;
 public:
 	GroundBlocks(const char * filePath);
 	~GroundBlocks();

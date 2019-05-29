@@ -74,7 +74,7 @@ std::vector<GameObject*> Stage::GetObjectList()
 	return grid->GetObjectList(Camera::getInstance());
 }
 
-void Stage::Update(DWORD dt, Player &player)
+void Stage::Update(DWORD dt, Player * player)
 {
 	if (!grid->isEmpty)
 	{
@@ -95,12 +95,15 @@ void Stage::Update(DWORD dt, Player &player)
 		// lần lượt update các object
 		for (int i = 0; i < objectList.size(); i++)
 		{
-			Collision::CollisionHandle(player, *objectList[i]);
-			objectList[i]->Update(dt, player);
+			if (objectList[i]->isExist)
+			{
+				Collision::CollisionHandle(*player, *objectList[i]);
+				objectList[i]->Update(dt, *player);
+			}
 		}
 	}
 
-	groundBlocks->Update(dt, player);
+	groundBlocks->Update(dt, *player);
 }
 
 

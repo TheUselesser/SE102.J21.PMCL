@@ -89,8 +89,8 @@ void BirdBrown::autoMove(float range, GameObject * player)
 	if (player->getMidX() >= getMidX() - seekRange &&
 		player->getMidX() <= getMidX() + seekRange)
 	{
-		//setVelX(0);
-		//setVelY(0);
+		setVelX(0);
+		setVelY(0);
 	}
 	else
 	{

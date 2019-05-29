@@ -4,14 +4,14 @@
 #include "DXInput.h"
 #include <string>
 
-/*
+
 Player * Player::instance = NULL;
 Player * Player::getInstance()
 {
 	if (instance == NULL)
 		instance = new Player();
 	return instance;
-}*/
+}
 
 Player::Player()
 {
@@ -24,7 +24,9 @@ Player::~Player()
 
 void Player::InitPlayer(float x, float y)
 {
-	CreateObject("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255), 22, 32);
+	//CreateObject("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255), 22, 32);
+	SetStatus(PLAYER_NULL);
+	SetStatus(PLAYER_STANDING);
 	setX(x);
 	setY(y + getHeight());
 	setVelX(DEFAULT_VELOCITY_X);
@@ -33,12 +35,17 @@ void Player::InitPlayer(float x, float y)
 	minHeight = getY();
 	maxHeight = minHeight + 64;
 
+	isMovable = true;
 	isMoving = directionChanged = startAnimation = isJumping = false;
 	maxHeightReached = false;
 	isOnGround = true;
 
 	isInvincible = false;
 	isKnockback = false;
+
+	isDead = false;
+
+	X_moved = false;
 }
 
 void Player::SetStatus(PLAYER_STATUS status, int direction)
@@ -54,7 +61,8 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 		case PLAYER_STANDING:
 			startAnimation = false;
 			setSize(22, 32);
-			sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 0, 3);
+			realWidth = 20;
+			sprite->SetAnimation(getWidth(), getHeight(), 1, 1, 0, 0);
 			if (direction > 0)
 			{
 				sprite->Release();
@@ -70,6 +78,7 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			setVelX(DEFAULT_VELOCITY_X * direction);
 			startAnimation = true;
 			setSize(22, 32);
+			realWidth = 20;
 			sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 1, 3);
 			if (direction > 0)
 			{
@@ -87,6 +96,7 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 
 			startAnimation = true;
 			setSize(24, 24);
+			realWidth = 24;
 			sprite->SetAnimation(getWidth(), getHeight(), 4, 2, 0, 3);
 			if (direction > 0)
 			{
@@ -106,14 +116,16 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			break;
 		case PLAYER_KNOCKBACK:
 			isKnockback = true;
-			isMoving = false;
+			isMovable = false;
 			isJumping = false;
+			isOnGround = true;
 			startKnockback = GetTickCount();
 			directionY = 1;
 			// trở nên bất tử
 			SetStatus(PLAYER_INVINCIBLE, direction);
 
 			setSize(24, 24);
+			realWidth = 24;
 			sprite->SetAnimation(getWidth(), getHeight(), 1, 1, 0, 0);
 			if (direction > 0)
 			{
@@ -133,13 +145,56 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			this->status = temp;
 			break;
 		case PLAYER_ATTACK:
-
+			if (!isJumping && isOnGround) isMovable = false;
+			if (!isAttacking) startAttack = GetTickCount();
+			isAttacking = true;
+			
+			startAnimation = true;
+			setSize(40, 32);
+			realWidth = 20;
+			sprite->SetAnimation(getWidth(), getHeight(), 3, 3, 0, 2);
+			if (direction > 0)
+			{
+				if (X_moved)
+				{
+					moveX(16);
+					X_moved = false;
+				}
+				sprite->Release();
+				sprite->LoadTexture("images/Ryu_attack_right.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
+			else
+			{
+				sprite->Release();
+				if (!X_moved)
+				{
+					moveX(-16);
+					X_moved = true;
+				}
+				sprite->LoadTexture("images/Ryu_attack_left.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
 			break;
 		case PLAYER_JUMP_ATTACK:
+			if (!isAttacking) startAttack = GetTickCount();
+			isAttacking = true;
 
+			startAnimation = true;
+			setSize(24, 24);
+			realWidth = 22;
+			sprite->SetAnimation(getWidth(), getHeight(), 4, 2, 0, 3);
+			if (direction > 0)
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/Ryu_jump_right.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
+			else
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/Ryu_jump_left.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
 			break;
 		case PLAYER_DIE:
-
+			isDead = true;
 			break;
 		default: // chẳng làm gì cả
 			break;
@@ -150,6 +205,10 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 void Player::Update(DWORD dt)
 {
 	timer.tickPerAnim = dt;
+	if (isOnGround && !isJumping && isAttacking)
+	{
+		timer.tickPerAnim = STAND_ATTACK_TIME / 3;
+	}
 
 	// Lấy một vài thông tin từ class Game
 	int mapStart = Game::getInstance()->getStage()->getMapStart();
@@ -161,11 +220,14 @@ void Player::Update(DWORD dt)
 	if (!isKnockback)
 	{
 		// Xử lý di chuyển
-		if (isMoving)
+		if (isMovable)
 		{
-			if (!collideGroundX)
+			if (isMoving)
 			{
-				selfMovingX();
+				if (!collideGroundX)
+				{
+					selfMovingX();
+				}
 			}
 		}
 
@@ -195,10 +257,50 @@ void Player::Update(DWORD dt)
 
 			if (getY() <= minHeight)
 			{
-				if (getY() < minHeight)
-					setY(minHeight);
 				isJumping = false;
 				SetStatus(PLAYER_MOVING, directionX);
+			}
+		}
+
+		// Xử lý tấn công
+		if (isAttacking)
+		{
+			// Khi đứng
+			if (isOnGround && !isJumping)
+			{
+				//timer.tickPerAnim = STAND_ATTACK_TIME / 3;
+				if (GetTickCount() - startAttack >= STAND_ATTACK_TIME)
+				{
+					isAttacking = false;
+					isMovable = true;
+					if (X_moved)
+					{
+						moveX(16);
+						X_moved = false;
+					}
+					SetStatus(PLAYER_STANDING, directionX);
+				}
+				else
+				{
+					SetStatus(PLAYER_ATTACK, directionX);
+				}
+			}
+			// Khi trên không
+			else
+			{
+				if (GetTickCount() - startAttack >= JUMP_ATTACK_TIME || (isOnGround && !isJumping))
+				{
+					isAttacking = false;
+
+					if (isOnGround && !isJumping)
+					{
+						SetStatus(PLAYER_MOVING, directionX);
+					}
+					else
+					{
+						SetStatus(PLAYER_JUMPING, directionX);
+					}
+				}
 			}
 		}
 	}
@@ -209,6 +311,7 @@ void Player::Update(DWORD dt)
 		if (GetTickCount() - startKnockback >= KNOCKBACK_TIME)
 		{
 			isKnockback = false;
+			isMovable = true;
 			SetStatus(PLAYER_NULL, directionX);
 			SetStatus(PLAYER_STANDING, directionX);
 		}
@@ -220,7 +323,7 @@ void Player::Update(DWORD dt)
 			{
 				moveY(DEFAULT_VELOCITY_Y * 1.6f);
 			}
-			if (getY() > (maxHeight - minHeight) / 2 + minHeight)
+			if (getY() > (maxHeight + minHeight) / 2)
 			{
 				directionY = -1;
 			}
@@ -260,9 +363,10 @@ void Player::Update(DWORD dt)
 
 	// Update camera theo vị trí nhân vật
 	if (getMidX() > mapStart + cameraWidth / 2 &&
-		getMidX() < mapEnd - cameraWidth / 2)
+		getMidX() < mapEnd - cameraWidth / 2 && 
+		(status != PLAYER_ATTACK))
 	{
-		Camera::getInstance()->trackPlayer(*this);
+		Camera::getInstance()->trackPlayer(this);
 	}
 	// Kiểm tra giới hạn di chuyển
 	// giới hạn nhân vật trong map
@@ -282,4 +386,11 @@ void Player::Update(DWORD dt)
 
 	// Vẽ lên camera
 	Draw();
+
+	// Chết thì làm sao
+	if (isDead)
+	{
+		// thêm điều kiện nếu còn mạng thì mới init
+		if (isOnGround) Game::getInstance()->init();
+	}
 }
