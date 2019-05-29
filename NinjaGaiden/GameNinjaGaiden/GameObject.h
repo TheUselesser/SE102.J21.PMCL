@@ -50,6 +50,21 @@ enum COLLISION_TYPE
 	COLLISION_TYPE_ITEM
 };
 
+// trạng thái của player
+enum PLAYER_STATUS
+{
+	PLAYER_NULL,
+	PLAYER_STANDING,
+	PLAYER_MOVING,
+	PLAYER_JUMPING,
+	PLAYER_END_JUMPING,
+	PLAYER_KNOCKBACK,
+	PLAYER_INVINCIBLE,
+	PLAYER_ATTACK,
+	PLAYER_JUMP_ATTACK,
+	PLAYER_DIE,
+};
+
 class GameObject :
 	public MovableRect
 {
@@ -64,25 +79,43 @@ protected:
 	void CreateObject(const char * imagePath, D3DCOLOR transColor, float width, float height);
 
 public:
+	float nx = 0.0f, ny = 0.0f;
+	float collisionTime = 1.0f;
+	bool isInvincible;
+	bool isKnockback;
+
 	bool startAnimation;
 	int directionX, directionY;
-	bool isOnCollisionX, isOnCollisionY;
 	bool isExist;
 	bool isOnGround;
+	bool isJumping;
 
 	bool collideGroundX;
 
 	GameObject();
 	~GameObject();
 
+	// Player only
+	virtual void setMinJumpHeight(float) {}
+	virtual float getMinJumpHeight() { return 0.0f; }
+	virtual void resetMaxJumpHeight() {}
+	virtual float getMaxJumpHeight() { return 0.0f; }
+	virtual float getDefaultPlayerHeight() { return 0.0f; }
+	virtual void SetStatus(PLAYER_STATUS, int) {}
+
+	// Dùng trong Collision.cpp để lấy thông tin va chạm (cụ thể là với nhân vật)
+	void UpdateCollisionStatus(int nx, int ny, float collisionTime);
+	virtual void CheckCollisionStatus(GameObject * player);
+
+	// Enemies, items, ground
 	void setObjectType(GAME_OBJECT_TYPE objectType);
 	GAME_OBJECT_TYPE getObjectType();
 	void setCollisionType(COLLISION_TYPE collisionType);
 	COLLISION_TYPE getCollisionType();
 
+	// General
 	virtual void Init();
 	virtual void setSpawned(bool isSpawned) {}	// dành cho enemy	
-	virtual void SetStatus();
 	virtual void Update(DWORD dt, GameObject &player);
 };
 

@@ -6,6 +6,8 @@ class GroundBlocks
 {
 	GroundBlock * *groundBlocks;
 	int numberOfBlocks;
+	GroundBlock * currentBlock;
+	float currentHeight;
 public:
 	GroundBlocks(const char * filePath);
 	~GroundBlocks();

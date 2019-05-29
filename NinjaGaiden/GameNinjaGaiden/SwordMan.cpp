@@ -54,7 +54,6 @@ void SwordMan::SetStatus(ENEMY_STATUS status)
 			break;
 		case ENEMY_MOVING:
 			startAnimation = true;
-			sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
 			if (getVelX() > 0)
 			{
 				sprite->Release();
@@ -77,19 +76,7 @@ void SwordMan::Update(DWORD dt, GameObject &player)
 	timer.tickPerAnim = dt;
 
 	SetStatus(ENEMY_MOVING);
-	Collision::CollisionHandle(*this, player);
-	Collision::CollisionHandle(player, *this);
-	
-	// Khi chạm vào player
-	if (isOnCollisionX)
-	{
-		// thì làm cái gì đó
-		// player.knockBack() chẳng hạn
-	}
-	else
-	{
-		autoMove(80);
-	}
+	autoMove(80);
 	
 	Draw();
 }

@@ -23,6 +23,8 @@ public:
 	Enemy();
 	~Enemy();
 
+	void CheckCollisionStatus(GameObject * player);
+
 	virtual void setSpawned(bool isSpawned);
 	virtual void SetStatus(ENEMY_STATUS status, int direction);
 	virtual void Update();

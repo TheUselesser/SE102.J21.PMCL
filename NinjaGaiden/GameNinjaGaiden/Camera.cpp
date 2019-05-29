@@ -27,12 +27,8 @@ Camera::~Camera()
 
 void Camera::trackPlayer(Player player)
 {
-	this->setVelX(player.getVelX());
-}
-
-void Camera::freeze()
-{
-	this->setVelX(0);
+	//this->setVelX(player.getVelX());
+	this->setX(player.getX() + (player.getWidth() - this->getWidth()) / 2);
 }
 
 void Camera::worldToView(float xW, float yW, float & xV, float & yV)

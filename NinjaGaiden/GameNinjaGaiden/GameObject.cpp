@@ -7,11 +7,9 @@ GameObject::GameObject()
 	sprite = new Sprite();	// có lỗi gì thì nhớ quan tâm bạn này
 
 	directionX = directionY = 1;
-	isOnCollisionX = isOnCollisionY = false;
-
 
 	timer.startTime = GetTickCount();
-	timer.tickPerAnim = 0;
+	timer.tickPerAnim = 3000;
 }
 
 
@@ -23,6 +21,17 @@ void GameObject::CreateObject(const char * imagePath, D3DCOLOR transColor, float
 {
 	setSize(width, height);
 	sprite->LoadTexture(imagePath, transColor);
+}
+
+void GameObject::UpdateCollisionStatus(int nx, int ny, float collisionTime)
+{
+	this->nx = nx;
+	this->ny = ny;
+	this->collisionTime = collisionTime;
+}
+
+void GameObject::CheckCollisionStatus(GameObject * player)
+{
 }
 
 void GameObject::setObjectType(GAME_OBJECT_TYPE objectType)
@@ -49,10 +58,6 @@ void GameObject::Init()
 {
 }
 
-void GameObject::SetStatus()
-{
-}
-
 void GameObject::Update(DWORD dt, GameObject & player)
 {
 }
@@ -65,9 +70,13 @@ void GameObject::Draw()
 		if (startAnimation)
 		{
 			if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
+			{
 				sprite->setCurrentAnimation(sprite->getFirstAnimation());
+			}
 			else
+			{
 				sprite->setCurrentAnimation(sprite->getCurrentAnimation() + 1);
+			}
 		}
 		else
 		{

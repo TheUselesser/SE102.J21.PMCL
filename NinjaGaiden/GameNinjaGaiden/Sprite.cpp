@@ -4,6 +4,7 @@
 
 Sprite::Sprite()
 {
+	currentAnimation = 0;
 }
 
 
@@ -52,7 +53,8 @@ void Sprite::SetAnimation(float animationWidth, float animationHeight, int anima
 	{
 		//
 		this->firstAnimation = firstAnimation;
-		this->currentAnimation = firstAnimation;
+		if (this->currentAnimation < firstAnimation || this->currentAnimation > lastAnimation)
+			this->currentAnimation = firstAnimation;
 		this->lastAnimation = lastAnimation;
 
 		// Lưu tọa độ các animation trong sprite vào mảng animation;

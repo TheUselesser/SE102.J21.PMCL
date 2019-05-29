@@ -95,6 +95,7 @@ void Stage::Update(DWORD dt, Player &player)
 		// lần lượt update các object
 		for (int i = 0; i < objectList.size(); i++)
 		{
+			Collision::CollisionHandle(player, *objectList[i]);
 			objectList[i]->Update(dt, player);
 		}
 	}

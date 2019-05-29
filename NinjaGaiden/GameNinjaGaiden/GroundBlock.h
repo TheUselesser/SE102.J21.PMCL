@@ -11,6 +11,10 @@ public:
 
 	bool blockMovingX();
 
+	bool canBeReachedFrom(GroundBlock * block, GameObject player);
+
+	void CheckCollisionStatus(GameObject * player);
+
 	void Update(DWORD dt, GameObject &player);
 };
 

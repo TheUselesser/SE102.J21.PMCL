@@ -17,7 +17,6 @@ public:
 	~Camera();
 
 	void trackPlayer(Player player);
-	void freeze();
 
 	void worldToView(float xW, float yW, float &xV, float &yV);
 };

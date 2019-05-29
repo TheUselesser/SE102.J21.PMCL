@@ -29,6 +29,15 @@ MovableRect Collision::GetSweptBroadphaseBox(MovableRect box)
 
 float Collision::SweptAABB(MovableRect box1, MovableRect box2, float & normalx, float & normaly)
 {
+	// Nếu 2 vật đè lên nhau thì rõ ràng là va chạm
+	if (AABBCheck(box1, box2))
+	{
+		normalx = 0.0f;
+		normaly = 1.0f;	// mình thích áp đặt cho nó là dạng va chạm từ trên xuống (box1 ở trên box2)
+		return 0.0f;	// collisionTime = 0 luôn;
+	}
+
+	// Còn không đè lên nhau thì áp dụng thuật toán quét
 	float xInvEntry, yInvEntry;
 	float xInvExit, yInvExit;
 
@@ -137,39 +146,15 @@ bool Collision::AABBCheck(Rect box1, Rect box2)
 
 void Collision::CollisionHandle(GameObject &box1, GameObject &box2)
 {
-	box1.isOnCollisionX = false;
-	box1.isOnCollisionY = false;
+	float normalx = 0.0f, normaly = 0.0f;
+	float collisionTime = 1.0f;
 
 	MovableRect broadphaseBox = GetSweptBroadphaseBox(box1);
 	if (AABBCheck(broadphaseBox, box2))
 	{
-		float normalx = 0, normaly = 0;
-		float collisionTime = SweptAABB(box1, box2, normalx, normaly);
-
-		if (collisionTime < 1.0f)
-		{
-			// Xử lý khi va chạm
-			if (normalx != 0)	// va chạm theo trục Ox
-			{
-				box1.isOnCollisionX = true;
-			}
-			if (normaly != 0)	// va chạm theo trục Oy
-			{
-				box1.isOnCollisionY = true;
-			}
-		}
+		collisionTime = SweptAABB(box1, box2, normalx, normaly);
 	}
-}
 
-void Collision::GroundCollisionCheck(GameObject &box, GameObject &groundBlock)
-{
-	box.isOnGround = true;
-	float normalx = 0, normaly = 0;
-	float collisionTime = SweptAABB(box, groundBlock, normalx, normaly);
-
-	if (collisionTime < 1.0f)
-	{
-		box.collideGroundX = normalx != 0 ? true : false;
-		//box.isOnGround = normaly != 0 ? true : false;
-	}
+	box2.UpdateCollisionStatus(normalx, normaly, collisionTime);
+	box2.CheckCollisionStatus(&box1);
 }
