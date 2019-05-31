@@ -19,9 +19,10 @@ Cat::~Cat()
 {
 }
 
-void Cat::Init()
+void Cat::Init(GameObject * player)
 {
 	isExist = true;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
 	directionY = 1;
 	setVelX(DEFAULT_CAT_VELOCITY * directionX);

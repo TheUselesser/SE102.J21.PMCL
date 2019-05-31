@@ -44,7 +44,7 @@ public:
 
 	static Player * getInstance();
 	
-	void setMinJumpHeight(float minHeight) { this->minHeight = minHeight + DEFAULT_HEIGHT; }
+	void setMinJumpHeight(float minHeight);
 	float getMinJumpHeight() { return minHeight; }
 	void resetMaxJumpHeight() { maxHeight = minHeight + 64; }
 	float getMaxJumpHeight() { return maxHeight; }

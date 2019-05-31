@@ -14,7 +14,7 @@ public:
 	MachineGunGuy(float x, float y);
 	~MachineGunGuy();
 
-	void Init();
+	void Init(GameObject * player);
 
 	void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);

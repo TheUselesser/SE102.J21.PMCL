@@ -7,6 +7,7 @@
 #include "Cannoneer.h"
 #include "Runner.h"
 #include "ItemContainer.h"
+#include "Player.h"
 
 #include<string>
 
@@ -61,11 +62,13 @@ void GridCell::setListSize(int n)
 	this->listSize = n;
 }
 
-void GridCell::addObject(int objTypeID, float x, float y)
+void GridCell::addObjectInfo(float x, float y, int objTypeID)
 {
-	// Theo lý thuyết thì không create object, chỉ add số liệu từ file để đến lúc thì mới create
-	//		nhưng thôi cứ create rồi add nguyên con vào list luôn
+	objectInfoList.push_back(new D3DXVECTOR3(x, y, objTypeID));
+}
 
+void GridCell::InitObject(float x, float y, int objTypeID)
+{
 	GameObject * object = NULL;
 
 	switch (objTypeID)
@@ -75,7 +78,6 @@ void GridCell::addObject(int objTypeID, float x, float y)
 	case 2:
 		object = new Banshee(x, y);
 		object->setObjectType(ENEMY_BANSHEE);
-		object->Init();
 		break;
 	case 3:
 		// Bat (brown)
@@ -85,7 +87,6 @@ void GridCell::addObject(int objTypeID, float x, float y)
 	case 5:
 		object = new BirdBrown(x, y);
 		object->setObjectType(ENEMY_BIRD_BROWN);
-		object->Init();
 		break;
 	case 6:
 		break;
@@ -98,63 +99,79 @@ void GridCell::addObject(int objTypeID, float x, float y)
 	case 10:
 		object = new MachineGunGuy(x, y);
 		object->setObjectType(ENEMY_MACHINE_GUN_GUY);
-		object->Init();
 		break;
 	case 11:
 		break;
 	case 12:
 		object = new SwordMan(x, y);
 		object->setObjectType(ENEMY_SWORD_MAN);
-		object->Init();
 		break;
 	case 13:
 		object = new Cat(x, y);
 		object->setObjectType(ENEMY_CAT);
-		object->Init();
 		break;
 	case 14:
 		object = new Cannoneer(x, y);
 		object->setObjectType(ENEMY_CANNONEER);
-		object->Init();
 		break;
 	case 15:
 		object = new Runner(x, y);
 		object->setObjectType(ENEMY_RUNNER);
-		object->Init();
 		break;
 	case 24:
 		object = new ItemContainer(x, y);
 		object->setObjectType(ITEM_ITEM_CONTAINER_4);
-		object->Init();
 		break;
 	default:
 		break;
 	}
-	object->isExist = true;
+	object->Init(Player::getInstance());
+	object->isExist = false;
+	object->isInCellsSet = false;
+
 	objectList.push_back(object);
 }
+void GridCell::InitObject(D3DXVECTOR3 * objInfo)
+{
+	InitObject(objInfo->x, objInfo->y, objInfo->z);
+}
+void GridCell::InitAllObjects()
+{
+	if (!isEmpty)
+	for (int i = 0; i < listSize; i++)
+	{
+		InitObject(objectInfoList[i]);
+	}
+}
 
+// getting
+std::vector<D3DXVECTOR3*> GridCell::getObjectInfoList()
+{
+	return objectInfoList;
+}
 std::vector<GameObject*> GridCell::getObjectList()
 {
 	return objectList;
 }
 
-void GridCell::setInUsed(bool isUsing)
+//
+void GridCell::enableUpdate(GameObject * player)
 {
-	if (isUsing)
-	{
+	if (!isEmpty)
 		for (int i = 0; i < listSize; i++)
 		{
-			objectList[i]->setSpawned(true);
+			objectList[i]->Init(player);
+			objectList[i]->isExist = true;
+			objectList[i]->isInCellsSet = true;
 		}
-	}
-	else
-	{
+}
+void GridCell::disableUpdate()
+{
+	if (!isEmpty)
 		for (int i = 0; i < listSize; i++)
 		{
-			objectList[i]->setSpawned(false);
+			objectList[i]->isInCellsSet = false;
 		}
-	}
 }
 
 

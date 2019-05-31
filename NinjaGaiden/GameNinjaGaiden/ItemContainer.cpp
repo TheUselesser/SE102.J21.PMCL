@@ -18,7 +18,7 @@ ItemContainer::~ItemContainer()
 {
 }
 
-void ItemContainer::Init()
+void ItemContainer::Init(GameObject * player)
 {
 	isExist = true;
 	startAnimation = true;

@@ -17,9 +17,10 @@ Banshee::~Banshee()
 {
 }
 
-void Banshee::Init()
+void Banshee::Init(GameObject * player)
 {
 	isExist = true;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
 	setVelX(DEFAULT_BANSHEE_VELOCITY * directionX);
 

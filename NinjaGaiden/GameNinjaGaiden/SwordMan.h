@@ -1,6 +1,5 @@
 #pragma once
 #include "Enemy.h"
-#include "Player.h"
 
 #define DEFAULT_SWORD_MAN_WIDTH		24
 #define DEFAULT_SWORD_MAN_HEIGHT	40
@@ -16,7 +15,7 @@ public:
 	SwordMan(float x, float y);
 	~SwordMan();
 
-	void Init();
+	void Init(GameObject * player);
 
 	void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);

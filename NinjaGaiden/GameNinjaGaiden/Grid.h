@@ -14,7 +14,8 @@ class Grid
 	// Giới hạn nhóm các cell giao với camera
 	int firstColumn, firstRow, lastColumn, lastRow;
 
-	void InitGrid();
+	// active objects
+	std::vector<GameObject*> objects;
 
 public:
 	bool isEmpty;
@@ -22,8 +23,8 @@ public:
 	Grid();
 	~Grid();
 
-	void readCellsInfo(const char * cellsInfoPath);
 	void readGridInfo(const char * gridInfoPath, const char * cellsInfoPath);
+	void readCellsInfo(const char * cellsInfoPath);
 	
 	// liên tục cập nhật bộ cells tùy theo vị trí của camera
 	void UpdateCellsSet(Camera * camera);
@@ -31,8 +32,14 @@ public:
 	D3DXVECTOR2 GetFirstCellPosition();
 	D3DXVECTOR2 GetLastCellPosition();
 
-	// Lấy toàn bộ object trong grid (để test, không dùng)
-	std::vector<GameObject*> GetObjectList();
+	void IgnoreLeft(Camera * camera);
+	void IgnoreRight(Camera * camera);
+	void AddLeft(Camera * camera, GameObject * player);
+	void AddRight(Camera * camera, GameObject * player);
+
+	// Một vài xử lý trước khi lấy objectList
+	void InitGrid(Camera * camera);
+	void UpdateObjectList(Camera * camera);
 	// Lấy object từ những cell giao với camera
 	std::vector<GameObject*> GetObjectList(Camera * camera);
 };

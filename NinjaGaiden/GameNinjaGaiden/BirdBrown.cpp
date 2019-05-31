@@ -13,21 +13,24 @@ BirdBrown::BirdBrown(float x, float y)
 	maxY = getY();
 	minY = maxY - 32;
 	isExist = false;
+
+	seekRange = 48;
+	playerRange = 64;
+	playerIsInSeekRange = false;
 }
 
 BirdBrown::~BirdBrown()
 {
 }
 
-void BirdBrown::Init()
+void BirdBrown::Init(GameObject * player)
 {
 	isExist = true;
-	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
+	setCollisionType(COLLISION_TYPE_ENEMY);
+	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	directionY = -1;
 	setVelX(DEFAULT_BIRD_BROWN_VELOCITY * directionX);
 	setVelY(DEFAULT_BIRD_BROWN_VELOCITY * directionY);
-
-	seekRange = 64;
 
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
@@ -86,27 +89,63 @@ void BirdBrown::Update(DWORD dt, GameObject &player)
 
 void BirdBrown::autoMove(float range, GameObject * player)
 {
-	if (player->getMidX() >= getMidX() - seekRange &&
-		player->getMidX() <= getMidX() + seekRange)
+	if (!playerIsInSeekRange)
 	{
-		//setVelX(0);
-		//setVelY(0);
+		// bay qua lại ở điểm ban đầu phạm vi range  |<---range---spawnX---range--->|
+		if (getMidX() <= spawnX - range || getMidX() >= spawnX + range)
+		{
+			setVelX(-getVelX());
+		}
+
+		// bay lên bay xuống một cách bình thường
+		if (getY() <= minY || getY() > maxY)
+		{
+			setVelY(-getVelY());
+		}
+
+		if (player->getRight() >= getMidX() - seekRange && player->getLeft() <= getMidX() + seekRange)
+		{
+			playerIsInSeekRange = true;
+		}
 	}
 	else
 	{
-		if (getVelX() == 0) setVelX(DEFAULT_BIRD_BROWN_VELOCITY);
-		if (getVelY() == 0) setVelY(DEFAULT_BIRD_BROWN_VELOCITY);
-	}
+		minY = player->getY();
+		maxY = minY + getHeight();
 
-	// đi qua lại ở điểm ban đâu phạm vi range  |<---range---spawnX---range--->|
-	if (getX() <= spawnX - range || getX() >= spawnX + range - getWidth())
-	{
-		setVelX(-getVelX());
-		directionChanged = true;
-	}
-	if (getY() <= minY || getY() > maxY)
-	{
-		setVelY(-getVelY());
+		// bay qua lại quanh player
+		if (getMidX() >= player->getMidX() - playerRange && getMidX() <= player->getMidX() + playerRange)
+		{
+			if (getMidX() < player->getMidX() - playerRange || getMidX() > player->getMidX() + playerRange)
+			{
+				setVelX(-getVelX());
+			}
+		}
+		else if (getMidX() < player->getMidX() - playerRange)
+		{
+			setVelX(DEFAULT_BIRD_BROWN_VELOCITY);
+		}
+		else
+		{
+			setVelX(-DEFAULT_BIRD_BROWN_VELOCITY);
+		}
+
+		// bay lên bay xuống
+		if (getMidY() >= minY && getMidY() <= maxY)
+		{
+			if (getMidY() == minY || getMidY() == maxY)
+			{
+				setVelY(-getVelY());
+			}
+		}
+		else if (getMidY() < minY)
+		{
+			setVelY(DEFAULT_BIRD_BROWN_VELOCITY);
+		}
+		else
+		{
+			setVelY(-DEFAULT_BIRD_BROWN_VELOCITY);
+		}
 	}
 	selfMovingX();
 	selfMovingY();

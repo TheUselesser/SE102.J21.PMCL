@@ -19,9 +19,10 @@ Cannoneer::~Cannoneer()
 {
 }
 
-void Cannoneer::Init()
+void Cannoneer::Init(GameObject * player)
 {
 	isExist = true;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	directionChanged = false;
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
 

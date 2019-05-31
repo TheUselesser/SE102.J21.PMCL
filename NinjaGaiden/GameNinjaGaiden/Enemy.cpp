@@ -18,13 +18,6 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 	{
 		if (collisionTime < 1.0f)
 		{
-			// nếu player nhìn đúng bên va chạm với quái thì quái chết
-			/*if ((player->directionX == 1 && this->getMidX() >= player->getRight()) ||
-				(player->directionX == -1 && this->getMidX() <= player->getLeft()))
-			{
-				this->isExist = false;
-			}*/
-
 			// player tấn công khi đang đứng
 			if (!player->isJumping)
 			{
@@ -60,12 +53,4 @@ void Enemy::setSpawned(bool isSpawned)
 void Enemy::SetStatus(ENEMY_STATUS status, int direction)
 {
 	this->status = status;
-}
-
-void Enemy::Update()
-{
-}
-
-void Enemy::autoMove()
-{
 }

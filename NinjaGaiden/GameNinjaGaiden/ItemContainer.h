@@ -12,7 +12,7 @@ public:
 	ItemContainer(float x, float y);
 	~ItemContainer();
 
-	void Init();
+	void Init(GameObject * player);
 	void Update(DWORD dt, GameObject &player);
 };
 

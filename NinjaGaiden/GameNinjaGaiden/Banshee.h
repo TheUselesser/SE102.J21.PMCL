@@ -15,7 +15,7 @@ public:
 	Banshee(float x, float y);
 	~Banshee();
 
-	void Init();
+	void Init(GameObject * player);
 
 	void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);

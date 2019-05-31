@@ -53,7 +53,7 @@ void Sprite::SetAnimation(float animationWidth, float animationHeight, int anima
 	{
 		//
 		this->firstAnimation = firstAnimation;
-		if (this->currentAnimation < firstAnimation)
+		if (this->currentAnimation < firstAnimation || this->currentAnimation > lastAnimation)
 			this->currentAnimation = firstAnimation;
 		this->lastAnimation = lastAnimation;
 

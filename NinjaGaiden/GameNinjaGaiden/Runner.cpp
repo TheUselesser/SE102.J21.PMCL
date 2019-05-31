@@ -20,9 +20,10 @@ Runner::~Runner()
 {
 }
 
-void Runner::Init()
+void Runner::Init(GameObject * player)
 {
 	isExist = true;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
 	setVelX(DEFAULT_RUNNER_VELOCITY * directionX);
 

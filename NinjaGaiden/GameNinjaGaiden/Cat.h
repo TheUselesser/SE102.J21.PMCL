@@ -14,7 +14,7 @@ public:
 	Cat(float x, float y);
 	~Cat();
 
-	void Init();
+	void Init(GameObject * player);
 
 	void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);

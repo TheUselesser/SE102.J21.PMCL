@@ -60,6 +60,7 @@ void Stage::InitGrid(const char * gridInfoPath, const char * cellsInfoPath)
 {
 	grid = new Grid();
 	grid->readGridInfo(gridInfoPath, cellsInfoPath);
+	grid->InitGrid(Camera::getInstance());
 
 	if (!grid->isEmpty)
 	{
@@ -86,10 +87,32 @@ void Stage::Update(DWORD dt, Player * player)
 		if (firstCellPosition.x != prevFirstCellPosition.x || firstCellPosition.y != prevFirstCellPosition.y ||
 			lastCellPosition.x != prevLastCellPosition.x || lastCellPosition.y != prevLastCellPosition.y)
 		{
-			prevFirstCellPosition = firstCellPosition;
-			prevLastCellPosition = lastCellPosition;
+			grid->UpdateObjectList(Camera::getInstance());
+
+			// camera dịch qua phải => xóa object của cell bên trái
+			if (firstCellPosition.x > prevFirstCellPosition.x || lastCellPosition.x > prevLastCellPosition.x)
+			{
+				std::string msg = std::to_string(firstCellPosition.x);
+				//MessageBox(0, msg.c_str(), "", 0);
+				
+				grid->IgnoreLeft(Camera::getInstance());
+				if (lastCellPosition.x > prevLastCellPosition.x)
+				{
+					grid->AddRight(Camera::getInstance(), Player::getInstance());
+				}
+			}
+			// camera dịch qua trái => xóa object của cell bên phải
+			else
+			{
+				grid->IgnoreRight(Camera::getInstance());
+				if (firstCellPosition.x < prevFirstCellPosition.x)
+					grid->AddLeft(Camera::getInstance(), Player::getInstance());
+			}
 
 			objectList = grid->GetObjectList(Camera::getInstance());
+			
+			prevFirstCellPosition = firstCellPosition;
+			prevLastCellPosition = lastCellPosition;
 		}
 
 		// lần lượt update các object

@@ -17,9 +17,10 @@ MachineGunGuy::~MachineGunGuy()
 {
 }
 
-void MachineGunGuy::Init()
+void MachineGunGuy::Init(GameObject * player)
 {
 	isExist = true;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
 	setVelX(DEFAULT_MACHINE_GUN_GUY_VELOCITY * directionX);
 

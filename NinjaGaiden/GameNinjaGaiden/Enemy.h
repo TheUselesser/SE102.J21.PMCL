@@ -27,7 +27,7 @@ public:
 
 	virtual void setSpawned(bool isSpawned);
 	virtual void SetStatus(ENEMY_STATUS status, int direction);
-	virtual void Update();
-	virtual void autoMove();
+	virtual void Update() {}
+	virtual void autoMove() {}
 };
 

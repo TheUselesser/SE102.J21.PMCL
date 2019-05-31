@@ -12,7 +12,7 @@ public:
 	Cannoneer(float x, float y);
 	~Cannoneer();
 
-	void Init();
+	void Init(GameObject * player);
 
 	//void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);

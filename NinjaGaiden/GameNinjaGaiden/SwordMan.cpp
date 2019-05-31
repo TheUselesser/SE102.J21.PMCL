@@ -20,10 +20,13 @@ SwordMan::~SwordMan()
 {
 }
 
-void SwordMan::Init()
+void SwordMan::Init(GameObject * player)
 {
 	isExist = true;
-	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
+	setCollisionType(COLLISION_TYPE_ENEMY);
+	
+	directionX = player->getMidX() <= getMidX() ? -1 : 1;
+
 	setVelX(DEFAULT_SWORD_MAN_VELOCITY * directionX);
 	
 	SetStatus(ENEMY_STANDING);
@@ -76,18 +79,11 @@ void SwordMan::Update(DWORD dt, GameObject &player)
 	timer.tickPerAnim = dt;
 
 	SetStatus(ENEMY_MOVING);
-	autoMove(80);
-	
+	autoMove(0);
 	Draw();
 }
 
 void SwordMan::autoMove(float range)
 {
-	// đi qua lại ở điểm ban đâu phạm vi range  |<---range---spawnX---range--->|
-	if (getX() <= spawnX - range || getX() >= spawnX + range - getWidth())
-	{
-		setVelX(-getVelX());
-		directionChanged = true;
-	}
 	selfMovingX();
 }

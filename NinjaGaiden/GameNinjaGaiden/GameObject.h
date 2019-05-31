@@ -86,6 +86,7 @@ public:
 	bool startAnimation;
 	int directionX, directionY;
 	bool isExist;
+	bool isInCellsSet;
 
 	// player only
 	bool isJumping;
@@ -122,6 +123,7 @@ public:
 
 	// General
 	virtual void Init();
+	virtual void Init(GameObject * player) {}
 	virtual void setSpawned(bool isSpawned) {}	// dành cho enemy	
 	virtual void Update(DWORD dt, GameObject &player);
 };

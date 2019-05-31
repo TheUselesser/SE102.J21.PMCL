@@ -41,7 +41,7 @@ class Game
 
 	// Stage
 	Stage * stage;
-	int stageIndex = 1;
+	int stageIndex = 0;
 	const int NUMBER_OF_STAGES = 3; // làm có 3 stage thôi
 
 	float groundLine;

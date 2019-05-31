@@ -12,6 +12,7 @@ class GridCell
 	int size;
 	int listSize;
 	std::vector<GameObject*> objectList;
+	std::vector<D3DXVECTOR3*> objectInfoList;
 
 public:
 	bool isEmpty;
@@ -24,10 +25,16 @@ public:
 	int getSize();		void setSize(int size);
 	int getListSize();	void setListSize(int n);
 
-	void addObject(int objTypeID, float x, float y);
-	std::vector<GameObject*> getObjectList();
+	void InitObject(float x, float y, int objTypeID);
+	void InitObject(D3DXVECTOR3 * objectInfo);
+	void InitAllObjects();
 
-	void setInUsed(bool isUsing);
+	void addObjectInfo(float x, float y, int objTypeID);
+	std::vector<GameObject*> getObjectList();
+	std::vector<D3DXVECTOR3*> getObjectInfoList();
+
+	void enableUpdate(GameObject * player);
+	void disableUpdate();
 
 	// có lẽ chưa cần sử dụng
 	Rect getBound();

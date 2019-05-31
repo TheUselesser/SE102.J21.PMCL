@@ -48,6 +48,15 @@ void Player::InitPlayer(float x, float y)
 	X_moved = false;
 }
 
+void Player::setMinJumpHeight(float minHeight)
+{
+	this->minHeight = minHeight + DEFAULT_HEIGHT;
+	if (getY() > this->minHeight)
+	{
+		if (!isJumping) isOnGround = false;
+	}
+}
+
 void Player::SetStatus(PLAYER_STATUS status, int direction)
 {
 	if (this->status != status || directionChanged)
@@ -179,18 +188,18 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			isAttacking = true;
 
 			startAnimation = true;
-			setSize(24, 24);
-			realWidth = 22;
+			setSize(32, 32);
+			realWidth = 24;
 			sprite->SetAnimation(getWidth(), getHeight(), 4, 2, 0, 3);
 			if (direction > 0)
 			{
 				sprite->Release();
-				sprite->LoadTexture("images/Ryu_jump_right.png", D3DCOLOR_XRGB(255, 163, 177));
+				sprite->LoadTexture("images/Ryu_jump_attack_right.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			else
 			{
 				sprite->Release();
-				sprite->LoadTexture("images/Ryu_jump_left.png", D3DCOLOR_XRGB(255, 163, 177));
+				sprite->LoadTexture("images/Ryu_jump_attack_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
 		case PLAYER_DIE:
@@ -249,7 +258,8 @@ void Player::Update(DWORD dt)
 			}
 
 			// Nhảy lên điểm cao nhất thì ngưng
-			if (getY() >= maxHeight)
+			if ((!isAttacking && getY() >= maxHeight) ||
+				(isAttacking && getY() >= maxHeight + getWidth() - getRealWidth()))
 			{
 				directionY = -1;
 				isOnGround = false;
