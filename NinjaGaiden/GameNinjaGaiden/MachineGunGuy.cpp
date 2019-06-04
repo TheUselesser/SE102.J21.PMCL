@@ -8,8 +8,7 @@ MachineGunGuy::MachineGunGuy(float x, float y)
 {
 	setSize(DEFAULT_MACHINE_GUN_GUY_WIDTH, DEFAULT_MACHINE_GUN_GUY_HEIGHT);
 	spawnX = x;
-	setX(x);
-	setY(y + getHeight());
+	spawnY = y;
 	isExist = false;
 }
 
@@ -20,8 +19,9 @@ MachineGunGuy::~MachineGunGuy()
 void MachineGunGuy::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
-	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
+	setCollisionType(COLLISION_TYPE_ENEMY); setX(spawnX);
+	setY(spawnY + getHeight());
+	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	setVelX(DEFAULT_MACHINE_GUN_GUY_VELOCITY * directionX);
 
 	SetStatus(ENEMY_STANDING);

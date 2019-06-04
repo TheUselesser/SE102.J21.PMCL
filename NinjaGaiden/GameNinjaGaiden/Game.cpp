@@ -5,7 +5,7 @@
 #include <string>
 
 #define BACKBUFFER_WIDTH 256
-#define BACKBUFFER_HEIGHT 192
+#define BACKBUFFER_HEIGHT 216
 #define FPS 60
 
 #define WINDOW_CLASS "GameWindow"
@@ -162,6 +162,13 @@ void Game::run()
 			// Nếu không vẽ gì thì màn hình sẽ đen thui
 			d3ddev->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
+			RECT * rect = new RECT();
+			rect->top = 0;
+			rect->left = 0;
+			rect->right = 256;
+			rect->bottom = 40;
+			d3ddev->ColorFill(backbuffer, rect, D3DCOLOR_XRGB(255, 0, 255));
+
 			// Xử lý phím
 			KeysControl();
 
@@ -204,11 +211,11 @@ void Game::KeysControl()
 	// Hold [Shift] to speed up
 	if (Key_Down(DIK_LSHIFT) || Key_Down(DIK_RSHIFT))
 	{
-		Player::getInstance()->setVelX(20 * Player::getInstance()->directionX);
+		Player::getInstance()->setVelX(24 * Player::getInstance()->directionX);
 	}
 	else
 	{
-		Player::getInstance()->setVelX(4 * Player::getInstance()->directionX);
+		Player::getInstance()->setVelX(6 * Player::getInstance()->directionX);
 	}
 	// [R] restart stage
 	if (Key_Down(DIK_R))
@@ -231,7 +238,7 @@ void Game::KeysControl()
 	// [LEFT ARROW] [RIGHT ARROW] di chuyển trái phải
 	if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 	{
-		if (!Player::getInstance()->isKnockback)
+		if (!Player::getInstance()->isKnockback && !Player::getInstance()->isClimbing)
 		{
 			Player::getInstance()->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
 
@@ -250,16 +257,36 @@ void Game::KeysControl()
 	// Không di chuyển
 	else
 	{
-		Player::getInstance()->isMoving = false;
-		if (!Player::getInstance()->isJumping && !Player::getInstance()->isKnockback)
+		if (!Player::getInstance()->isClimbing) Player::getInstance()->isMoving = false;
+		if (!Player::getInstance()->isJumping && !Player::getInstance()->isClimbing && !Player::getInstance()->isKnockback)
 		{
 			Player::getInstance()->SetStatus(PLAYER_STANDING, Player::getInstance()->directionX);
+		}
+	}
+	// [UP ARROW] [DOWN ARROW] trèo lên xuống
+	if (Key_Down(DIK_UPARROW) || Key_Down(DIK_DOWNARROW))
+	{
+		if (Player::getInstance()->isClimbing)
+		{
+			Player::getInstance()->isMoving = true;
+			Player::getInstance()->directionY = Key_Down(DIK_UPARROW) ? 1 : -1;
+			Player::getInstance()->SetStatus(PLAYER_CLIMBING, Player::getInstance()->directionX);
+		}
+	}
+	else
+	{
+		if (Player::getInstance()->isClimbing)
+		{
+			Player::getInstance()->isMoving = false;
+			Player::getInstance()->SetStatus(PLAYER_CLINGING, Player::getInstance()->directionX);
 		}
 	}
 
 	// [Z] tấn công
 	if (Key_Down(DIK_Z))
 	{
+		// Không được tấn công lúc đang leo trèo
+		if (!Player::getInstance()->isClimbing)
 		if (!Player::getInstance()->isAttacking)
 		{
 			if (Player::getInstance()->isOnGround && !Player::getInstance()->isJumping)
@@ -276,12 +303,15 @@ void Game::KeysControl()
 	// [Space] [X] nhảy
 	if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
 	{
-		if (!Player::getInstance()->isAttacking && !Player::getInstance()->isKnockback)
+		if (Player::getInstance()->isJumpable)
 		{
-			if (!Player::getInstance()->isJumping && Player::getInstance()->isOnGround)
+			if (!Player::getInstance()->isAttacking && !Player::getInstance()->isKnockback)
 			{
-				Player::getInstance()->directionY = 1;
-				Player::getInstance()->SetStatus(PLAYER_JUMPING, Player::getInstance()->directionX);
+				if (!Player::getInstance()->isJumping && Player::getInstance()->isOnGround)
+				{
+					Player::getInstance()->directionY = 1;
+					Player::getInstance()->SetStatus(PLAYER_JUMPING, Player::getInstance()->directionX);
+				}
 			}
 		}
 	}

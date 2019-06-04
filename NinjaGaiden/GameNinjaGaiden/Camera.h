@@ -3,7 +3,7 @@
 #include "MovableRect.h"
 
 #define	DEFAULT_CAMERA_WIDTH	256
-#define	DEFAULT_CAMERA_HEIGHT	192
+#define	DEFAULT_CAMERA_HEIGHT	176
 
 class Camera :
 	public MovableRect

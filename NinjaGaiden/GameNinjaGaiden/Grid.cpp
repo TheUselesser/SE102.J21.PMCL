@@ -94,6 +94,7 @@ void Grid::readCellsInfo(const char * cellsInfoPath)
 	int objTypeID;
 	std::string nonsense = "";	// ^_^
 	float objX, objY;
+	int itemType;	// for item container only
 
 	std::ifstream fs(cellsInfoPath);
 	if (!fs.is_open()) {
@@ -112,13 +113,13 @@ void Grid::readCellsInfo(const char * cellsInfoPath)
 
 				for (int i = 0; i < cell[row][col].getListSize();)
 				{
-					fs >> columnIndex >> rowIndex >> objTypeID >> nonsense >> objX >> objY;
+					fs >> columnIndex >> rowIndex >> objTypeID >> nonsense >> objX >> objY >> itemType;
 
 					// check xem có đúng cell không
 					if (rowIndex == cell[row][col].getRowIndex() && columnIndex == cell[row][col].getColumnIndex())
 					{
 						// thêm objectInfo vào objectInfoList của cell
-						cell[row][col].addObjectInfo(objX, objY, objTypeID);
+						cell[row][col].addObjectInfo(objX, objY, objTypeID, itemType);
 						i++;	// tự tin không sợ vòng lặp vô hạn
 					}
 				}

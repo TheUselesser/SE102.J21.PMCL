@@ -33,7 +33,7 @@ void Player::InitPlayer(float x, float y)
 	setVelY(DEFAULT_VELOCITY_Y);
 
 	minHeight = getY();
-	maxHeight = minHeight + 64;
+	maxHeight = minHeight + DEFAULT_JUMP_HEIGHT;
 
 	isMovable = true;
 	isMoving = directionChanged = startAnimation = isJumping = false;
@@ -85,22 +85,13 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			break;
 		case PLAYER_MOVING:
 			setVelX(DEFAULT_VELOCITY_X * direction);
+			SetStatus(PLAYER_STANDING, directionX);
+			this->status = PLAYER_MOVING;
 			startAnimation = true;
-			setSize(22, 32);
-			realWidth = 20;
 			sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 1, 3);
-			if (direction > 0)
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255));
-			}
-			else
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/Ryu_left.png", D3DCOLOR_XRGB(255, 0, 255));
-			}
 			break;
 		case PLAYER_JUMPING:
+			if (isClimbing) isClimbing = false;
 			isJumping = true;
 
 			startAnimation = true;
@@ -126,6 +117,8 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 		case PLAYER_KNOCKBACK:
 			isKnockback = true;
 			isMovable = false;
+			isMoving = false;
+			isClimbing = false;
 			isJumping = false;
 			isOnGround = true;
 			startKnockback = GetTickCount();
@@ -202,6 +195,35 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 				sprite->LoadTexture("images/Ryu_jump_attack_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
+		case PLAYER_CLINGING:
+			isClimbing = true;
+			if (isMoving) isMoving = false;
+			if (isJumping) isJumping = false;
+			isOnGround = true;
+			if (isAttacking) isAttacking = false;
+
+			startAnimation = false;
+			setSize(16, 32);
+			realWidth = 16;
+			sprite->SetAnimation(getWidth(), getHeight(), 1, 1, 0, 0);
+			if (direction > 0)
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/Ryu_climb_right.png", D3DCOLOR_XRGB(255, 0, 255));
+			}
+			else
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/Ryu_climb_left.png", D3DCOLOR_XRGB(255, 0, 255));
+			}
+			break;
+		case PLAYER_CLIMBING:
+			setVelY(DEFAULT_CLIMB_VELOCITY * directionY);
+			SetStatus(PLAYER_CLINGING, directionX);
+			this->status = PLAYER_CLIMBING;
+			startAnimation = true;
+			sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
+			break;
 		case PLAYER_DIE:
 			isDead = true;
 			break;
@@ -228,23 +250,27 @@ void Player::Update(DWORD dt)
 	// Chỉ xử lý các trạng thái chủ động khi không bị knockback
 	if (!isKnockback)
 	{
-		// Xử lý di chuyển
-		if (isMovable)
-		{
-			if (isMoving)
-			{
-				if (!collideGroundX)
-				{
-					selfMovingX();
-				}
-			}
-		}
-
-		//
+		// lên xuống qua lại
 		if (directionChanged)
 		{
 			SetStatus(this->status, directionX);
 			directionChanged = false;
+		}
+
+		// Xử lý di chuyển
+		if (isMovable)	// chủ yếu để ép player đứng yên khi đánh lúc đang đứng
+		{
+			if (isMoving)
+			{
+				if (isClimbing)
+				{
+					selfMovingY();
+				}
+				else
+				{
+					selfMovingX();
+				}
+			}
 		}
 
 		// Xử lý nhảy
@@ -263,6 +289,10 @@ void Player::Update(DWORD dt)
 			{
 				directionY = -1;
 				isOnGround = false;
+
+				// tạm để đây
+				//isJumpable = false;
+				//startCooldownJump = GetTickCount();
 			}
 
 			if (getY() <= minHeight)
@@ -276,7 +306,7 @@ void Player::Update(DWORD dt)
 		if (isAttacking)
 		{
 			// Khi đứng
-			if (isOnGround && !isJumping)
+			if (isOnGround && !isJumping && !isClimbing)
 			{
 				//timer.tickPerAnim = STAND_ATTACK_TIME / 3;
 				if (GetTickCount() - startAttack >= STAND_ATTACK_TIME)
@@ -340,6 +370,15 @@ void Player::Update(DWORD dt)
 		}
 	}
 
+	// ?
+	if (!isJumpable)
+	{
+		if (GetTickCount() - startCooldownJump >= COOLDOWN_JUMP)
+		{
+			isJumpable = true;
+		}
+	}
+
 	// Invincible
 	if (isInvincible)
 	{
@@ -358,7 +397,7 @@ void Player::Update(DWORD dt)
 		moveY(-DEFAULT_VELOCITY_Y);
 	}
 	// Kiểm tra xem nhân vật có đang đứng trên mặt đất hay không
-	if (!isJumping && getY() > minHeight)
+	if (!isJumping && !isClimbing && getY() > minHeight)
 	{
 		isOnGround = false;
 	}
@@ -380,9 +419,9 @@ void Player::Update(DWORD dt)
 	}
 	// Kiểm tra giới hạn di chuyển
 	// giới hạn nhân vật trong map
-	if (this->getX() < mapStart)
+	if (this->getRight() - this->getRealWidth() < mapStart && this->getRight() > mapStart)
 	{
-		this->setX(mapStart);
+		this->setX(mapStart - this->getWidth() + this->getRealWidth());
 	}
 	// giới hạn camera trong map
 	if (cameraX < mapStart)

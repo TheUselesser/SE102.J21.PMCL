@@ -151,6 +151,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Runner.cpp" />
+    <ClCompile Include="SpiritualStrength.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="SwordMan.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Runner.h" />
+    <ClInclude Include="SpiritualStrength.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="SwordMan.h" />

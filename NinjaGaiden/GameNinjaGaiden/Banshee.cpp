@@ -8,8 +8,7 @@ Banshee::Banshee(float x, float y)
 {
 	setSize(DEFAULT_BANSHEE_WIDTH, DEFAULT_BANSHEE_HEIGHT);
 	spawnX = x;
-	setX(x);
-	setY(y + getHeight());
+	spawnY = y;
 	isExist = false;
 }
 
@@ -21,7 +20,9 @@ void Banshee::Init(GameObject * player)
 {
 	isExist = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
-	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
+	setX(spawnX);
+	setY(spawnY + getHeight());
+	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	setVelX(DEFAULT_BANSHEE_VELOCITY * directionX);
 
 	SetStatus(ENEMY_STANDING);

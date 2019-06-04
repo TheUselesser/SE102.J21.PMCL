@@ -11,8 +11,7 @@ SwordMan::SwordMan(float x, float y)
 {
 	setSize(DEFAULT_SWORD_MAN_WIDTH, DEFAULT_SWORD_MAN_HEIGHT);
 	spawnX = x;
-	setX(x);
-	setY(y + getHeight());
+	spawnY = y;
 	isExist = false;
 }
 
@@ -24,7 +23,9 @@ void SwordMan::Init(GameObject * player)
 {
 	isExist = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
-	
+
+	setX(spawnX);
+	setY(spawnY + getHeight());
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 
 	setVelX(DEFAULT_SWORD_MAN_VELOCITY * directionX);

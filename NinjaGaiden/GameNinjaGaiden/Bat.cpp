@@ -1,4 +1,4 @@
-#include "Bat.h"
+﻿#include "Bat.h"
 Bat::Bat()
 {
 	setSize(DEFAULT_BAT_WIDTH, DEFAULT_BAT_HEIGHT);
@@ -8,12 +8,27 @@ Bat::Bat(float x, float y)
 {
 	setSize(DEFAULT_BAT_WIDTH, DEFAULT_BAT_HEIGHT);
 	spawnX = x;
-	setX(x);
-	setY(y + getHeight());
+	spawnY = y;
 }
 
 Bat::~Bat()
 {
+}
+
+void Bat::Init(GameObject * player)
+{
+	setX(spawnX);
+	setY(spawnY + getHeight());
+	directionX = player->getMidX() <= getMidX() ? -1 : 1;
+
+	if (directionX < 0)
+	{
+		// quay trái
+	}
+	else
+	{
+		// quay phải
+	}
 }
 
 void Bat::SetStatus(ENEMY_STATUS status)

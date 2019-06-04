@@ -10,8 +10,8 @@ Cannoneer::Cannoneer()
 Cannoneer::Cannoneer(float x, float y)
 {
 	setSize(DEFAULT_CANNONEER_WIDTH, DEFAULT_CANNONEER_HEIGHT);
-	setX(x);
-	setY(y + getHeight());
+	spawnX = x;
+	spawnY = y;
 	isExist = false;
 }
 
@@ -24,7 +24,9 @@ void Cannoneer::Init(GameObject * player)
 	isExist = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
 	directionChanged = false;
-	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
+	setX(spawnX);
+	setY(spawnY + getHeight());
+	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 
 	// SetStatus(ENEMY_STANDING);
 	status = ENEMY_STANDING;

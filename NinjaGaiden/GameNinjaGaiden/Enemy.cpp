@@ -14,6 +14,7 @@ Enemy::~Enemy()
 
 void Enemy::CheckCollisionStatus(GameObject * player)
 {
+	// bị player tấn công
 	if (player->isAttacking)
 	{
 		if (collisionTime < 1.0f)
@@ -34,6 +35,7 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 		}
 	}
 
+	// đập player (khi hắn không bất tử)
 	if (this->isExist && !player->isInvincible)
 	{
 		if (collisionTime < 1.0f)

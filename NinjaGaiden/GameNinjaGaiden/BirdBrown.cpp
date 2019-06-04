@@ -8,14 +8,11 @@ BirdBrown::BirdBrown(float x, float y)
 {
 	setSize(DEFAULT_BIRD_BROWN_WIDTH, DEFAULT_BIRD_BROWN_HEIGHT);
 	spawnX = x;
-	setX(x);
-	setY(y + getHeight());
-	maxY = getY();
-	minY = maxY - 32;
+	spawnY = y;
 	isExist = false;
 
 	seekRange = 48;
-	playerRange = 64;
+	playerRange = 40;
 	playerIsInSeekRange = false;
 }
 
@@ -27,8 +24,13 @@ void BirdBrown::Init(GameObject * player)
 {
 	isExist = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
+	setX(spawnX);
+	setY(spawnY + getHeight());
+	maxY = getY();
+	minY = maxY - 32;
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	directionY = -1;
+
 	setVelX(DEFAULT_BIRD_BROWN_VELOCITY * directionX);
 	setVelY(DEFAULT_BIRD_BROWN_VELOCITY * directionY);
 

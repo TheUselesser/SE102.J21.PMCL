@@ -93,8 +93,7 @@ void Stage::Update(DWORD dt, Player * player)
 			if (firstCellPosition.x > prevFirstCellPosition.x || lastCellPosition.x > prevLastCellPosition.x)
 			{
 				std::string msg = std::to_string(firstCellPosition.x);
-				//MessageBox(0, msg.c_str(), "", 0);
-				
+
 				grid->IgnoreLeft(Camera::getInstance());
 				if (lastCellPosition.x > prevLastCellPosition.x)
 				{

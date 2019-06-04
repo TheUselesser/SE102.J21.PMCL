@@ -14,11 +14,12 @@ class Enemy :
 {
 protected: 
 	ENEMY_STATUS status;
+	float spawnX, spawnY;
+
 	// Dành cho mấy con có di chuyển lên xuống
 	float minY, maxY;
 public:
 	bool directionChanged;
-	float spawnX;
 
 	Enemy();
 	~Enemy();

@@ -91,7 +91,10 @@ void Sprite::Draw(float x, float y, Rect * rect)
 
 	float xV, yV;
 	Camera::getInstance()->worldToView(x, y, xV, yV);
-	spriteTexture.Draw(xV, yV, &frame);
+	//if (yV <= Camera::getInstance()->getTop()) 
+	{
+		spriteTexture.Draw(xV, yV, &frame);
+	}
 }
 
 void Sprite::Release()

@@ -25,6 +25,8 @@ public:
 
 	void readGridInfo(const char * gridInfoPath, const char * cellsInfoPath);
 	void readCellsInfo(const char * cellsInfoPath);
+	// Khởi tạo grid
+	void InitGrid(Camera * camera);
 	
 	// liên tục cập nhật bộ cells tùy theo vị trí của camera
 	void UpdateCellsSet(Camera * camera);
@@ -37,8 +39,7 @@ public:
 	void AddLeft(Camera * camera, GameObject * player);
 	void AddRight(Camera * camera, GameObject * player);
 
-	// Một vài xử lý trước khi lấy objectList
-	void InitGrid(Camera * camera);
+	// Cập nhật objectList mỗi khi có cell thay đổi
 	void UpdateObjectList(Camera * camera);
 	// Lấy object từ những cell giao với camera
 	std::vector<GameObject*> GetObjectList(Camera * camera);

@@ -1,11 +1,15 @@
 ﻿#pragma once
 #include "GameObject.h"
 
-#define DEFAULT_VELOCITY_X	4
+#define DEFAULT_VELOCITY_X	6
 #define DEFAULT_VELOCITY_Y	8
+#define DEFAULT_CLIMB_VELOCITY 4
 #define DEFAULT_WIDTH 20
 #define DEFAULT_HEIGHT	32
+#define DEFAULT_JUMP_HEIGHT 56
 
+// Mỗi lần nhảy cách nhau 1 tí xíu
+#define COOLDOWN_JUMP 300
 // bị đẩy lùi delay 0.5s
 #define KNOCKBACK_TIME 500
 // mỗi lần bất tử sẽ kéo dài 3s từ lúc bắt đầu bị knockback do va chạm enemy
@@ -20,7 +24,8 @@ class Player :
 	static Player * instance;
 
 	PLAYER_STATUS status;
-
+	
+	DWORD startCooldownJump;
 	DWORD startKnockback;
 	DWORD startInvincible;
 	DWORD startAttack;
@@ -31,11 +36,13 @@ class Player :
 	// thêm các chỉ số máu, số mạng, vũ khí . . .
 	int HP, maxHP;
 	int life;
+	// WEAPON_TYPE weapon;	// kiểu  kiểu vầy
 
 	Player();
 	~Player();
 public:
 	bool isMovable;
+	bool isJumpable;
 	bool isMoving;
 	bool directionChanged;
 
@@ -46,7 +53,7 @@ public:
 	
 	void setMinJumpHeight(float minHeight);
 	float getMinJumpHeight() { return minHeight; }
-	void resetMaxJumpHeight() { maxHeight = minHeight + 64; }
+	void resetMaxJumpHeight() { maxHeight = minHeight + DEFAULT_JUMP_HEIGHT; }
 	float getMaxJumpHeight() { return maxHeight; }
 	float getDefaultPlayerWidth() { return DEFAULT_WIDTH; }
 	float getDefaultPlayerHeight() { return DEFAULT_HEIGHT; }

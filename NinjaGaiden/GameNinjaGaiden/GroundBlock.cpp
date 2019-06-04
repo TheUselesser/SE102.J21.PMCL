@@ -24,40 +24,10 @@ bool GroundBlock::blockMovingX()
 	return groundType == 1 ? true : false;
 }
 
-bool GroundBlock::canBeReachedFrom(GroundBlock * block, GameObject player)
-{
-	if (block == this)
-	{
-		return true;
-	}
-	// Xét theo di chuyển y
-	else if ((this->getTop() >= block->getTop() && this->getTop() <= player.getBottom()) ||
-		(this->getTop() < block->getTop()))
-	{
-		return true;
-	}
-	// Xét theo di chuyển x
-	/*else if ()
-	{
-		return true;
-	}*/
-	else
-		return false;
-}
-
 void GroundBlock::CheckCollisionStatus(GameObject * player)
 {
 	if (collisionTime < 1.0f)
 	{
-		if (ny == 1)
-		{
-			if (player->getBottom() <= this->getTop() && player->getBottom() >= this->getTop() - 4)
-			{
-				player->isOnGround = true;
-				player->setY(this->getTop() + player->getDefaultPlayerHeight());
-			}
-		}
-
 		if (this->blockMovingX())
 		{
 			if (player->getBottom() < this->getTop())
@@ -72,6 +42,21 @@ void GroundBlock::CheckCollisionStatus(GameObject * player)
 				{
 					player->setX(this->getRight() - player->getWidth() + player->getRealWidth());
 				}
+			}
+		}
+
+		// bám thang
+		if (groundType == 3 && player->isJumping)
+		{
+			if (player->getBottom() < this->getTop())
+			{
+				// va chạm bên trái block
+				if (player->getX() + player->getRealWidth() > this->getLeft() && player->getLeft() < this->getLeft())
+				{
+					player->setX(this->getLeft() - player->getRealWidth());
+				}
+
+				player->SetStatus(PLAYER_CLINGING, player->directionX);
 			}
 		}
 	}

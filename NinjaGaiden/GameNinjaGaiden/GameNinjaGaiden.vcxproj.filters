@@ -31,6 +31,9 @@
     <Filter Include="2_Game Objects\21_Enemies">
       <UniqueIdentifier>{93f138b1-2ae1-45ef-bd1f-243077faa5b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2_Game Objects\22_Items">
+      <UniqueIdentifier>{a026d71c-384d-46d1-9494-4d452705fc00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winmain.cpp">
@@ -84,12 +87,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>1_Game Core</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GroundBlock.cpp">
       <Filter>2_Game Objects\20_</Filter>
     </ClCompile>
@@ -119,6 +116,15 @@
     </ClCompile>
     <ClCompile Include="GroundBlocks.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemContainer.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>2_Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiritualStrength.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,12 +176,6 @@
     <ClInclude Include="Game.h">
       <Filter>1_Game Core</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GroundBlock.h">
       <Filter>2_Game Objects\20_</Filter>
     </ClInclude>
@@ -205,6 +205,15 @@
     </ClInclude>
     <ClInclude Include="GroundBlocks.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemContainer.h">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>2_Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SpiritualStrength.h">
+      <Filter>2_Game Objects\22_Items</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

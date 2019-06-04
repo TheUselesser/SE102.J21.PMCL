@@ -12,7 +12,7 @@ class GridCell
 	int size;
 	int listSize;
 	std::vector<GameObject*> objectList;
-	std::vector<D3DXVECTOR3*> objectInfoList;
+	std::vector<D3DXVECTOR4*> objectInfoList;
 
 public:
 	bool isEmpty;
@@ -25,13 +25,13 @@ public:
 	int getSize();		void setSize(int size);
 	int getListSize();	void setListSize(int n);
 
-	void InitObject(float x, float y, int objTypeID);
-	void InitObject(D3DXVECTOR3 * objectInfo);
+	void InitObject(float x, float y, int objTypeID, int itemTypeID = -1);
+	void InitObject(D3DXVECTOR4 * objectInfo);
 	void InitAllObjects();
 
-	void addObjectInfo(float x, float y, int objTypeID);
+	void addObjectInfo(float x, float y, int objTypeID, int itemTypeID = -1);
 	std::vector<GameObject*> getObjectList();
-	std::vector<D3DXVECTOR3*> getObjectInfoList();
+	std::vector<D3DXVECTOR4*> getObjectInfoList();
 
 	void enableUpdate(GameObject * player);
 	void disableUpdate();

@@ -63,7 +63,7 @@ void GroundBlocks::Update(DWORD dt, GameObject &player)
 
 	for (i = 0; i < numberOfBlocks; i++)
 	{
-		if (player.isJumping)
+		if (player.isJumping || player.isClimbing)
 		{
 			count++;
 		}
@@ -77,29 +77,27 @@ void GroundBlocks::Update(DWORD dt, GameObject &player)
 			{
 				count++;
 				currentHeight[i] = player.getBottom() - groundBlocks[i]->getTop();
+				
+				// khởi tạo giá trị cho minHeight
 				if (minHeight == -1) minHeight = currentHeight[i];
 			}
 
 			// xác định block đang đứng
-			if (player.getBottom() >= groundBlocks[i]->getTop() && player.isOnGround && !player.isJumping)
+			if (player.getBottom() >= groundBlocks[i]->getTop())
 			{
 				if (currentHeight[i] <= minHeight)
 				{
 					minHeight = currentHeight[i];
 					currentBlock = groundBlocks[i];
-					player.setMinJumpHeight(currentBlock->getTop());
-					player.resetMaxJumpHeight();
+					if (!player.isClimbing) 
+						player.setMinJumpHeight(currentBlock->getTop());
 				}
 			}
 
-			if (!player.isOnGround || player.isJumping)
+			// Khi đặt chân lên block thì cập nhật maxJumpHeight
+			if (player.isOnGround && !player.isJumping)
 			{
-				if (player.getBottom() >= groundBlocks[i]->getTop() &&
-					(player.getBottom() < currentBlock->getTop() ||
-					(groundBlocks[i]->getTop() > currentBlock->getTop())))
-				{
-					player.setMinJumpHeight(groundBlocks[i]->getTop());
-				}
+				player.resetMaxJumpHeight();
 			}
 
 			groundBlocks[i]->Update(dt, player);

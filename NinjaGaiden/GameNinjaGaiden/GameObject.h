@@ -47,7 +47,21 @@ enum COLLISION_TYPE
 {
 	COLLISION_TYPE_GROUND,
 	COLLISION_TYPE_ENEMY,
-	COLLISION_TYPE_ITEM
+	COLLISION_TYPE_ITEM,
+	COLLISION_TYPE_NOTHING,
+};
+// Loại item
+enum ITEM_TYPE
+{
+	ITEM_SPIRITUAL_STR_5_PTS = 1,
+	ITEM_SPIRITUAL_STR_10_PTS = 2,
+	ITEM_TIME_FREEZE = 3,
+	ITEM_THROWING_STAR = 4,
+	ITEM_BONUS_500_PTS = 5,
+	ITEM_BONUS_1000_PTS = 6,
+	ITEM_FIRE_WHEEL_ART = 7,
+	ITEM_HP_RECOVER = 8,
+	ITEM_WINDMILL_THROWING_STAR = 9,
 };
 
 // trạng thái của player
@@ -62,6 +76,9 @@ enum PLAYER_STATUS
 	PLAYER_INVINCIBLE,
 	PLAYER_ATTACK,
 	PLAYER_JUMP_ATTACK,
+	PLAYER_CLINGING,
+	PLAYER_CLIMBING,
+	PLAYER_ITEM_USE,
 	PLAYER_DIE,
 };
 
@@ -90,6 +107,7 @@ public:
 
 	// player only
 	bool isJumping;
+	bool isClimbing;
 	bool isInvincible;
 	bool isKnockback;
 	bool isOnGround;
@@ -120,6 +138,8 @@ public:
 	GAME_OBJECT_TYPE getObjectType();
 	void setCollisionType(COLLISION_TYPE collisionType);
 	COLLISION_TYPE getCollisionType();
+	// item container
+	virtual void setItemTypeID(int id) {}
 
 	// General
 	virtual void Init();

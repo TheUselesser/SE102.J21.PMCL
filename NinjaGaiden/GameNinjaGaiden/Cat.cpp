@@ -8,10 +8,7 @@ Cat::Cat(float x, float y)
 {
 	setSize(DEFAULT_CAT_WIDTH, DEFAULT_CAT_HEIGHT);
 	spawnX = x;
-	setX(x);
-	setY(y + getHeight());
-	minY = getY();
-	maxY = minY + 6;
+	spawnY = y;
 	isExist = false;
 }
 
@@ -23,7 +20,11 @@ void Cat::Init(GameObject * player)
 {
 	isExist = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
-	directionX = -1;	// mai mốt xét direction tùy theo vị trí của player
+	setX(spawnX);
+	setY(spawnY + getHeight());
+	minY = getY();
+	maxY = minY + 6;
+	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	directionY = 1;
 	setVelX(DEFAULT_CAT_VELOCITY * directionX);
 	setVelY(DEFAULT_CAT_VELOCITY/2 * directionY);	// mai mốt có gravity thì sửa
