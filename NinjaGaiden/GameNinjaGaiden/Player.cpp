@@ -22,6 +22,16 @@ Player::~Player()
 {
 }
 
+void Player::setMinClimbHeight(float minClimbHeight)
+{
+	this->minClimbHeight = minClimbHeight + DEFAULT_HEIGHT;
+}
+
+void Player::setMaxClimbHeight(float maxClimbHeight)
+{
+	this->maxClimbHeight = maxClimbHeight;
+}
+
 void Player::InitPlayer(float x, float y)
 {
 	//CreateObject("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255), 22, 32);
@@ -51,10 +61,11 @@ void Player::InitPlayer(float x, float y)
 void Player::setMinJumpHeight(float minHeight)
 {
 	this->minHeight = minHeight + DEFAULT_HEIGHT;
-	if (getY() > this->minHeight)
-	{
-		if (!isJumping) isOnGround = false;
-	}
+}
+
+void Player::setMaxJumpHeight(float maxHeight)
+{
+	this->maxHeight = maxHeight;
 }
 
 void Player::SetStatus(PLAYER_STATUS status, int direction)
@@ -199,7 +210,7 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			isClimbing = true;
 			if (isMoving) isMoving = false;
 			if (isJumping) isJumping = false;
-			isOnGround = true;
+			if (!isOnGround) isOnGround = true;
 			if (isAttacking) isAttacking = false;
 
 			startAnimation = false;
@@ -209,12 +220,12 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			if (direction > 0)
 			{
 				sprite->Release();
-				sprite->LoadTexture("images/Ryu_climb_right.png", D3DCOLOR_XRGB(255, 0, 255));
+				sprite->LoadTexture("images/Ryu_climb_right.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			else
 			{
 				sprite->Release();
-				sprite->LoadTexture("images/Ryu_climb_left.png", D3DCOLOR_XRGB(255, 0, 255));
+				sprite->LoadTexture("images/Ryu_climb_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
 		case PLAYER_CLIMBING:
@@ -262,14 +273,25 @@ void Player::Update(DWORD dt)
 		{
 			if (isMoving)
 			{
-				if (isClimbing)
-				{
-					selfMovingY();
-				}
-				else
+				if (!isClimbing)
 				{
 					selfMovingX();
 				}
+			}
+		}
+
+		// Xử lý leo trèo
+		if (isClimbing)
+		{
+			if (isMoving)
+			{
+				if (getY() <= maxClimbHeight && getY() >= minClimbHeight)
+					selfMovingY();
+
+				if (getY() > maxClimbHeight)
+					setY(maxClimbHeight);
+				if (getY() < minClimbHeight)
+					setY(minClimbHeight);
 			}
 		}
 
@@ -290,7 +312,6 @@ void Player::Update(DWORD dt)
 				directionY = -1;
 				isOnGround = false;
 
-				// tạm để đây
 				//isJumpable = false;
 				//startCooldownJump = GetTickCount();
 			}
@@ -401,7 +422,7 @@ void Player::Update(DWORD dt)
 	{
 		isOnGround = false;
 	}
-	if (getY() <= minHeight)
+	else if (getY() <= minHeight)
 	{
 		if (getY() < minHeight)
 			setY(minHeight);

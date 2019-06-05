@@ -123,11 +123,16 @@ public:
 	virtual void setMinJumpHeight(float) {}
 	virtual float getMinJumpHeight() { return 0.0f; }
 	virtual void resetMaxJumpHeight() {}
+	virtual void setMaxJumpHeight(float) {}
 	virtual float getMaxJumpHeight() { return 0.0f; }
 	virtual float getDefaultPlayerWidth() { return 0.0f; }
 	virtual float getDefaultPlayerHeight() { return 0.0f; }
 	virtual void SetStatus(PLAYER_STATUS, int = 1) {}
 	virtual float getRealWidth() { return 0.0f; }
+	virtual void setMinClimbHeight(float) {}
+	virtual float getMinClimbHeight() { return 0.0f; }
+	virtual void setMaxClimbHeight(float) {}
+	virtual float getMaxClimbHeight() { return 0.0f; }
 
 	// Dùng trong Collision.cpp để lấy thông tin va chạm (cụ thể là với nhân vật)
 	void UpdateCollisionStatus(int nx, int ny, float collisionTime);

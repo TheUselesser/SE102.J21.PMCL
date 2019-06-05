@@ -36,18 +36,22 @@ void Camera::worldToView(float xW, float yW, float & xV, float & yV)
 	// lập matrix translate
 	D3DXMATRIX matrix;
 
+	// Flip Y + Ox
+	//	1	0	0	0
+	//	0	-1	0	0
+	//	-x0	y0	1	0
+	//	0	0	0	1
 	D3DXMatrixIdentity(&matrix);
 	matrix._22 = -1;
 	matrix._31 = -getX();		// x0
 	matrix._32 = getY();		// y0
 
-	//	1	0	0	0
-	//	0	-1	0	0
-	//	-x0	y0	1	0
-	//	0	0	0	1	
-
-	// transform nó
+	// transform
 	D3DXVECTOR4 matrixP(xW, yW, 1, 1);
+	D3DXVec4Transform(&matrixP, &matrixP, &matrix);
+
+	// Translate Y 40
+	D3DXMatrixTranslation(&matrix, 0, 40, 0);
 	D3DXVec4Transform(&matrixP, &matrixP, &matrix);
 
 	xV = matrixP.x;

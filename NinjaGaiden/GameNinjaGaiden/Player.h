@@ -10,8 +10,8 @@
 
 // Mỗi lần nhảy cách nhau 1 tí xíu
 #define COOLDOWN_JUMP 300
-// bị đẩy lùi delay 0.5s
-#define KNOCKBACK_TIME 500
+// bị đẩy lùi delay 0.3s
+#define KNOCKBACK_TIME 300
 // mỗi lần bất tử sẽ kéo dài 3s từ lúc bắt đầu bị knockback do va chạm enemy
 #define INVINCIBLE_TIME 3000
 // mỗi đòn tấn công kéo dài 0.3s
@@ -32,6 +32,7 @@ class Player :
 
 	float minHeight, maxHeight;
 	bool maxHeightReached;
+	float minClimbHeight, maxClimbHeight;
 
 	// thêm các chỉ số máu, số mạng, vũ khí . . .
 	int HP, maxHP;
@@ -51,13 +52,18 @@ public:
 
 	static Player * getInstance();
 	
-	void setMinJumpHeight(float minHeight);
+	void setMinJumpHeight(float minHeight);		// set min dưới chân
 	float getMinJumpHeight() { return minHeight; }
 	void resetMaxJumpHeight() { maxHeight = minHeight + DEFAULT_JUMP_HEIGHT; }
+	void setMaxJumpHeight(float maxHeight);		// set max trên đầu
 	float getMaxJumpHeight() { return maxHeight; }
 	float getDefaultPlayerWidth() { return DEFAULT_WIDTH; }
 	float getDefaultPlayerHeight() { return DEFAULT_HEIGHT; }
 	float getRealWidth() { return realWidth; }
+	void setMinClimbHeight(float minClimbHeight);
+	float getMinClimbHeight() { return minClimbHeight; }
+	void setMaxClimbHeight(float maxClimbHeight);
+	float getMaxClimbHeight() { return maxClimbHeight; }
 
 	// Nhập x, y là điểm dưới trái của nhân vật
 	void InitPlayer(float x, float y);

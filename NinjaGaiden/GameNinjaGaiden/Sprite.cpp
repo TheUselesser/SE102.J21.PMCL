@@ -91,7 +91,18 @@ void Sprite::Draw(float x, float y, Rect * rect)
 
 	float xV, yV;
 	Camera::getInstance()->worldToView(x, y, xV, yV);
-	//if (yV <= Camera::getInstance()->getTop()) 
+
+	// Định làm giới hạn hình ảnh không vượt ra khỏi camera nhưng fail rồi
+	/*if (y > 176)
+	{
+		frame.top += y - 176;
+
+		if (frame.top > frame.bottom)
+		{
+			frame.top = frame.bottom;
+		}
+	}*/
+	if (rect->getBottom() <= Camera::getInstance()->getHeight())
 	{
 		spriteTexture.Draw(xV, yV, &frame);
 	}

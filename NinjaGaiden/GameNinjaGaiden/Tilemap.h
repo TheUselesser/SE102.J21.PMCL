@@ -17,6 +17,6 @@ public:
 
 	void LoadTilemap(const char * imagePath, const char * matrixPath);	// đường dẫn tilesheet và matrix
 	void Draw(Camera * camera);
-	void Release();
+	void Release() {}
 };
 

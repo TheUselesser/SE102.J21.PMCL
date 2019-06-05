@@ -1,4 +1,5 @@
 ﻿#include "Enemy.h"
+#include "Game.h"
 
 #include "Collision.h"
 
@@ -36,7 +37,9 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 	}
 
 	// đập player (khi hắn không bất tử)
-	if (this->isExist && !player->isInvincible)
+	if (this->isExist && !player->isInvincible
+		&& Game::getInstance()->allowHurtingPlayer
+		)
 	{
 		if (collisionTime < 1.0f)
 		{

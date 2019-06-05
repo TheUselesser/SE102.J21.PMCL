@@ -1,4 +1,5 @@
 ﻿#include "SpiritualStrength.h"
+#include "Collision.h"
 
 
 
@@ -46,24 +47,25 @@ void SpiritualStrength::Init(float x, float y)
 
 void SpiritualStrength::Update(DWORD dt, GameObject & player)
 {
+	Collision::CollisionHandle(player, *this);
 	Draw();
 }
 
 void SpiritualStrength::CheckCollisionStatus(GameObject * player)
 {
-	if (this->isExist && !player->isInvincible)
+	if (this->isExist)
 	{
-		if (collisionTime < 1.0f)
+		if (collisionTime < 1.0f && !player->isAttacking)
 		{
 			// Xử lý khi player nhặt item
 			// cái thứ này chỉ có 2 loại là +5 và +10
 			if (type == SPIRITUAL_STRENGTH_5)
 			{
-				
+				isExist = false;
 			}
 			else
 			{
-				
+				isExist = false;
 			}
 		}
 	}

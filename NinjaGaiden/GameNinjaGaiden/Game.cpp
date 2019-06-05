@@ -1,6 +1,7 @@
 ﻿#include "Game.h"
 #include <time.h>
 #include "DXInput.h"
+#include "Scorebar.h"
 
 #include <string>
 
@@ -143,6 +144,9 @@ void Game::InitGame()
 	Player::getInstance()->InitPlayer(stage->getPlayerStart(), groundLine);
 	// Camera
 	Camera::getInstance()->setX(0);
+
+	// Scorebar
+	Scorebar::getInstance()->Init();
 }
 
 void Game::run()
@@ -161,13 +165,6 @@ void Game::run()
 		{
 			// Nếu không vẽ gì thì màn hình sẽ đen thui
 			d3ddev->Clear(0, 0, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-
-			RECT * rect = new RECT();
-			rect->top = 0;
-			rect->left = 0;
-			rect->right = 256;
-			rect->bottom = 40;
-			d3ddev->ColorFill(backbuffer, rect, D3DCOLOR_XRGB(255, 0, 255));
 
 			// Xử lý phím
 			KeysControl();
@@ -194,6 +191,9 @@ void Game::update()
 
 	// Vẽ Ryu
 	Player::getInstance()->Update(60);
+
+	// Vẽ Scorebar
+	Scorebar::getInstance()->Update();
 }
 
 void Game::end()
@@ -227,11 +227,27 @@ void Game::KeysControl()
 		std::string msg = std::to_string(Player::getInstance()->isJumping) + " " + std::to_string(Player::getInstance()->isOnGround) + " " + std::to_string(Player::getInstance()->getMinJumpHeight()) + " " + std::to_string(Player::getInstance()->getMaxJumpHeight());
 		MessageBox(0, msg.c_str(), "checking", 0);
 	}
-	// Hold [Q] to be invincible
+	// [Q] to turn on/off invincibility
 	if (Key_Down(DIK_Q))
 	{
-		Player::getInstance()->isInvincible = true;
+		allowHurtingPlayer = !allowHurtingPlayer;
 	}
+	// [1] [2] [3] to switch between stages
+	if (Key_Down(DIK_NUMPAD1))
+	{
+		stageIndex = 0;
+		init();
+	}
+	if (Key_Down(DIK_NUMPAD2))
+	{
+		stageIndex = 1;
+		init();
+	}
+	/*if (Key_Down(DIK_NUMPAD3))
+	{
+		stageIndex = 2;
+		init();
+	}*/
 
 	// ******************************************************
 
@@ -257,10 +273,13 @@ void Game::KeysControl()
 	// Không di chuyển
 	else
 	{
-		if (!Player::getInstance()->isClimbing) Player::getInstance()->isMoving = false;
-		if (!Player::getInstance()->isJumping && !Player::getInstance()->isClimbing && !Player::getInstance()->isKnockback)
+		if (!Player::getInstance()->isClimbing)
 		{
-			Player::getInstance()->SetStatus(PLAYER_STANDING, Player::getInstance()->directionX);
+			Player::getInstance()->isMoving = false;
+			if (!Player::getInstance()->isJumping && !Player::getInstance()->isKnockback)
+			{
+				Player::getInstance()->SetStatus(PLAYER_STANDING, Player::getInstance()->directionX);
+			}
 		}
 	}
 	// [UP ARROW] [DOWN ARROW] trèo lên xuống
@@ -303,6 +322,14 @@ void Game::KeysControl()
 	// [Space] [X] nhảy
 	if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
 	{
+		if (Player::getInstance()->isClimbing)
+		{
+			// thiết lập sau khi thoát climbing
+			Player::getInstance()->isClimbing = false;
+			Player::getInstance()->setMinJumpHeight(Player::getInstance()->getBottom());
+			Player::getInstance()->setMaxJumpHeight(Player::getInstance()->getMinJumpHeight() + 48);
+		}
+
 		if (Player::getInstance()->isJumpable)
 		{
 			if (!Player::getInstance()->isAttacking && !Player::getInstance()->isKnockback)

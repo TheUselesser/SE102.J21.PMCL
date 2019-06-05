@@ -89,15 +89,11 @@ void ItemContainer::CheckCollisionStatus(GameObject * player)
 
 void ItemContainer::DropItem()
 {
-	std::string msg = std::to_string(itemTypeID);
-	MessageBox(0, msg.c_str(), "id", 0);
-
 	// Khởi tạo item
 	switch (itemTypeID)
 	{
 	case 1:
 		// Spiritual Strength 5 points
-		MessageBox(0, "", "", 0);
 		item = new SpiritualStrength();
 		item->setItemTypeID(itemTypeID);
 		break;
@@ -144,6 +140,7 @@ void ItemContainer::Update(DWORD dt, GameObject & player)
 	}
 	else
 	{
-		item->Update(dt, player);
+		if (item->isExist)
+			item->Update(dt, player);
 	}
 }

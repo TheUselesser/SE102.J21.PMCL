@@ -46,17 +46,25 @@ void GroundBlock::CheckCollisionStatus(GameObject * player)
 		}
 
 		// bám thang
-		if (groundType == 3 && player->isJumping)
+		if (groundType == 3 && (player->isJumping || !player->isOnGround))
 		{
-			if (player->getBottom() < this->getTop())
+			//MessageBox(0, "", "", 0);
+			if (player->getTop() < this->getTop())
 			{
 				// va chạm bên trái block
-				if (player->getX() + player->getRealWidth() > this->getLeft() && player->getLeft() < this->getLeft())
+				if (player->getX() + player->getRealWidth() > this->getLeft() && player->getLeft() < this->getLeft()
+					&& Key_Down(DIK_RIGHTARROW))
 				{
+					player->SetStatus(PLAYER_CLINGING, player->directionX);
 					player->setX(this->getLeft() - player->getRealWidth());
+					player->setMinClimbHeight(this->getBottom());
+					player->setMaxClimbHeight(this->getTop());
 				}
-
-				player->SetStatus(PLAYER_CLINGING, player->directionX);
+				// va chạm bên phải block tương tự
+				else
+				{
+					//... stage 3 ko có trường hợp này ^_^ hihi
+				}
 			}
 		}
 	}

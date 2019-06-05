@@ -114,9 +114,6 @@
     <ClCompile Include="Bat.cpp">
       <Filter>2_Game Objects\21_Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="GroundBlocks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ItemContainer.cpp">
       <Filter>2_Game Objects\22_Items</Filter>
     </ClCompile>
@@ -125,6 +122,12 @@
     </ClCompile>
     <ClCompile Include="SpiritualStrength.cpp">
       <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Scorebar.cpp">
+      <Filter>1_Game Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GroundBlocks.cpp">
+      <Filter>2_Game Objects\20_</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,9 +206,6 @@
     <ClInclude Include="Bat.h">
       <Filter>2_Game Objects\21_Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="GroundBlocks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ItemContainer.h">
       <Filter>2_Game Objects\22_Items</Filter>
     </ClInclude>
@@ -214,6 +214,12 @@
     </ClInclude>
     <ClInclude Include="SpiritualStrength.h">
       <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Scorebar.h">
+      <Filter>1_Game Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundBlocks.h">
+      <Filter>2_Game Objects\20_</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
