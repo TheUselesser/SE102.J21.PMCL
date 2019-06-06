@@ -106,42 +106,39 @@ void Game::InitGame()
 	{
 	// Stage 3-1
 	case 0:
-		stage = new Stage();
 		// Map
-		stage->LoadTilemap("images/Stage31/3_1_tilesheet.png", "images/Stage31/3_1_matrix.txt");
-		stage->LoadGroundBlocks("images/Stage31/ground_blocks.txt");
-		stage->setPlayerStart(8);
+		Stage::getInstance()->LoadTilemap("images/Stage31/3_1_tilesheet.png", "images/Stage31/3_1_matrix.txt");
+		Stage::getInstance()->LoadGroundBlocks("images/Stage31/ground_blocks.txt");
+		Stage::getInstance()->setPlayerStart(8);
 		groundLine = 38;
 		// Enemy
-		stage->InitGrid("images/Stage31/grid_info.txt", "images/Stage31/cells_info.txt");
+		Stage::getInstance()->InitGrid("images/Stage31/grid_info.txt", "images/Stage31/cells_info.txt");
 		break;
 	// Stage 3-2
 	case 1:
-		stage = new Stage();
 		// Map
-		stage->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
-		stage->LoadGroundBlocks("images/Stage32/ground_blocks.txt");
-		stage->setPlayerStart(0);
+		Stage::getInstance()->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
+		Stage::getInstance()->LoadGroundBlocks("images/Stage32/ground_blocks.txt");
+		Stage::getInstance()->setPlayerStart(0);
 		groundLine = 38;
 		// Enemy
-		stage->InitGrid("images/Stage32/grid_info.txt", "images/Stage32/cells_info.txt");
+		Stage::getInstance()->InitGrid("images/Stage32/grid_info.txt", "images/Stage32/cells_info.txt");
 		break;
 	// Stage 3-3
 	case 2:
-		stage = new Stage();
 		// Map
-		stage->LoadTilemap("images/Stage33/3_3_tilesheet.png", "images/Stage33/3_3_matrix.txt");
-		stage->LoadGroundBlocks("images/Stage33/ground_blocks.txt");
-		stage->setMapStart(512);
-		stage->setPlayerStart(528);
+		Stage::getInstance()->LoadTilemap("images/Stage33/3_3_tilesheet.png", "images/Stage33/3_3_matrix.txt");
+		Stage::getInstance()->LoadGroundBlocks("images/Stage33/ground_blocks.txt");
+		Stage::getInstance()->setMapStart(512);
+		Stage::getInstance()->setPlayerStart(528);
 		groundLine = 28;
 		// Enemy
-		stage->InitGrid("images/Stage33/grid_info.txt", "images/Stage33/cells_info.txt");
+		Stage::getInstance()->InitGrid("images/Stage33/grid_info.txt", "images/Stage33/cells_info.txt");
 		break;
 	}
 
 	// Player Ryu
-	Player::getInstance()->InitPlayer(stage->getPlayerStart(), groundLine);
+	Player::getInstance()->InitPlayer(Stage::getInstance()->getPlayerStart(), groundLine);
 	// Camera
 	Camera::getInstance()->setX(0);
 
@@ -183,17 +180,17 @@ void Game::run()
 
 void Game::update()
 {
+	// Vẽ Scorebar
+	Scorebar::getInstance()->Update();
+
 	// Vẽ tilemap
-	stage->Draw(Camera::getInstance());
+	Stage::getInstance()->Draw(Camera::getInstance());
 
 	// Update enemy trong stage
-	stage->Update(300, Player::getInstance());
+	Stage::getInstance()->Update(300, Player::getInstance());
 
 	// Vẽ Ryu
 	Player::getInstance()->Update(60);
-
-	// Vẽ Scorebar
-	Scorebar::getInstance()->Update();
 }
 
 void Game::end()
@@ -204,19 +201,14 @@ void Game::end()
 	if (d3d != NULL) d3d->Release();
 }
 
+
+
+int count = 0;
+
 void Game::KeysControl()
 {
 	// ***** Will be deleted ********************************
 
-	// Hold [Shift] to speed up
-	if (Key_Down(DIK_LSHIFT) || Key_Down(DIK_RSHIFT))
-	{
-		Player::getInstance()->setVelX(24 * Player::getInstance()->directionX);
-	}
-	else
-	{
-		Player::getInstance()->setVelX(6 * Player::getInstance()->directionX);
-	}
 	// [R] restart stage
 	if (Key_Down(DIK_R))
 	{
@@ -224,13 +216,18 @@ void Game::KeysControl()
 	}
 	if (Key_Down(DIK_B))
 	{
-		std::string msg = std::to_string(Player::getInstance()->isJumping) + " " + std::to_string(Player::getInstance()->isOnGround) + " " + std::to_string(Player::getInstance()->getMinJumpHeight()) + " " + std::to_string(Player::getInstance()->getMaxJumpHeight());
+		std::string msg = std::to_string(count);
 		MessageBox(0, msg.c_str(), "checking", 0);
 	}
-	// [Q] to turn on/off invincibility
+	// [Q] to turn on invincibility
 	if (Key_Down(DIK_Q))
 	{
-		allowHurtingPlayer = !allowHurtingPlayer;
+		allowHurtingPlayer = false;
+	}
+	// [W] to turn off invincibility
+	if (Key_Down(DIK_W))
+	{
+		allowHurtingPlayer = true;
 	}
 	// [1] [2] [3] to switch between stages
 	if (Key_Down(DIK_NUMPAD1))
@@ -260,6 +257,7 @@ void Game::KeysControl()
 
 			if (Player::getInstance()->getVelX() * Player::getInstance()->directionX < 0)
 			{
+				Player::getInstance()->setVelX(-Player::getInstance()->getVelX());
 				Player::getInstance()->directionChanged = true;
 			}
 
@@ -310,6 +308,7 @@ void Game::KeysControl()
 		{
 			if (Player::getInstance()->isOnGround && !Player::getInstance()->isJumping)
 			{
+				count++;
 				Player::getInstance()->SetStatus(PLAYER_ATTACK, Player::getInstance()->directionX);
 			}
 			else
@@ -343,6 +342,18 @@ void Game::KeysControl()
 		}
 	}
 
+	// [C] use item
+	if (Key_Down(DIK_C))
+	{
+		if (Player::getInstance()->hasItem)
+		{
+			Player::getInstance()->getItem()->UseItem();
+			
+			// set animation dùng item
+		}
+	}
+
+
 	// [ESC] close game
 	if (Key_Down(DIK_ESCAPE))
 	{
@@ -355,7 +366,7 @@ void Game::KeysControl()
 	}
 
 	// Đến cuối map -> chuyển stage
-	if (Player::getInstance()->getRight() >= stage->getMapEnd())
+	if (Player::getInstance()->getRight() >= Stage::getInstance()->getMapEnd())
 	{
 		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
 		{
@@ -366,9 +377,4 @@ void Game::KeysControl()
 			InitGame();
 		}
 	}
-}
-
-Stage * Game::getStage()
-{
-	return stage;
 }

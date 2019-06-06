@@ -1,5 +1,5 @@
 ﻿#include "GameObject.h"
-
+#include "Collision.h"
 
 
 GameObject::GameObject()
@@ -54,12 +54,24 @@ COLLISION_TYPE GameObject::getCollisionType()
 	return clsType;
 }
 
+void GameObject::MindTheGroundBlocks(GameObject * groundBlock)
+{
+	Collision::NPOCollision(*this, *groundBlock);
+}
+
 void GameObject::Init()
 {
 }
 
 void GameObject::Update(DWORD dt, GameObject & player)
 {
+}
+
+void GameObject::Freeze(DWORD time)
+{
+	isFreezing = true;
+	startFreezeTime = GetTickCount();
+	freezeTime = time;
 }
 
 void GameObject::Draw()

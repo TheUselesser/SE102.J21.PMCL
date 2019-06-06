@@ -78,7 +78,19 @@ void Cat::Update(DWORD dt, GameObject &player)
 	timer.tickPerAnim = dt;
 
 	SetStatus(ENEMY_MOVING);
-	autoMove(120);
+
+	if (!isFreezing)
+		autoMove(120);
+	else
+	{
+		startAnimation = false;
+
+		if (GetTickCount() - startFreezeTime >= freezeTime)
+		{
+			isFreezing = false;
+		}
+	}
+
 	Draw();
 }
 

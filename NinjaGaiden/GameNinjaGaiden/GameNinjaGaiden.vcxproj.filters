@@ -120,14 +120,32 @@
     <ClCompile Include="Item.cpp">
       <Filter>2_Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="SpiritualStrength.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
     <ClCompile Include="Scorebar.cpp">
       <Filter>1_Game Core</Filter>
     </ClCompile>
     <ClCompile Include="GroundBlocks.cpp">
       <Filter>2_Game Objects\20_</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemBonusPts.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemFireWheelArt.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemRestorePhysicalStrength.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemThrowingStar.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemTimeFreeze.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemWindmillThrowingStar.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemSpiritualStrengthPts.cpp">
+      <Filter>2_Game Objects\22_Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,14 +230,32 @@
     <ClInclude Include="Item.h">
       <Filter>2_Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="SpiritualStrength.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
     <ClInclude Include="Scorebar.h">
       <Filter>1_Game Core</Filter>
     </ClInclude>
     <ClInclude Include="GroundBlocks.h">
       <Filter>2_Game Objects\20_</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemBonusPts.h">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemFireWheelArt.h">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemRestorePhysicalStrength.h">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemThrowingStar.h">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemTimeFreeze.h">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemWindmillThrowingStar.h">
+      <Filter>2_Game Objects\22_Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemSpiritualStrengthPts.h">
+      <Filter>2_Game Objects\22_Items</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

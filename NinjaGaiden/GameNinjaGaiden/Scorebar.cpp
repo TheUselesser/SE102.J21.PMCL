@@ -1,5 +1,6 @@
 ﻿#include "Scorebar.h"
 #include "Game.h"
+#include "Player.h"
 
 #include <string>
 
@@ -79,19 +80,23 @@ void Scorebar::Update()
 	{
 		// stage 3-1
 	case 0:
-		act = 1;
+		stage = 1;
 		break;
 		// stage 3-2
 	case 1:
-		act = 2;
+		stage = 2;
 		break;
 		// stage 3-3
 	case 2:
-		act = 3;
+		stage = 3;
 		break;
 	}
 
-	// Làm cái gì khác nữa...
+	// Update player stats
+	score = Player::getInstance()->getScore();
+	playerHP = Player::getInstance()->getHP();
+	playerSpiritualStr = Player::getInstance()->getSpiritualStrength();
+	playChance = Player::getInstance()->getLife();
 
 
 	// Vẽ lên (0, 0) trên backbuffer

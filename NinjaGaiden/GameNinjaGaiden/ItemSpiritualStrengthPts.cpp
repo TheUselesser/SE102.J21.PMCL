@@ -1,28 +1,27 @@
-﻿#include "SpiritualStrength.h"
-#include "Collision.h"
+﻿#include "ItemSpiritualStrengthPts.h"
+#include "Player.h"
 
 
-
-SpiritualStrength::SpiritualStrength()
+ItemSpiritualStrengthPts::ItemSpiritualStrengthPts()
 {
 }
 
 
-SpiritualStrength::~SpiritualStrength()
+ItemSpiritualStrengthPts::~ItemSpiritualStrengthPts()
 {
 }
 
-void SpiritualStrength::setType(SPIRITUAL_STRENGTH_TYPE type)
+void ItemSpiritualStrengthPts::setType(ITEM_SPIRITUAL_STRENGTH_TYPE type)
 {
 	this->type = type;
 }
 
-SPIRITUAL_STRENGTH_TYPE SpiritualStrength::getType()
+ITEM_SPIRITUAL_STRENGTH_TYPE ItemSpiritualStrengthPts::getType()
 {
 	return type;
 }
 
-void SpiritualStrength::Init(float x, float y)
+void ItemSpiritualStrengthPts::Init(float x, float y)
 {
 	isExist = true;
 	setX(x);
@@ -35,23 +34,17 @@ void SpiritualStrength::Init(float x, float y)
 	switch (getItemType())
 	{
 	case ITEM_SPIRITUAL_STR_5_PTS:
-		type = SPIRITUAL_STRENGTH_5;
+		type = SPIRITUAL_STRENGTH_5_PTS;
 		sprite->LoadTexture("images/items/item_spiritual_strength_5.png", D3DCOLOR_XRGB(255, 255, 255));
 		break;
 	case ITEM_SPIRITUAL_STR_10_PTS:
-		type = SPIRITUAL_STRENGTH_10;
+		type = SPIRITUAL_STRENGTH_10_PTS;
 		sprite->LoadTexture("images/items/item_spiritual_strength_10.png", D3DCOLOR_XRGB(255, 255, 255));
 		break;
 	}
 }
 
-void SpiritualStrength::Update(DWORD dt, GameObject & player)
-{
-	Collision::CollisionHandle(player, *this);
-	Draw();
-}
-
-void SpiritualStrength::CheckCollisionStatus(GameObject * player)
+void ItemSpiritualStrengthPts::CheckCollisionStatus(GameObject * player)
 {
 	if (this->isExist)
 	{
@@ -59,12 +52,14 @@ void SpiritualStrength::CheckCollisionStatus(GameObject * player)
 		{
 			// Xử lý khi player nhặt item
 			// cái thứ này chỉ có 2 loại là +5 và +10
-			if (type == SPIRITUAL_STRENGTH_5)
+			if (type == SPIRITUAL_STRENGTH_5_PTS)
 			{
+				Player::getInstance()->increase_spiritualStrength(5);
 				isExist = false;
 			}
 			else
 			{
+				Player::getInstance()->increase_spiritualStrength(10);
 				isExist = false;
 			}
 		}

@@ -43,5 +43,6 @@ public:
 	void UpdateObjectList(Camera * camera);
 	// Lấy object từ những cell giao với camera
 	std::vector<GameObject*> GetObjectList(Camera * camera);
+	std::vector<GameObject*> GetObjectList();
 };
 

@@ -1,5 +1,11 @@
 ﻿#include "ItemContainer.h"
-#include "SpiritualStrength.h"
+#include "ItemSpiritualStrengthPts.h"
+#include "ItemBonusPts.h"
+#include "ItemFireWheelArt.h"
+#include "ItemRestorePhysicalStrength.h"
+#include "ItemThrowingStar.h"
+#include "ItemTimeFreeze.h"
+#include "ItemWindmillThrowingStar.h"
 
 #include <string>
 
@@ -94,34 +100,48 @@ void ItemContainer::DropItem()
 	{
 	case 1:
 		// Spiritual Strength 5 points
-		item = new SpiritualStrength();
+		item = new ItemSpiritualStrengthPts();
 		item->setItemTypeID(itemTypeID);
 		break;
 	case 2:
 		// Spiritual Strength 10 points
-		item = new SpiritualStrength();
+		item = new ItemSpiritualStrengthPts();
 		item->setItemTypeID(itemTypeID);
 		break;
 	case 3:
 		//ITEM_TIME_FREEZE
+		item = new ItemTimeFreeze();
+		item->setItemTypeID(itemTypeID);
 		break;
 	case 4:
 		//ITEM_THROWING_STAR
+		item = new ItemThrowingStar();
+		item->setItemTypeID(itemTypeID);
 		break;
 	case 5:
 		//ITEM_BONUS_500_PTS
+		item = new ItemBonusPts();
+		item->setItemTypeID(itemTypeID);
 		break;
 	case 6:
 		//ITEM_BONUS_1000_PTS
+		item = new ItemBonusPts();
+		item->setItemTypeID(itemTypeID);
 		break;
 	case 7:
 		//ITEM_FIRE_WHEEL_ART
+		item = new ItemFireWheelArt();
+		item->setItemTypeID(itemTypeID);
 		break;
 	case 8:
 		//ITEM_HP_RECOVER
+		item = new ItemRestorePhysicalStrength();
+		item->setItemTypeID(itemTypeID);
 		break;
 	case 9:
 		//ITEM_WINDMILL_THROWING_STAR
+		item = new ItemWindmillThrowingStar();
+		item->setItemTypeID(itemTypeID);
 		break;
 	default:
 		break;
@@ -142,5 +162,7 @@ void ItemContainer::Update(DWORD dt, GameObject & player)
 	{
 		if (item->isExist)
 			item->Update(dt, player);
+		else
+			this->isExist = false;
 	}
 }

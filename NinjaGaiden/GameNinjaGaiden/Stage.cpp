@@ -4,11 +4,21 @@
 #include <string>
 #include "DXInput.h"
 
+
+Stage * Stage::instance = NULL;
+Stage * Stage::getInstance()
+{
+	if (instance == NULL)
+	{
+		instance = new Stage();
+	}
+	return instance;
+}
+
 Stage::Stage()
 {
 	mapStart = mapEnd = playerStart = playerEnd = 0;
 }
-
 
 Stage::~Stage()
 {
@@ -75,8 +85,14 @@ std::vector<GameObject*> Stage::GetObjectList()
 	return grid->GetObjectList(Camera::getInstance());
 }
 
+std::vector<GameObject*> Stage::GetAllObjects()
+{
+	return grid->GetObjectList();
+}
+
 void Stage::Update(DWORD dt, Player * player)
 {
+	// Update grid
 	if (!grid->isEmpty)
 	{
 		grid->UpdateCellsSet(Camera::getInstance());
@@ -120,11 +136,16 @@ void Stage::Update(DWORD dt, Player * player)
 			if (objectList[i]->isExist)
 			{
 				Collision::CollisionHandle(*player, *objectList[i]);
+				for (int j = 0; j < groundBlocks->getNumberOfBlocks(); j++)
+				{
+					objectList[i]->MindTheGroundBlocks(groundBlocks->getGroundBlock(j));
+				}
 				objectList[i]->Update(dt, *player);
 			}
 		}
 	}
 
+	// Update ground
 	groundBlocks->Update(dt, *player);
 }
 

@@ -11,6 +11,8 @@
 
 class Stage
 {
+	static Stage * instance;
+
 	Tilemap * tilemap;
 	GroundBlocks * groundBlocks;
 
@@ -23,9 +25,10 @@ class Stage
 	D3DXVECTOR2 prevFirstCellPosition;
 	D3DXVECTOR2 prevLastCellPosition;
 
-public:
 	Stage();
 	~Stage();
+public:
+	static Stage * getInstance();
 
 	int getMapStart();	void setMapStart(int mapStart);
 	int getMapEnd();	void setMapEnd(int mapEnd);
@@ -37,6 +40,7 @@ public:
 	// dùng grid
 	void InitGrid(const char * gridInfoPath, const char * cellsInfoPath);
 	std::vector<GameObject*> GetObjectList();
+	std::vector<GameObject*> GetAllObjects();
 
 	// Tilemap
 	void LoadTilemap(const char * imagePath, const char * matrixPath);

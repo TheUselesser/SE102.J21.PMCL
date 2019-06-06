@@ -1,12 +1,15 @@
 ﻿#pragma once
 #include "GameObject.h"
+#include "Item.h"
 
-#define DEFAULT_VELOCITY_X	6
+#define DEFAULT_VELOCITY_X	4
 #define DEFAULT_VELOCITY_Y	8
 #define DEFAULT_CLIMB_VELOCITY 4
 #define DEFAULT_WIDTH 20
 #define DEFAULT_HEIGHT	32
 #define DEFAULT_JUMP_HEIGHT 56
+
+#define MAX_HP 16
 
 // Mỗi lần nhảy cách nhau 1 tí xíu
 #define COOLDOWN_JUMP 300
@@ -14,7 +17,7 @@
 #define KNOCKBACK_TIME 300
 // mỗi lần bất tử sẽ kéo dài 3s từ lúc bắt đầu bị knockback do va chạm enemy
 #define INVINCIBLE_TIME 3000
-// mỗi đòn tấn công kéo dài 0.3s
+// mỗi đòn tấn công kéo dài 0.5s
 #define STAND_ATTACK_TIME 500
 #define JUMP_ATTACK_TIME 500
 
@@ -34,18 +37,21 @@ class Player :
 	bool maxHeightReached;
 	float minClimbHeight, maxClimbHeight;
 
-	// thêm các chỉ số máu, số mạng, vũ khí . . .
-	int HP, maxHP;
+	/********** Này kia các thứ: **********/
+	int score;
+	int HP;
 	int life;
-	// WEAPON_TYPE weapon;	// kiểu  kiểu vầy
+	int spiritualStr;
+	Item * item;	// nhớ là chỉ dùng cho các item có hiển thị trên UI nhé
 
+	// Người hãy quên em đi, vì em sử dụng singleton pattern
 	Player();
 	~Player();
 public:
 	bool isMovable;
 	bool isJumpable;
-	bool isMoving;
 	bool directionChanged;
+	bool hasItem;
 
 	// attack animation trick
 	bool X_moved;
@@ -69,5 +75,25 @@ public:
 	void InitPlayer(float x, float y);
 	void SetStatus(PLAYER_STATUS status, int direction = 1);
 	void Update(DWORD dt);
+
+	/********** Này kia các thứ **********/
+	void setScore(int score);	int getScore() { return score; }
+	void setHP(int HP);			int getHP() { return HP; }
+	void setLife(int life);		int getLife() { return life; }
+	int getMaxHP() { return MAX_HP; }
+	void setSpiritualStrength(int spiritualStr);
+	int getSpiritualStrength() { return spiritualStr; }
+	void setItem(Item * item);
+	Item * getItem() { return item; }
+	/********** Advanced **********/
+	void addScore(int score);
+	void increase_HP(int HP = 1);
+	void decrease_HP(int HP = 1);
+	void increase_life(int life = 1);
+	void decrease_life(int life = 1);
+	void increase_spiritualStrength(int ss);
+	void decrease_spiritualStrength(int ss);
+	
+	void resetAllStats();
 };
 

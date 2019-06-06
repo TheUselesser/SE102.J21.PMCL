@@ -27,8 +27,8 @@ public:
 	void CheckCollisionStatus(GameObject * player);
 
 	virtual void setSpawned(bool isSpawned);
-	virtual void SetStatus(ENEMY_STATUS status, int direction);
-	virtual void Update() {}
-	virtual void autoMove() {}
+	virtual void SetStatus(ENEMY_STATUS status);
+	/*virtual*/ void Update(DWORD dt, GameObject &player);
+	virtual void autoMove(float) {}
 };
 

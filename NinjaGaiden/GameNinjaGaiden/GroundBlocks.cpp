@@ -48,9 +48,9 @@ int GroundBlocks::getNumberOfBlocks()
 	return numberOfBlocks;
 }
 
-GroundBlocks GroundBlocks::getGroundBlock(int index)
+GroundBlock * GroundBlocks::getGroundBlock(int index)
 {
-	return NULL;
+	return groundBlocks[index];
 }
 
 void GroundBlocks::Update(DWORD dt, GameObject &player)

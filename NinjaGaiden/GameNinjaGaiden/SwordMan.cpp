@@ -81,6 +81,13 @@ void SwordMan::Update(DWORD dt, GameObject &player)
 
 	SetStatus(ENEMY_MOVING);
 	autoMove(0);
+
+	if (!isOnGround)
+	{
+		moveX(-getVelX());
+		moveY(-8);
+	}
+
 	Draw();
 }
 

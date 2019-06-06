@@ -55,7 +55,16 @@ void Enemy::setSpawned(bool isSpawned)
 	isExist = isSpawned;
 }
 
-void Enemy::SetStatus(ENEMY_STATUS status, int direction)
+void Enemy::SetStatus(ENEMY_STATUS status)
 {
 	this->status = status;
+}
+
+void Enemy::Update(DWORD dt, GameObject & player)
+{
+	timer.tickPerAnim = dt;
+
+	SetStatus(ENEMY_MOVING);
+	autoMove(10);
+	Draw();
 }

@@ -43,7 +43,7 @@ void Runner::Init(GameObject * player)
 }
 
 void Runner::SetStatus(ENEMY_STATUS status)
-{//if (this->status != status || directionChanged)
+{
 	{
 		this->status = status;
 

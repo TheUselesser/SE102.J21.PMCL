@@ -1,5 +1,5 @@
 ﻿#include "Item.h"
-
+#include "Collision.h"
 
 
 Item::Item()
@@ -93,4 +93,10 @@ void Item::setItemType(ITEM_TYPE itemType)
 		break;
 	default: break;
 	}
+}
+
+void Item::Update(DWORD dt, GameObject & player)
+{
+	Collision::CollisionHandle(player, *this);
+	Draw();
 }

@@ -92,10 +92,13 @@ protected:
 	GAME_OBJECT_TYPE objType;
 	COLLISION_TYPE clsType;
 
-	void Draw();
 	void CreateObject(const char * imagePath, D3DCOLOR transColor, float width, float height);
 
 	float realWidth;
+
+	DWORD startFreezeTime, freezeTime;
+	bool isFreezing = false;
+
 public:
 	float nx = 0.0f, ny = 0.0f;
 	float collisionTime = 1.0f;
@@ -106,6 +109,7 @@ public:
 	bool isInCellsSet;
 
 	// player only
+	bool isMoving;
 	bool isJumping;
 	bool isClimbing;
 	bool isInvincible;
@@ -113,8 +117,6 @@ public:
 	bool isOnGround;
 	bool isAttacking;
 	bool isDead;
-
-	bool collideGroundX;
 
 	GameObject();
 	~GameObject();
@@ -134,7 +136,8 @@ public:
 	virtual void setMaxClimbHeight(float) {}
 	virtual float getMaxClimbHeight() { return 0.0f; }
 
-	// Dùng trong Collision.cpp để lấy thông tin va chạm (cụ thể là với nhân vật)
+	// Dùng trong Collision.cpp để lấy thông tin va chạm
+	// lưu thông tin va chạm vào những thứ sẽ va chạm với nhân vật
 	void UpdateCollisionStatus(int nx, int ny, float collisionTime);
 	virtual void CheckCollisionStatus(GameObject * player);
 
@@ -143,6 +146,7 @@ public:
 	GAME_OBJECT_TYPE getObjectType();
 	void setCollisionType(COLLISION_TYPE collisionType);
 	COLLISION_TYPE getCollisionType();
+	void MindTheGroundBlocks(GameObject * groundBlock);
 	// item container
 	virtual void setItemTypeID(int id) {}
 
@@ -151,5 +155,8 @@ public:
 	virtual void Init(GameObject * player) {}
 	virtual void setSpawned(bool isSpawned) {}	// dành cho enemy	
 	virtual void Update(DWORD dt, GameObject &player);
+
+	void Freeze(DWORD time);
+	void Draw();
 };
 

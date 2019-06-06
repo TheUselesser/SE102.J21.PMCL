@@ -15,6 +15,9 @@ Player * Player::getInstance()
 
 Player::Player()
 {
+	resetAllStats();
+	item = new Item();
+	hasItem = false;
 }
 
 
@@ -95,8 +98,7 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			}
 			break;
 		case PLAYER_MOVING:
-			setVelX(DEFAULT_VELOCITY_X * direction);
-			SetStatus(PLAYER_STANDING, directionX);
+			SetStatus(PLAYER_STANDING, direction);
 			this->status = PLAYER_MOVING;
 			startAnimation = true;
 			sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 1, 3);
@@ -253,8 +255,8 @@ void Player::Update(DWORD dt)
 	}
 
 	// Lấy một vài thông tin từ class Game
-	int mapStart = Game::getInstance()->getStage()->getMapStart();
-	int mapEnd = Game::getInstance()->getStage()->getMapEnd();
+	int mapStart = Stage::getInstance()->getMapStart();
+	int mapEnd = Stage::getInstance()->getMapEnd();
 	float cameraX = Camera::getInstance()->getX();
 	float cameraWidth = Camera::getInstance()->getWidth();
 
@@ -329,7 +331,8 @@ void Player::Update(DWORD dt)
 			// Khi đứng
 			if (isOnGround && !isJumping && !isClimbing)
 			{
-				//timer.tickPerAnim = STAND_ATTACK_TIME / 3;
+				timer.tickPerAnim = (DWORD) STAND_ATTACK_TIME / 3;
+
 				if (GetTickCount() - startAttack >= STAND_ATTACK_TIME)
 				{
 					isAttacking = false;
@@ -418,7 +421,8 @@ void Player::Update(DWORD dt)
 		moveY(-DEFAULT_VELOCITY_Y);
 	}
 	// Kiểm tra xem nhân vật có đang đứng trên mặt đất hay không
-	if (!isJumping && !isClimbing && getY() > minHeight)
+	if (!isJumping && !isClimbing && getY() > minHeight
+		&& !(isOnGround && isAttacking))
 	{
 		isOnGround = false;
 	}
@@ -463,4 +467,73 @@ void Player::Update(DWORD dt)
 		// thêm điều kiện nếu còn mạng thì mới init
 		if (isOnGround) Game::getInstance()->init();
 	}
+}
+
+void Player::setScore(int score)
+{
+	this->score = score;
+}
+
+void Player::setHP(int HP)
+{
+	this->HP = HP;
+}
+
+void Player::setLife(int life)
+{
+	this->life = life;
+}
+
+void Player::setSpiritualStrength(int spiritualStr)
+{
+	this->spiritualStr = spiritualStr;
+}
+
+void Player::setItem(Item * item)
+{
+	this->item = item;
+	hasItem = true;
+}
+
+void Player::addScore(int score)
+{
+	this->score += score;
+}
+
+void Player::increase_HP(int HP)
+{
+	this->HP += HP;
+}
+
+void Player::decrease_HP(int HP)
+{
+	this->HP -= HP;
+}
+
+void Player::increase_life(int life)
+{
+	this->life += life;
+}
+
+void Player::decrease_life(int life)
+{
+	this->life -= life;
+}
+
+void Player::increase_spiritualStrength(int ss)
+{
+	this->spiritualStr += ss;
+}
+
+void Player::decrease_spiritualStrength(int ss)
+{
+	this->spiritualStr -= ss;
+}
+
+void Player::resetAllStats()
+{
+	HP = MAX_HP;
+	life = 2;	// ?
+	score = 0;
+	spiritualStr = 0;	// ?
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameTexture.h"
 #include "Player.h"
 #include "Game.h"
@@ -20,12 +20,13 @@ public:
 
 	static Scorebar * getInstance();
 
-	//int playerHP;
+	int playerHP;
+	int playerSpiritualStr; // kiểu như mana
 	//int bossHP;
 	int score;
 	int Time;
 	int playChance = 2;
-	int act = 1;
+	int act = 3, stage = 1;
 
 	void Init();
 	void Draw(int x, int y);

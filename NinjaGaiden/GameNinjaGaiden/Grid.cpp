@@ -87,6 +87,28 @@ std::vector<GameObject*> Grid::GetObjectList(Camera * camera)
 	return objects;
 }
 
+std::vector<GameObject*> Grid::GetObjectList()
+{
+	std::vector<GameObject*> objectList;
+
+	for (int row = 0; row < numberOfRows; row++)
+	{
+		for (int col = 0; col < numberOfColumns; col++)
+		{
+			// Thao tác với cell[y][x]
+			if (!cell[row][col].isEmpty)
+			{
+				for (int i = 0; i < cell[row][col].getListSize(); i++)
+				{
+					objectList.push_back(cell[row][col].getObjectList()[i]);
+				}
+			}
+		}
+	}
+
+	return objectList;
+}
+
 void Grid::readCellsInfo(const char * cellsInfoPath)
 {
 	// index để check có đúng cell không, tránh đọc file bị thừa quá nhiều

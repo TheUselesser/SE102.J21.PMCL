@@ -85,7 +85,19 @@ void BirdBrown::Update(DWORD dt, GameObject &player)
 	timer.tickPerAnim = dt;
 
 	SetStatus(ENEMY_MOVING);
-	autoMove(100, &player);
+
+	if (!isFreezing)
+		autoMove(100, &player);
+	else
+	{
+		startAnimation = false;
+
+		if (GetTickCount() - startFreezeTime >= freezeTime)
+		{
+			isFreezing = false;
+		}
+	}
+
 	Draw();
 }
 
