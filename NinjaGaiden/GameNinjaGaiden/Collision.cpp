@@ -174,9 +174,13 @@ void Collision::NPOCollision(GameObject & object, GameObject & groundBlock)
 
 	if (collisionTime < 1.0f)
 	{
-		//if (normaly == 1.0f)
+		if (object.getBottom() <= groundBlock.getTop())
 		{
 			object.isOnGround = true;
+			if (object.getBottom() < groundBlock.getTop())
+			{
+				object.setY(groundBlock.getTop() + object.getHeight());
+			}
 		}
 	}
 	else

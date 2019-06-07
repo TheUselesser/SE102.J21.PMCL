@@ -257,11 +257,6 @@ void Grid::AddLeft(Camera * camera, GameObject * player)
 			cell_2->enableUpdate(player);
 		}
 	}
-
-	/*objects.reserve(objects.size() + cell_1->getObjectList().size());
-	std::copy(cell_1->getObjectList().begin(), cell_1->getObjectList().end(), objects.end());
-	objects.reserve(objects.size() + cell_2->getObjectList().size());
-	std::copy(cell_2->getObjectList().begin(), cell_2->getObjectList().end(), objects.end());*/
 }
 
 void Grid::AddRight(Camera * camera, GameObject * player)
@@ -270,7 +265,7 @@ void Grid::AddRight(Camera * camera, GameObject * player)
 	GridCell *cell_1, *cell_2;
 	cell_1 = &cell[lastRow][lastColumn];
 	cell_2 = &cell[lastRow - 1][lastColumn];
-
+	
 	for (int i = 0; i < cell_1->getObjectList().size(); i++)
 	{
 		if (!cell_1->getObjectList()[i]->isExist)
@@ -287,9 +282,15 @@ void Grid::AddRight(Camera * camera, GameObject * player)
 			cell_2->enableUpdate(player);
 		}
 	}
+}
 
-	/*objects.reserve(objects.size() + cell_1->getObjectList().size());
-	std::copy(cell_1->getObjectList().begin(), cell_1->getObjectList().end(), objects.end());
-	objects.reserve(objects.size() + cell_2->getObjectList().size());
-	std::copy(cell_2->getObjectList().begin(), cell_2->getObjectList().end(), objects.end());*/
+void Grid::Release()
+{
+	for (int row = 0; row < numberOfRows; row++)
+	{
+		for (int col = 0; col < numberOfColumns; col++)
+		{
+			cell[row][col].Release();
+		}
+	}
 }

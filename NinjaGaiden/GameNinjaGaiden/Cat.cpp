@@ -6,6 +6,8 @@ Cat::Cat()
 
 Cat::Cat(float x, float y)
 {
+	moveType = MT_FROM_HIGHER_TO_LOWER_GROUND;
+	isOnGround = true;
 	setSize(DEFAULT_CAT_WIDTH, DEFAULT_CAT_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -22,6 +24,7 @@ void Cat::Init(GameObject * player)
 	setCollisionType(COLLISION_TYPE_ENEMY);
 	setX(spawnX);
 	setY(spawnY + getHeight());
+	currentGroundY = getY();
 	minY = getY();
 	maxY = minY + 6;
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
@@ -77,6 +80,7 @@ void Cat::Update(DWORD dt, GameObject &player)
 {
 	timer.tickPerAnim = dt;
 
+	MindTheGroundBlocks();
 	SetStatus(ENEMY_MOVING);
 
 	if (!isFreezing)
@@ -96,16 +100,13 @@ void Cat::Update(DWORD dt, GameObject &player)
 
 void Cat::autoMove(float range)
 {
-	// ?i qua l?i ? ?i?m ban ??u ph?m vi range  |<---range---spawnX---range--->|
-	if (getX() <= spawnX - range || getX() >= spawnX + range - getWidth())
-	{
-		setVelX(-getVelX());
-		directionChanged = true;
-	}
+	setVelX(DEFAULT_CAT_VELOCITY * directionX);
+	selfMovingX();
+
+	// Nhảy tưng tưng
 	if (getY() < minY || getY() >= maxY)
 	{
 		setVelY(-getVelY());
 	}
-	selfMovingX();
 	selfMovingY();
 }

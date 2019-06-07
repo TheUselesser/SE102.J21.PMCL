@@ -177,19 +177,8 @@ void GridCell::disableUpdate()
 }
 
 
-// Có lẽ không bao giờ sử dụng
-Rect GridCell::getBound()
+void GridCell::Release()
 {
-	Rect bound;
-	bound.setX(columnIndex * size);
-	bound.setY(rowIndex * size + size);
-	bound.setSize(size, size);
-	return bound;
-}
-
-bool GridCell::isIntersect(Rect rect)
-{
-	// Kiểm tra xem cell có giao với cái rect không
-	Rect bound = getBound();
-	return Collision::AABBCheck(bound, rect);
+	objectList.clear();
+	objectInfoList.clear();
 }

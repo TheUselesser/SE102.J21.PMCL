@@ -50,6 +50,9 @@ void Game::init()
 	// Game init
 	InitGame();
 
+	// Scorebar init
+	Scorebar::getInstance()->Init();
+
 	// Keyboard init
 	if (!Init_Keyboard(hWnd))
 	{
@@ -120,6 +123,7 @@ void Game::InitGame()
 		Stage::getInstance()->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
 		Stage::getInstance()->LoadGroundBlocks("images/Stage32/ground_blocks.txt");
 		Stage::getInstance()->setPlayerStart(0);
+		Stage::getInstance()->setPlayerEnd(Stage::getInstance()->getMapEnd() - 16);
 		groundLine = 38;
 		// Enemy
 		Stage::getInstance()->InitGrid("images/Stage32/grid_info.txt", "images/Stage32/cells_info.txt");
@@ -131,7 +135,7 @@ void Game::InitGame()
 		Stage::getInstance()->LoadGroundBlocks("images/Stage33/ground_blocks.txt");
 		Stage::getInstance()->setMapStart(512);
 		Stage::getInstance()->setPlayerStart(528);
-		groundLine = 28;
+		groundLine = 38;
 		// Enemy
 		Stage::getInstance()->InitGrid("images/Stage33/grid_info.txt", "images/Stage33/cells_info.txt");
 		break;
@@ -140,10 +144,7 @@ void Game::InitGame()
 	// Player Ryu
 	Player::getInstance()->InitPlayer(Stage::getInstance()->getPlayerStart(), groundLine);
 	// Camera
-	Camera::getInstance()->setX(0);
-
-	// Scorebar
-	Scorebar::getInstance()->Init();
+	Camera::getInstance()->trackPlayer(Player::getInstance());
 }
 
 void Game::run()
@@ -180,9 +181,6 @@ void Game::run()
 
 void Game::update()
 {
-	// Vẽ Scorebar
-	Scorebar::getInstance()->Update();
-
 	// Vẽ tilemap
 	Stage::getInstance()->Draw(Camera::getInstance());
 
@@ -191,6 +189,23 @@ void Game::update()
 
 	// Vẽ Ryu
 	Player::getInstance()->Update(60);
+
+	// Vẽ Scorebar
+	Scorebar::getInstance()->Update();
+
+	// Đến cuối map -> chuyển stage
+	if (Player::getInstance()->getRight() >= Stage::getInstance()->getPlayerEnd())
+	{
+		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
+		{
+			stageIndex++;
+			if (!(stageIndex < NUMBER_OF_STAGES))	 // ^_^
+				stageIndex = 0;
+
+			Stage::getInstance()->Release();
+			InitGame();
+		}
+	}
 }
 
 void Game::end()
@@ -201,10 +216,6 @@ void Game::end()
 	if (d3d != NULL) d3d->Release();
 }
 
-
-
-int count = 0;
-
 void Game::KeysControl()
 {
 	// ***** Will be deleted ********************************
@@ -213,11 +224,6 @@ void Game::KeysControl()
 	if (Key_Down(DIK_R))
 	{
 		init();
-	}
-	if (Key_Down(DIK_B))
-	{
-		std::string msg = std::to_string(count);
-		MessageBox(0, msg.c_str(), "checking", 0);
 	}
 	// [Q] to turn on invincibility
 	if (Key_Down(DIK_Q))
@@ -232,19 +238,23 @@ void Game::KeysControl()
 	// [1] [2] [3] to switch between stages
 	if (Key_Down(DIK_NUMPAD1))
 	{
-		stageIndex = 0;
+		stageIndex = 0; Stage::getInstance()->Release();
 		init();
 	}
 	if (Key_Down(DIK_NUMPAD2))
 	{
-		stageIndex = 1;
+		stageIndex = 1; Stage::getInstance()->Release();
 		init();
 	}
-	/*if (Key_Down(DIK_NUMPAD3))
+	if (Key_Down(DIK_NUMPAD3))
 	{
-		stageIndex = 2;
+		stageIndex = 2; Stage::getInstance()->Release();
 		init();
-	}*/
+	}
+	if (Key_Down(DIK_NUMPAD4))
+	{
+		Stage::getInstance()->setPlayerEnd(0);
+	}
 
 	// ******************************************************
 
@@ -308,7 +318,6 @@ void Game::KeysControl()
 		{
 			if (Player::getInstance()->isOnGround && !Player::getInstance()->isJumping)
 			{
-				count++;
 				Player::getInstance()->SetStatus(PLAYER_ATTACK, Player::getInstance()->directionX);
 			}
 			else
@@ -363,18 +372,5 @@ void Game::KeysControl()
 
 		end();
 		PostMessage(hWnd, WM_DESTROY, 0, 0);
-	}
-
-	// Đến cuối map -> chuyển stage
-	if (Player::getInstance()->getRight() >= Stage::getInstance()->getMapEnd())
-	{
-		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
-		{
-			stageIndex++;
-			if (!(stageIndex < NUMBER_OF_STAGES))	 // ^_^
-				stageIndex = 0;
-
-			InitGame();
-		}
 	}
 }

@@ -42,6 +42,7 @@ enum GAME_OBJECT_TYPE
 	ITEM_ITEM_CONTAINER_4 = 24,		//
 	OBJECT_GROUND,
 };
+
 // loại va chạm
 enum COLLISION_TYPE
 {
@@ -98,10 +99,13 @@ protected:
 
 	DWORD startFreezeTime, freezeTime;
 	bool isFreezing = false;
-
 public:
 	float nx = 0.0f, ny = 0.0f;
 	float collisionTime = 1.0f;
+
+	float e_nx = 0.0f, e_ny = 0.0f, e_collisionTime = 1.0f;
+
+	GameObject * currentBlock;
 
 	bool startAnimation;
 	int directionX, directionY;
@@ -135,7 +139,7 @@ public:
 	virtual float getMinClimbHeight() { return 0.0f; }
 	virtual void setMaxClimbHeight(float) {}
 	virtual float getMaxClimbHeight() { return 0.0f; }
-
+   
 	// Dùng trong Collision.cpp để lấy thông tin va chạm
 	// lưu thông tin va chạm vào những thứ sẽ va chạm với nhân vật
 	void UpdateCollisionStatus(int nx, int ny, float collisionTime);
@@ -146,8 +150,8 @@ public:
 	GAME_OBJECT_TYPE getObjectType();
 	void setCollisionType(COLLISION_TYPE collisionType);
 	COLLISION_TYPE getCollisionType();
-	void MindTheGroundBlocks(GameObject * groundBlock);
-	// item container
+
+	// ItemContainer
 	virtual void setItemTypeID(int id) {}
 
 	// General
@@ -159,4 +163,3 @@ public:
 	void Freeze(DWORD time);
 	void Draw();
 };
-

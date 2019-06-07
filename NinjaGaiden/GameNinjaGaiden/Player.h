@@ -63,9 +63,11 @@ public:
 	void resetMaxJumpHeight() { maxHeight = minHeight + DEFAULT_JUMP_HEIGHT; }
 	void setMaxJumpHeight(float maxHeight);		// set max trên đầu
 	float getMaxJumpHeight() { return maxHeight; }
+
 	float getDefaultPlayerWidth() { return DEFAULT_WIDTH; }
 	float getDefaultPlayerHeight() { return DEFAULT_HEIGHT; }
 	float getRealWidth() { return realWidth; }
+
 	void setMinClimbHeight(float minClimbHeight);
 	float getMinClimbHeight() { return minClimbHeight; }
 	void setMaxClimbHeight(float maxClimbHeight);

@@ -130,6 +130,7 @@
     <ClCompile Include="Banshee.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="BirdBrown.cpp" />
+    <ClCompile Include="Boss3.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cannoneer.cpp" />
     <ClCompile Include="Cat.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Banshee.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="BirdBrown.h" />
+    <ClInclude Include="Boss3.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cannoneer.h" />
     <ClInclude Include="Cat.h" />

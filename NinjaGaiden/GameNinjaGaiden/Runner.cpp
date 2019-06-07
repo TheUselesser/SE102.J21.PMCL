@@ -9,6 +9,8 @@ Runner::Runner()
 
 Runner::Runner(float x, float y)
 {
+	moveType = MT_FROM_HIGHER_TO_LOWER_GROUND;
+	isOnGround = true;
 	setSize(DEFAULT_RUNNER_WIDTH, DEFAULT_RUNNER_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -25,6 +27,7 @@ void Runner::Init(GameObject * player)
 	setCollisionType(COLLISION_TYPE_ENEMY);
 	setX(spawnX);
 	setY(spawnY + getHeight());
+	currentGroundY = getY();
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	setVelX(DEFAULT_RUNNER_VELOCITY * directionX);
 
@@ -77,18 +80,26 @@ void Runner::Update(DWORD dt, GameObject & player)
 {
 	timer.tickPerAnim = dt;
 
+	MindTheGroundBlocks();
 	SetStatus(ENEMY_MOVING);
-	autoMove(80);
+
+	if (!isFreezing)
+		autoMove(120);
+	else
+	{
+		startAnimation = false;
+
+		if (GetTickCount() - startFreezeTime >= freezeTime)
+		{
+			isFreezing = false;
+		}
+	}
+
 	Draw();
 }
 
 void Runner::autoMove(float range)
 {
-	// đi qua lại ở điểm ban đâu phạm vi range  |<---range---spawnX---range--->|
-	if (getX() <= spawnX - range || getX() >= spawnX + range - getWidth())
-	{
-		setVelX(-getVelX());
-		directionChanged = true;
-	}
+	setVelX(DEFAULT_RUNNER_VELOCITY * directionX);
 	selfMovingX();
 }

@@ -11,6 +11,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	GameWindow::getInstance()->initHandleWindow(hInstance, nShowCmd);
 
 	HWND hWnd = GameWindow::getInstance()->getHandleWindow();
+	
 	// init direct input
 	if (!Init_DirectInput(hWnd))
 	{

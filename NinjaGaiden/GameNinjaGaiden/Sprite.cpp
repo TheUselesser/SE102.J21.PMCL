@@ -7,6 +7,14 @@ Sprite::Sprite()
 	currentAnimation = 0;
 }
 
+Sprite::Sprite(float x, float y)
+{
+	position.x = x;
+	position.y = y;
+	position.z = 0;
+	texture = NULL;
+	spriteHandle = NULL;
+}
 
 Sprite::~Sprite()
 {
@@ -111,4 +119,54 @@ void Sprite::Draw(float x, float y, Rect * rect)
 void Sprite::Release()
 {
 	spriteTexture.Release();
+}
+
+//chổ thêm
+LPDIRECT3DTEXTURE9 Sprite::LoadTexture(LPDIRECT3DDEVICE9 device, const char * file)
+{
+	D3DXIMAGE_INFO info;
+	HRESULT result;
+
+	result = D3DXGetImageInfoFromFile(file, &info);
+	if (result != D3D_OK)
+	{
+		return NULL;
+	}
+
+	width = info.Width;
+	height = info.Height;
+
+	//create texture
+	result = D3DXCreateTextureFromFileEx(
+		device,
+		file,
+		info.Width,
+		info.Height,
+		1,									//Mipmap levels
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 0, 255),			//Transparent color
+		&info,								//Image infomation
+		NULL,
+		&texture							//result
+	);
+
+	if (FAILED(result))
+		return NULL;
+	return texture;
+}
+
+void Sprite::Draw(D3DXVECTOR3 pos, RECT *rect)
+{
+	if (spriteHandle && texture)
+	{
+		spriteHandle->Begin(D3DXSPRITE_ALPHABLEND);
+
+		spriteHandle->Draw(texture, rect, NULL, &pos, D3DCOLOR_XRGB(255, 255, 255));
+
+		spriteHandle->End();
+	}
 }

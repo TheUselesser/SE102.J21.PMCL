@@ -6,6 +6,7 @@ Banshee::Banshee()
 
 Banshee::Banshee(float x, float y)
 {
+	moveType = MT_ON_ONE_GROUND;
 	setSize(DEFAULT_BANSHEE_WIDTH, DEFAULT_BANSHEE_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -75,18 +76,26 @@ void Banshee::Update(DWORD dt, GameObject &player)
 {
 	timer.tickPerAnim = dt;
 
+	MindTheGroundBlocks();
 	SetStatus(ENEMY_MOVING);
-	autoMove(28);
+
+	if (!isFreezing)
+		autoMove(80);
+	else
+	{
+		startAnimation = false;
+
+		if (GetTickCount() - startFreezeTime >= freezeTime)
+		{
+			isFreezing = false;
+		}
+	}
+
 	Draw();
 }
 
 void Banshee::autoMove(float range)
 {
-	// ?i qua l?i ? ?i?m ban ??u ph?m vi range  |<---range---spawnX---range--->|
-	if (getX() <= spawnX - range || getX() >= spawnX + range - getWidth())
-	{
-		setVelX(-getVelX());
-		directionChanged = true;
-	}
+	setVelX(DEFAULT_BANSHEE_VELOCITY * directionX);
 	selfMovingX();
 }

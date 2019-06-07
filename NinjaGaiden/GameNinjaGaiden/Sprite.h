@@ -17,8 +17,14 @@ class Sprite
 
 	GameTexture spriteTexture;
 
+	float width, height;
+	D3DXVECTOR3 position;
+	LPDIRECT3DTEXTURE9 texture;
+	LPD3DXSPRITE spriteHandle;
+
 public:
 	Sprite();
+	Sprite(float x, float y);
 	~Sprite();
 
 	int getCurrentAnimation();	void setCurrentAnimation(int currentAnimation);
@@ -30,5 +36,10 @@ public:
 
 	void Draw(float x, float y, Rect * rect);
 	void Release();
+
+	//chổ thêm
+	D3DXVECTOR3 getPosition() { return position; }
+	LPDIRECT3DTEXTURE9 LoadTexture(LPDIRECT3DDEVICE9 device, const char *file);
+	void Draw(D3DXVECTOR3 pos, RECT *rect);
 };
 

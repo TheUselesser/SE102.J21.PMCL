@@ -51,7 +51,7 @@ void Player::InitPlayer(float x, float y)
 	isMovable = true;
 	isMoving = directionChanged = startAnimation = isJumping = false;
 	maxHeightReached = false;
-	isOnGround = true;
+	isOnGround = false;
 
 	isInvincible = false;
 	isKnockback = false;

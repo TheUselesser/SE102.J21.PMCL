@@ -15,6 +15,7 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	sprite->Release();
 }
 
 void GameObject::CreateObject(const char * imagePath, D3DCOLOR transColor, float width, float height)
@@ -52,11 +53,6 @@ void GameObject::setCollisionType(COLLISION_TYPE collisionType)
 COLLISION_TYPE GameObject::getCollisionType()
 {
 	return clsType;
-}
-
-void GameObject::MindTheGroundBlocks(GameObject * groundBlock)
-{
-	Collision::NPOCollision(*this, *groundBlock);
 }
 
 void GameObject::Init()

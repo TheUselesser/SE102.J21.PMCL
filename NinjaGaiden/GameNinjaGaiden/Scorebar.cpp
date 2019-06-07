@@ -1,27 +1,33 @@
 ﻿#include "Scorebar.h"
 #include "Game.h"
-#include "Player.h"
 
 #include <string>
+#include <sstream>
 
 
 
 int FONT_SIZE = 8;
+std::string Int2String(int x)
+{
+	std::string out_string;
+	std::stringstream ss;
+	ss << x;
+	out_string = ss.str();
+
+	return out_string;
+}
 
 Scorebar::Scorebar()
 {
 	//playerHP = 10;//cần 1 hàm lấy máu của ryu 
-	score = 0000000;
-	Time = 1000;
+	score = 000000;
+	time = 1000;
 	playChance = 2;
 	//1 vài biến khác nữa
 }
 
 Scorebar::~Scorebar()
 {
-	score = 0;
-	Time = 0;
-	m = "";
 }
 
 Scorebar * Scorebar::instance = NULL;
@@ -34,13 +40,64 @@ Scorebar * Scorebar::getInstance()
 	return instance;
 }
 
-void Scorebar::Init()
+bool Scorebar::Init()
 {
 	gameTexture = new GameTexture();
-	gameTexture->LoadTexture("images/Scorebar/tinybar.png", D3DCOLOR_XRGB(255, 255, 255));
-	//load font
+	//gameTexture->LoadTexture("images/Scorebar/newUI.png", D3DCOLOR_XRGB(255, 255, 255));
+	////load font
+	//FONT = NULL;
+	//HRESULT hr = D3DXCreateFont(
+	//	Game::getInstance()->get3DDevice(),
+	//	FONT_SIZE,
+	//	0,
+	//	FW_NORMAL,
+	//	1,
+	//	false,
+	//	DEFAULT_CHARSET,
+	//	OUT_DEFAULT_PRECIS,
+	//	ANTIALIASED_QUALITY,
+	//	FF_DONTCARE,
+	//	"Ninja Gaiden (NES)",
+	//	&FONT);
+	//if (!SUCCEEDED(hr))
+	//{
+	//	isInit = false;
+	//}
+
+	this->playerHP = 10;//có hàm get HP ở ryu 
+	this->bossHP = 10;// có hàm get HP ở boss
+
+	black = new Sprite();
+	black->LoadTexture("images/GameUI/black.png", D3DCOLOR_XRGB(255, 255, 255));
+
+	
+	playerHPList = new std::vector<Sprite*>();
+	for (int i = 0; i < 16; i++)
+	{
+		Sprite* sprite = new Sprite(120 + 12 * (i + 1), 67);
+		sprite->LoadTexture("images/GameUI/hp.png", D3DCOLOR_XRGB(255, 255, 255));
+		playerHPList->push_back(sprite);
+	}
+
+	bossHPList = new std::vector<Sprite*>();
+	for (int i = 0; i < 16; i++)
+	{
+		Sprite* sprite = new Sprite(120 + 12 * (i + 1), 67);
+		sprite->LoadTexture("images/GameUI/enemy_hp.png", D3DCOLOR_XRGB(255, 255, 255));
+		bossHPList->push_back(sprite);
+	}
+
+	emptyHPList = new std::vector<Sprite*>();
+	for (int i = 0; i < 16; i++)
+	{
+		Sprite* sprite = new Sprite(120 + 12 * (i + 1), 43);
+		sprite->LoadTexture("images/GameUI/empty_hp.png", D3DCOLOR_XRGB(255, 255, 255));
+		emptyHPList->push_back(sprite);
+	}
+
 	FONT = NULL;
-	HRESULT hr = D3DXCreateFont(
+	AddFontResourceEx("", FR_PRIVATE, NULL);
+	HRESULT result = D3DXCreateFont(
 		Game::getInstance()->get3DDevice(),
 		FONT_SIZE,
 		0,
@@ -51,26 +108,65 @@ void Scorebar::Init()
 		OUT_DEFAULT_PRECIS,
 		ANTIALIASED_QUALITY,
 		FF_DONTCARE,
-		"Ninja Gaiden (NES)",
+		"Init Text",
 		&FONT);
-	if (!SUCCEEDED(hr))
-	{
-		isInit = false;
-	}
+
+	if (!SUCCEEDED(result))
+		return false;
+	SetRect(Rect, 0, 20, 256, 40);
+	m = "SCORE_000000 TIME 0000 STAGE 00\n";
+	m += "PLAYER                =62\n";
+	m += "ENEMY                P=3\n";
+
+
+	return true;
 }
 
 void Scorebar::Draw(int x, int y)
 {
-	SetRect(Rect, 0, 0, 80, 256);
-	m = score + "\n";
-	m += Time + "\n";
-	m += playChance + "     00";
+	gameTexture = new GameTexture();
+	SetRect(Rect, x, y, 256, 116);
 
-	if (isInit == true)
-		if (FONT)
-			FONT->DrawTextA(NULL, m.c_str(), -1, Rect, DT_LEFT, D3DCOLOR_XRGB(255, 255, 255));
+	if (FONT)
+		FONT->DrawTextA(NULL, m.c_str(), -1, Rect, DT_LEFT, D3DCOLOR_XRGB(255, 255, 255));
 
-	gameTexture->Draw(x, y, Rect);
+	black->Draw(black->getPosition(), Rect);
+
+
+
+	for (std::vector<Sprite*>::iterator i = emptyHPList->begin(); i != emptyHPList->end(); i++)
+	{
+		SetRect(Rect, 0, 0, 8, 15);
+		(*i)->Draw((*i)->getPosition(), Rect);
+		D3DXVECTOR3 newPosition = (*i)->getPosition();
+		newPosition.y = 67;
+		(*i)->Draw(newPosition, Rect);
+	}
+
+
+	int count = 0;
+	for (std::vector<Sprite*>::iterator i = playerHPList->begin(); i != playerHPList->end(); i++)
+	{
+		if (count < playerHP)
+		{
+			SetRect(Rect, 0, 0, 8, 15);
+			(*i)->Draw((*i)->getPosition(), Rect);
+		}
+		count++;
+	}
+
+
+	count = 0;
+	for (std::vector<Sprite*>::iterator i = bossHPList->begin(); i != bossHPList->end(); i++)
+	{
+		if (count < bossHP)
+		{
+			SetRect(Rect, 0, 0, 8, 15);
+			(*i)->Draw((*i)->getPosition(), Rect);
+		}
+		count++;
+	}
+
 }
 
 void Scorebar::Update()
@@ -80,25 +176,23 @@ void Scorebar::Update()
 	{
 		// stage 3-1
 	case 0:
-		stage = 1;
+		act = 1;
 		break;
 		// stage 3-2
 	case 1:
-		stage = 2;
+		act = 2;
 		break;
 		// stage 3-3
 	case 2:
-		stage = 3;
+		act = 3;
 		break;
 	}
 
-	// Update player stats
-	score = Player::getInstance()->getScore();
-	playerHP = Player::getInstance()->getHP();
-	playerSpiritualStr = Player::getInstance()->getSpiritualStrength();
-	playChance = Player::getInstance()->getLife();
+	// Làm cái gì khác nữa...
 
 
 	// Vẽ lên (0, 0) trên backbuffer
 	Draw(0, 0);
 }
+
+

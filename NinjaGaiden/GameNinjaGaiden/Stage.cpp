@@ -17,7 +17,7 @@ Stage * Stage::getInstance()
 
 Stage::Stage()
 {
-	mapStart = mapEnd = playerStart = playerEnd = 0;
+	mapStart = playerStart = 0;
 }
 
 Stage::~Stage()
@@ -136,10 +136,17 @@ void Stage::Update(DWORD dt, Player * player)
 			if (objectList[i]->isExist)
 			{
 				Collision::CollisionHandle(*player, *objectList[i]);
+
 				for (int j = 0; j < groundBlocks->getNumberOfBlocks(); j++)
 				{
-					objectList[i]->MindTheGroundBlocks(groundBlocks->getGroundBlock(j));
+					if (objectList[i]->getLeft() > groundBlocks->getGroundBlock(j)->getLeft() - objectList[i]->getWidth() &&
+						objectList[i]->getRight() < groundBlocks->getGroundBlock(j)->getRight() + objectList[i]->getWidth())
+					{
+						if (objectList[i]->getBottom() == groundBlocks->getGroundBlock(j)->getTop() && groundBlocks->getGroundBlock(j)->getWidth() > 16)
+							objectList[i]->currentBlock = groundBlocks->getGroundBlock(j);
+					}
 				}
+
 				objectList[i]->Update(dt, *player);
 			}
 		}
@@ -157,8 +164,8 @@ void Stage::LoadTilemap(const char * imagePath, const char * matrixPath)
 	tilemap = new Tilemap();
 	tilemap->LoadTilemap(imagePath, matrixPath);
 
-	mapStart = 0;
-	mapEnd = tilemap->mapWidth;
+	mapStart = playerStart = 0;
+	mapEnd = playerEnd = tilemap->mapWidth;
 }
 
 void Stage::LoadGroundBlocks(const char * filePath)
@@ -173,5 +180,12 @@ void Stage::Draw(Camera * camera)
 
 void Stage::Release()
 {
-	//...
+	// tilemap
+	delete tilemap;
+	// groundblock;
+	delete groundBlocks;
+	// grid
+	grid->Release();
+	//	objectlist
+	objectList.clear();
 }

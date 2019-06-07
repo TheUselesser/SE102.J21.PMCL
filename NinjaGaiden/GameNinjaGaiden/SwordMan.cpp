@@ -9,10 +9,12 @@ SwordMan::SwordMan()
 
 SwordMan::SwordMan(float x, float y)
 {
+	moveType = MT_ON_ONE_GROUND;
 	setSize(DEFAULT_SWORD_MAN_WIDTH, DEFAULT_SWORD_MAN_HEIGHT);
 	spawnX = x;
 	spawnY = y;
 	isExist = false;
+	currentBlock = new GameObject();
 }
 
 SwordMan::~SwordMan()
@@ -22,6 +24,7 @@ SwordMan::~SwordMan()
 void SwordMan::Init(GameObject * player)
 {
 	isExist = true;
+	isOnGround = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
 
 	setX(spawnX);
@@ -29,6 +32,7 @@ void SwordMan::Init(GameObject * player)
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 
 	setVelX(DEFAULT_SWORD_MAN_VELOCITY * directionX);
+	setVelY(8);
 	
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
@@ -46,32 +50,29 @@ void SwordMan::Init(GameObject * player)
 
 void SwordMan::SetStatus(ENEMY_STATUS status)
 {
-	//if (this->status != status || directionChanged)
-	{
-		this->status = status;
+	this->status = status;
 
-		switch (status)
+	switch (status)
+	{
+	case ENEMY_STANDING:
+		startAnimation = false;
+
+		break;
+	case ENEMY_MOVING:
+		startAnimation = true;
+		if (directionX > 0)
 		{
-		case ENEMY_STANDING:
-			startAnimation = false;
-			
-			break;
-		case ENEMY_MOVING:
-			startAnimation = true;
-			if (getVelX() > 0)
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/enemies/SwordMan_right.png", D3DCOLOR_XRGB(255, 255, 255));
-			}
-			else
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/enemies/SwordMan_left.png", D3DCOLOR_XRGB(255, 255, 255));
-			}
-			break;
-		default:
-			break;
+			sprite->Release();
+			sprite->LoadTexture("images/enemies/SwordMan_right.png", D3DCOLOR_XRGB(255, 255, 255));
 		}
+		else
+		{
+			sprite->Release();
+			sprite->LoadTexture("images/enemies/SwordMan_left.png", D3DCOLOR_XRGB(255, 255, 255));
+		}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -79,13 +80,19 @@ void SwordMan::Update(DWORD dt, GameObject &player)
 {
 	timer.tickPerAnim = dt;
 
+	MindTheGroundBlocks();
 	SetStatus(ENEMY_MOVING);
-	autoMove(0);
 
-	if (!isOnGround)
+	if (!isFreezing)
+		autoMove(0);
+	else
 	{
-		moveX(-getVelX());
-		moveY(-8);
+		startAnimation = false;
+
+		if (GetTickCount() - startFreezeTime >= freezeTime)
+		{
+			isFreezing = false;
+		}
 	}
 
 	Draw();
@@ -93,5 +100,6 @@ void SwordMan::Update(DWORD dt, GameObject &player)
 
 void SwordMan::autoMove(float range)
 {
+	setVelX(DEFAULT_SWORD_MAN_VELOCITY * directionX);
 	selfMovingX();
 }

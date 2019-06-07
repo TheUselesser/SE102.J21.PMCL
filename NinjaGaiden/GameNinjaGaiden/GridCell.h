@@ -36,8 +36,6 @@ public:
 	void enableUpdate(GameObject * player);
 	void disableUpdate();
 
-	// có lẽ chưa cần sử dụng
-	Rect getBound();
-	bool isIntersect(Rect rect);
+	void Release();
 };
 
