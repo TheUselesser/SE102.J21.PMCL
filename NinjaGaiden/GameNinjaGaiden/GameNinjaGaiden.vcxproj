@@ -132,6 +132,7 @@
     <ClCompile Include="BirdBrown.cpp" />
     <ClCompile Include="Boss3.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CannonBullet.cpp" />
     <ClCompile Include="Cannoneer.cpp" />
     <ClCompile Include="Cat.cpp" />
     <ClCompile Include="Collision.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="BirdBrown.h" />
     <ClInclude Include="Boss3.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CannonBullet.h" />
     <ClInclude Include="Cannoneer.h" />
     <ClInclude Include="Cat.h" />
     <ClInclude Include="Collision.h" />

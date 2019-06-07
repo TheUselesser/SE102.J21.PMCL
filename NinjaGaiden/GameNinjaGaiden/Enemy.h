@@ -27,6 +27,10 @@ protected:
 
 	// Dành cho mấy con có di chuyển lên xuống
 	float minY, maxY;
+
+	// Dành cho mấy con có đòn đánh riêng
+	DWORD startCooldown = false;
+
 public:
 	bool directionChanged;
 
@@ -39,6 +43,7 @@ public:
 	virtual void SetStatus(ENEMY_STATUS status);
 	/*virtual*/ void Update(DWORD dt, GameObject &player);
 	virtual void autoMove(float) {}
+	virtual void periodAttack(DWORD cooldown) {}
 
 	void MindTheGroundBlocks();
 };

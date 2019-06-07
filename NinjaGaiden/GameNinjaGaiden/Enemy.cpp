@@ -1,5 +1,6 @@
 ﻿#include "Enemy.h"
 #include "Game.h"
+#include "Player.h"
 
 #include "Collision.h"
 
@@ -38,14 +39,21 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 
 	// đập player (khi hắn không bất tử)
 	if (this->isExist && !player->isInvincible
-		&& Game::getInstance()->allowHurtingPlayer
-		)
+		&& Game::getInstance()->allowHurtingPlayer)
 	{
 		if (collisionTime < 1.0f)
 		{
 			// hướng player = quái bên phải ? bên phải : bên trái
 			player->directionX = this->getLeft() >= player->getLeft() ? 1 : -1;
 			player->SetStatus(PLAYER_KNOCKBACK, player->directionX);
+
+			// Giảm máu (Lúc đầu build dở nên giờ nhìn nó lủng củng vầy)
+			Player::getInstance()->decrease_HP();
+			if (getObjectType() == ENEMY_CANNON_BULLET)
+			{
+				// giảm thêm 1 máu nữa là 2
+				Player::getInstance()->decrease_HP();
+			}
 		}
 	}
 }
@@ -101,16 +109,8 @@ void Enemy::MindTheGroundBlocks()
 		}
 		if (getRight() > currentBlock->getRight())
 		{
-			//if (nextBlock->getTop() < this->getBottom())
-			{
-				if (getLeft() > currentBlock->getRight())
-					isOnGround = false;
-			}
-			//else
-			{
-				//setX(currentBlock->getRight() - getWidth());
-				//directionX = -1;
-			}
+			if (getLeft() > currentBlock->getRight())
+				isOnGround = false;
 		}
 
 		if (!isOnGround)
