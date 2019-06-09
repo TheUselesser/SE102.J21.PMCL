@@ -50,6 +50,7 @@ class Game
 	void InitDirectX();
 	void InitGame();
 
+	DWORD startCooldown_R = GetTickCount();
 public:
 	bool allowHurtingPlayer = true;
 

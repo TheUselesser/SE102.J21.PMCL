@@ -40,7 +40,7 @@ enum GAME_OBJECT_TYPE
 	ITEM_ITEM_CONTAINER_2 = 22,
 	ITEM_ITEM_CONTAINER_3 = 23,
 	ITEM_ITEM_CONTAINER_4 = 24,		//
-	BOSS_3 = 33,					//
+	ENEMY_BOSS_3 = 33,					//
 	ENEMY_MACHINE_BULLET = 40,		//
 	ENEMY_CANNON_BULLET = 41,		//
 	ENEMY_BOSS_3_BULLET = 42,		//
@@ -97,8 +97,6 @@ protected:
 	GAME_OBJECT_TYPE objType;
 	COLLISION_TYPE clsType;
 
-	void CreateObject(const char * imagePath, D3DCOLOR transColor, float width, float height);
-
 	float realWidth;
 
 	DWORD startFreezeTime, freezeTime;
@@ -154,6 +152,12 @@ public:
 	GAME_OBJECT_TYPE getObjectType();
 	void setCollisionType(COLLISION_TYPE collisionType);
 	COLLISION_TYPE getCollisionType();
+	// Bosses
+	virtual bool isBoss() { return false; }
+	virtual int getMaxHP() { return 0; }
+	virtual int getHP() { return 0; }
+	virtual void decrease_HP(int i = 1) {}
+	virtual void resetAllStats() {}
 
 	// ItemContainer
 	virtual void setItemTypeID(int id) {}
@@ -166,4 +170,5 @@ public:
 
 	void Freeze(DWORD time);
 	void Draw();
+	void Release();
 };

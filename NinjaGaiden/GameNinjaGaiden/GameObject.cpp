@@ -4,10 +4,9 @@
 
 GameObject::GameObject()
 {
-	sprite = new Sprite();	// có lỗi gì thì nhớ quan tâm bạn này
+	sprite = new Sprite();
 
-	directionX = directionY = 1;
-
+	// ? ? :D ? ?
 	timer.startTime = GetTickCount();
 	timer.tickPerAnim = 3000;
 }
@@ -16,12 +15,6 @@ GameObject::GameObject()
 GameObject::~GameObject()
 {
 	sprite->Release();
-}
-
-void GameObject::CreateObject(const char * imagePath, D3DCOLOR transColor, float width, float height)
-{
-	setSize(width, height);
-	sprite->LoadTexture(imagePath, transColor);
 }
 
 void GameObject::UpdateCollisionStatus(int nx, int ny, float collisionTime)
@@ -94,4 +87,9 @@ void GameObject::Draw()
 
 	// vẽ object
 	sprite->Draw(getX(), getY(), this);
+}
+
+void GameObject::Release()
+{
+	//sprite->Release();
 }

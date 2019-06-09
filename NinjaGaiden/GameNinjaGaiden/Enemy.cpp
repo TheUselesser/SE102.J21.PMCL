@@ -26,13 +26,21 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 			{
 				if (player->directionX * (this->getLeft() >= player->getLeft() ? 1 : -1) > 0)
 				{
-					this->isExist = false;
+					if (isBoss())
+					{
+						decrease_HP();
+					}
+					else this->isExist = false;
 				}
 			}
 			// player tấn công khi đang nhảy (xoay vòng vòng nên khỏi xét hướng)
 			else
 			{
-				this->isExist = false;
+				if (isBoss())
+				{
+					decrease_HP();
+				}
+				else this->isExist = false;
 			}
 		}
 	}
@@ -49,7 +57,9 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 
 			// Giảm máu (Lúc đầu build dở nên giờ nhìn nó lủng củng vầy)
 			Player::getInstance()->decrease_HP();
-			if (getObjectType() == ENEMY_CANNON_BULLET)
+
+			if (getObjectType() == ENEMY_CANNON_BULLET ||
+				getObjectType() == ENEMY_BOSS_3_BULLET)
 			{
 				// giảm thêm 1 máu nữa là 2
 				Player::getInstance()->decrease_HP();
@@ -93,7 +103,7 @@ void Enemy::MindTheGroundBlocks()
 			directionX = -1;
 		}
 		break;
-	case MT_FROM_HIGHER_TO_LOWER_GROUND:	// incompleted
+	case MT_FROM_HIGHER_TO_LOWER_GROUND:	// [incompleted]
 		if (getLeft() < currentBlock->getLeft())
 		{
 			if (getLeft() < 0)

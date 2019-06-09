@@ -29,7 +29,7 @@ protected:
 	float minY, maxY;
 
 	// Dành cho mấy con có đòn đánh riêng
-	DWORD startCooldown = false;
+	DWORD startCooldown;
 
 public:
 	bool directionChanged;

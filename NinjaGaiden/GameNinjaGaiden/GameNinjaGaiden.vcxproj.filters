@@ -156,6 +156,9 @@
     <ClCompile Include="CannonBullet.cpp">
       <Filter>2_Game Objects\21_Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Boss3Bullet.cpp">
+      <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXInput.h">
@@ -271,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="CannonBullet.h">
       <Filter>2_Game Objects\21_Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss3Bullet.h">
+      <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

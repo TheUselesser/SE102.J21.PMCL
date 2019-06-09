@@ -15,11 +15,14 @@
 #define COOLDOWN_JUMP 300
 // bị đẩy lùi delay 0.3s
 #define KNOCKBACK_TIME 300
-// mỗi lần bất tử sẽ kéo dài 3s từ lúc bắt đầu bị knockback do va chạm enemy
-#define INVINCIBLE_TIME 3000
+// mỗi lần bất tử sẽ kéo dài 2.5s từ lúc bắt đầu bị knockback do va chạm enemy
+#define INVINCIBLE_TIME 2400
+// delay mỗi cái chớp chớp
+#define BLINK_DELAY 300
 // mỗi đòn tấn công kéo dài 0.5s
 #define STAND_ATTACK_TIME 500
 #define JUMP_ATTACK_TIME 500
+#define THROWING_TIME 250
 
 class Player :
 	public GameObject
@@ -31,7 +34,9 @@ class Player :
 	DWORD startCooldownJump;
 	DWORD startKnockback;
 	DWORD startInvincible;
+	DWORD stopDrawing;	bool isStopDrawing;
 	DWORD startAttack;
+	DWORD startThrowing;
 
 	float minHeight, maxHeight;
 	bool maxHeightReached;
@@ -51,6 +56,7 @@ public:
 	bool isMovable;
 	bool isJumpable;
 	bool directionChanged;
+	bool isThrowing;
 	bool hasItem;
 
 	// attack animation trick

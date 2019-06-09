@@ -18,9 +18,6 @@ Grid::~Grid()
 
 void Grid::InitGrid(Camera * camera)
 {
-	if (!this->isEmpty)
-		objects.clear();
-
 	UpdateCellsSet(camera);
 
 	for (int row = firstRow; row <= lastRow; row++)
@@ -71,15 +68,10 @@ void Grid::UpdateObjectList(Camera * camera)
 		{	
 			newObjectList.push_back(objects[i]);
 		}
-		else
-		{
-			//delete objects[i];
-			//objects[i]->isExist = false;
-		}
 	}
 
 	objects.clear();
-	objects = newObjectList;
+	objects.swap(newObjectList);
 }
 
 std::vector<GameObject*> Grid::GetObjectList(Camera * camera)
@@ -224,14 +216,20 @@ D3DXVECTOR2 Grid::GetLastCellPosition()
 // Chỉ đúng với setting game hiện tại hoặc tương tự
 void Grid::IgnoreLeft(Camera * camera)
 {
-	cell[lastRow][lastColumn - 3].disableUpdate();
-	cell[lastRow - 1][lastColumn - 3].disableUpdate();
+	if (lastColumn > 2)
+	{
+		cell[lastRow][lastColumn - 3].disableUpdate();
+		cell[lastRow - 1][lastColumn - 3].disableUpdate();
+	}
 }
 
 void Grid::IgnoreRight(Camera * camera)
 {
-	cell[firstRow][firstColumn + 3].disableUpdate();
-	cell[firstRow + 1][firstColumn + 3].disableUpdate();
+	if (firstColumn < numberOfColumns - 3)
+	{
+		cell[firstRow][firstColumn + 3].disableUpdate();
+		cell[firstRow + 1][firstColumn + 3].disableUpdate();
+	}
 }
 
 void Grid::AddLeft(Camera * camera, GameObject * player)
@@ -240,7 +238,7 @@ void Grid::AddLeft(Camera * camera, GameObject * player)
 	cell_1 = &cell[firstRow][firstColumn];
 	cell_2 = &cell[firstRow + 1][firstColumn];
 
-
+	if (!cell_1->isEmpty)
 	for (int i = 0; i < cell_1->getObjectList().size(); i++)
 	{
 		if (!cell_1->getObjectList()[i]->isExist)
@@ -249,6 +247,7 @@ void Grid::AddLeft(Camera * camera, GameObject * player)
 			cell_1->enableUpdate(player);
 		}
 	}
+	if (!cell_2->isEmpty)
 	for (int i = 0; i < cell_2->getObjectList().size(); i++)
 	{
 		if (!cell_2->getObjectList()[i]->isExist)
@@ -266,6 +265,7 @@ void Grid::AddRight(Camera * camera, GameObject * player)
 	cell_1 = &cell[lastRow][lastColumn];
 	cell_2 = &cell[lastRow - 1][lastColumn];
 	
+	if (!cell_1->isEmpty)
 	for (int i = 0; i < cell_1->getObjectList().size(); i++)
 	{
 		if (!cell_1->getObjectList()[i]->isExist)
@@ -274,6 +274,7 @@ void Grid::AddRight(Camera * camera, GameObject * player)
 			cell_1->enableUpdate(player);
 		}
 	}
+	if (!cell_2->isEmpty)
 	for (int i = 0; i < cell_2->getObjectList().size(); i++)
 	{
 		if (!cell_2->getObjectList()[i]->isExist)
@@ -286,6 +287,13 @@ void Grid::AddRight(Camera * camera, GameObject * player)
 
 void Grid::Release()
 {
+	isEmpty = true;
+
+	// release objects from objects
+	objects.clear();
+	objects.shrink_to_fit();
+
+	// release objects from cell
 	for (int row = 0; row < numberOfRows; row++)
 	{
 		for (int col = 0; col < numberOfColumns; col++)
@@ -293,4 +301,11 @@ void Grid::Release()
 			cell[row][col].Release();
 		}
 	}
+
+	// delete array
+	for (int row = 0; row < numberOfRows; row++)
+	{
+		delete[] cell[row];
+	}
+	delete[] cell;
 }

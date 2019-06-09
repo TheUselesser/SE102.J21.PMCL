@@ -8,8 +8,6 @@ class GameTexture
 	LPDIRECT3DTEXTURE9 texture;
 	LPD3DXSPRITE spriteHandler;
 
-	bool isSprite;
-
 public:
 	float width, height;
 

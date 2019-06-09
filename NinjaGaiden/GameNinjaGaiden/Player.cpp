@@ -18,6 +18,7 @@ Player::Player()
 	resetAllStats();
 	item = new Item();
 	hasItem = false;
+	isStopDrawing = false;
 }
 
 
@@ -37,7 +38,6 @@ void Player::setMaxClimbHeight(float maxClimbHeight)
 
 void Player::InitPlayer(float x, float y)
 {
-	//CreateObject("images/Ryu_right.png", D3DCOLOR_XRGB(255, 0, 255), 22, 32);
 	SetStatus(PLAYER_NULL);
 	SetStatus(PLAYER_STANDING);
 	setX(x);
@@ -51,12 +51,13 @@ void Player::InitPlayer(float x, float y)
 	isMovable = true;
 	isMoving = directionChanged = startAnimation = isJumping = false;
 	maxHeightReached = false;
-	isOnGround = false;
+	isOnGround = true;
 
 	isInvincible = false;
 	isKnockback = false;
 
 	isDead = false;
+	isStopDrawing = false;
 
 	X_moved = false;
 }
@@ -82,6 +83,7 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 		switch (status)
 		{
 		case PLAYER_STANDING:
+			#pragma region Show code
 			startAnimation = false;
 			setSize(22, 32);
 			realWidth = 20;
@@ -97,13 +99,17 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 				sprite->LoadTexture("images/Ryu_left.png", D3DCOLOR_XRGB(255, 0, 255));
 			}
 			break;
+#pragma endregion
 		case PLAYER_MOVING:
+			#pragma region Show code
 			SetStatus(PLAYER_STANDING, direction);
 			this->status = PLAYER_MOVING;
 			startAnimation = true;
 			sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 1, 3);
 			break;
+#pragma endregion
 		case PLAYER_JUMPING:
+			#pragma region Show code
 			if (isClimbing) isClimbing = false;
 			isJumping = true;
 
@@ -122,12 +128,16 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 				sprite->LoadTexture("images/Ryu_jump_left.png", D3DCOLOR_XRGB(255, 0, 255));
 			}
 			break;
+#pragma endregion
 		case PLAYER_END_JUMPING:
+			#pragma region Show code
 			isJumping = false;
 			setY(getY() + 8);
 			SetStatus(PLAYER_STANDING, direction);
 			break;
+#pragma endregion
 		case PLAYER_KNOCKBACK:
+			#pragma region Show code
 			isKnockback = true;
 			isMovable = false;
 			isMoving = false;
@@ -154,12 +164,16 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			}
 			this->status = temp;
 			break;
+#pragma endregion
 		case PLAYER_INVINCIBLE:
+			#pragma region Show code
 			isInvincible = true;
 			startInvincible = GetTickCount();
 			this->status = temp;
 			break;
+#pragma endregion
 		case PLAYER_ATTACK:
+			#pragma region Show code
 			if (!isJumping && isOnGround) isMovable = false;
 			if (!isAttacking) startAttack = GetTickCount();
 			isAttacking = true;
@@ -189,7 +203,9 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 				sprite->LoadTexture("images/Ryu_attack_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
+#pragma endregion
 		case PLAYER_JUMP_ATTACK:
+			#pragma region Show code
 			if (!isAttacking) startAttack = GetTickCount();
 			isAttacking = true;
 
@@ -208,7 +224,9 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 				sprite->LoadTexture("images/Ryu_jump_attack_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
+#pragma endregion
 		case PLAYER_CLINGING:
+			#pragma region Show code
 			isClimbing = true;
 			if (isMoving) isMoving = false;
 			if (isJumping) isJumping = false;
@@ -230,17 +248,40 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 				sprite->LoadTexture("images/Ryu_climb_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
+#pragma endregion
 		case PLAYER_CLIMBING:
+			#pragma region Show code
 			setVelY(DEFAULT_CLIMB_VELOCITY * directionY);
 			SetStatus(PLAYER_CLINGING, directionX);
 			this->status = PLAYER_CLIMBING;
 			startAnimation = true;
 			sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
 			break;
+#pragma endregion
+		case PLAYER_ITEM_USE:
+			if (!isJumping && isOnGround) isMovable = false;
+			if (!isThrowing) startThrowing = GetTickCount();
+			isThrowing = true;
+
+			startAnimation = true;
+			setSize(28, 32);
+			realWidth = 20;
+			sprite->SetAnimation(getWidth(), getHeight(), 1, 1, 0, 0);
+			if (direction > 0)
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/Ryu_throwing_right.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
+			else
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/Ryu_throwing_left.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
+			break;
 		case PLAYER_DIE:
 			isDead = true;
 			break;
-		default: // chẳng làm gì cả
+		default:
 			break;
 		}
 	}
@@ -249,16 +290,13 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 void Player::Update(DWORD dt)
 {
 	timer.tickPerAnim = dt;
-	if (isOnGround && !isJumping && isAttacking)
-	{
-		timer.tickPerAnim = STAND_ATTACK_TIME / 3;
-	}
 
-	// Lấy một vài thông tin từ class Game
+	#pragma region mapStart, mapEnd, cameraX, cameraWidth
 	int mapStart = Stage::getInstance()->getMapStart();
 	int mapEnd = Stage::getInstance()->getMapEnd();
 	float cameraX = Camera::getInstance()->getX();
 	float cameraWidth = Camera::getInstance()->getWidth();
+#pragma endregion Lấy giới hạn map và camera
 
 	// Chỉ xử lý các trạng thái chủ động khi không bị knockback
 	if (!isKnockback)
@@ -282,22 +320,7 @@ void Player::Update(DWORD dt)
 			}
 		}
 
-		// Xử lý leo trèo
-		if (isClimbing)
-		{
-			if (isMoving)
-			{
-				if (getY() <= maxClimbHeight && getY() >= minClimbHeight)
-					selfMovingY();
-
-				if (getY() > maxClimbHeight)
-					setY(maxClimbHeight);
-				if (getY() < minClimbHeight)
-					setY(minClimbHeight);
-			}
-		}
-
-		// Xử lý nhảy
+		#pragma region Nhảy
 		if (isJumping)
 		{
 			// Tăng giảm độ cao
@@ -313,9 +336,6 @@ void Player::Update(DWORD dt)
 			{
 				directionY = -1;
 				isOnGround = false;
-
-				//isJumpable = false;
-				//startCooldownJump = GetTickCount();
 			}
 
 			if (getY() <= minHeight)
@@ -324,8 +344,25 @@ void Player::Update(DWORD dt)
 				SetStatus(PLAYER_MOVING, directionX);
 			}
 		}
+#pragma endregion Xử lý nhảy
 
-		// Xử lý tấn công
+		#pragma region Leo trèo
+		if (isClimbing)
+		{
+			if (isMoving)
+			{
+				if (getY() <= maxClimbHeight && getY() >= minClimbHeight)
+					selfMovingY();
+
+				if (getY() > maxClimbHeight)
+					setY(maxClimbHeight);
+				if (getY() < minClimbHeight)
+					setY(minClimbHeight);
+			}
+		}
+#pragma endregion Xử lý leo trèo
+
+		#pragma region Tấn công
 		if (isAttacking)
 		{
 			// Khi đứng
@@ -367,8 +404,35 @@ void Player::Update(DWORD dt)
 				}
 			}
 		}
+#pragma endregion Xử lý tấn công
+
+		#pragma region Dùng item
+		if (isThrowing)
+		{
+			timer.tickPerAnim = (DWORD)THROWING_TIME / 2;
+
+			if (GetTickCount() - startThrowing >= THROWING_TIME)
+			{
+				isThrowing = false;
+				isMovable = true;
+				if (isMoving)
+				{
+					SetStatus(PLAYER_MOVING, directionX);
+				}
+				else
+				{
+					SetStatus(PLAYER_STANDING, directionX);
+				}
+			}
+			else
+			{
+				SetStatus(PLAYER_ITEM_USE, directionX);
+			}
+		}
+#pragma endregion Xử lý ném phi tiêu
+
 	}
-	// Xử lý khi bị knockback
+	// Xử lý khi bị knockback	[incompleted]
 	else
 	{
 		// knockback trong khoảng thời gian KNOCKBACK_TIME
@@ -406,13 +470,18 @@ void Player::Update(DWORD dt)
 	// Invincible
 	if (isInvincible)
 	{
+		// làm hiệu ứng chớp chớp
+		if (GetTickCount() - stopDrawing >= BLINK_DELAY)
+		{
+			isStopDrawing = !isStopDrawing;
+		}
+
 		// Chỉ bất tử trong khoảng thời gian INVINCIBLE_TIME
 		if (GetTickCount() - startInvincible >= INVINCIBLE_TIME)
 		{
 			isInvincible = false;
+			isStopDrawing = false;
 		}
-
-		// làm hiệu ứng chớp chớp
 	}
 
 	// Gravity: nhân vật rớt xuống khi không đứng trên mặt đất chạm đất
@@ -459,7 +528,8 @@ void Player::Update(DWORD dt)
 	}
 
 	// Vẽ lên camera
-	Draw();
+	if (!isStopDrawing)
+		Draw();
 
 	// Chết thì làm sao
 	if (isDead)
@@ -469,6 +539,7 @@ void Player::Update(DWORD dt)
 	}
 }
 
+#pragma region Stats
 void Player::setScore(int score)
 {
 	this->score = score;
@@ -537,3 +608,4 @@ void Player::resetAllStats()
 	score = 0;
 	spiritualStr = 0;	// ?
 }
+#pragma endregion get/set Score, HP, life, Spiritual strength

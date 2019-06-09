@@ -22,12 +22,14 @@ class Stage
 	std::vector<GameObject*> objectList;
 
 	Grid * grid;
-	D3DXVECTOR2 prevFirstCellPosition;
-	D3DXVECTOR2 prevLastCellPosition;
+	//D3DXVECTOR2 prevFirstCellPosition;
+	//D3DXVECTOR2 prevLastCellPosition;
 
 	Stage();
 	~Stage();
 public:
+	D3DXVECTOR2 prevFirstCellPosition;
+	D3DXVECTOR2 prevLastCellPosition;
 	static Stage * getInstance();
 
 	int getMapStart();	void setMapStart(int mapStart);

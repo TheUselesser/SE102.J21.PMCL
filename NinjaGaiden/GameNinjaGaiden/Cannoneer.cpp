@@ -35,17 +35,14 @@ void Cannoneer::Init(GameObject * player)
 	isAttacking = true;
 	startCooldown = GetTickCount();
 
-	// SetStatus(ENEMY_STANDING);
 	status = ENEMY_STANDING;
-	sprite->SetAnimation(getWidth(), getHeight(), 1, 1, 0, 0);
+	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 0);
 	if (directionX > 0)
 	{
-		//sprite->Release();
 		sprite->LoadTexture("images/enemies/Cannoneer_right.png", D3DCOLOR_XRGB(255, 163, 177));
 	}
 	else
 	{
-		//sprite->Release();
 		sprite->LoadTexture("images/enemies/Cannoneer_left.png", D3DCOLOR_XRGB(255, 163, 177));
 	}
 }
@@ -55,6 +52,24 @@ void Cannoneer::SetStatus(ENEMY_STATUS status)
 	switch (status)
 	{
 	case ENEMY_STANDING:
+		sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 0);
+		if (directionChanged)
+		{
+			if (directionX > 0)
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/enemies/Cannoneer_right.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
+			else
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/enemies/Cannoneer_left.png", D3DCOLOR_XRGB(255, 163, 177));
+			}
+			directionChanged = false;
+		}
+		break;
+	case ENEMY_MOVING:
+		sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 1, 1);
 		if (directionChanged)
 		{
 			if (directionX > 0)
@@ -79,7 +94,14 @@ void Cannoneer::Update(DWORD dt, GameObject & player)
 {
 	timer.tickPerAnim = dt;
 
-	SetStatus(ENEMY_STANDING);
+	if (bullet->startFire != -1)
+	{
+		SetStatus(ENEMY_MOVING);
+	}
+	else
+	{
+		SetStatus(ENEMY_STANDING);
+	}
 
 	if (!isFreezing)
 	{
@@ -103,8 +125,6 @@ void Cannoneer::autoMove(float range)
 	int temp = directionX;
 	directionX = Player::getInstance()->getMidX() > getMidX() ? 1 : -1;
 	if (temp * directionX < 0) directionChanged = true;
-
-	// Thật ra chỉ cần>>>  directionX = Player::getInstance()->getMidX() > getMidX() ? 1 : -1;
 }
 
 void Cannoneer::periodAttack(DWORD cooldown)
@@ -143,7 +163,5 @@ void Cannoneer::periodAttack(DWORD cooldown)
 			bullet->Update(0, *Player::getInstance());
 		}
 	}
-
-
 }
 

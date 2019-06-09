@@ -98,7 +98,7 @@ void Game::InitDirectX()
 
 void Game::InitGame()
 {
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	// Game Timer
 	timer.startTime = GetTickCount();
@@ -107,44 +107,50 @@ void Game::InitGame()
 	// Load stage
 	switch (stageIndex)
 	{
-	// Stage 3-1
 	case 0:
+		#pragma region Stage 3-1
 		// Map
 		Stage::getInstance()->LoadTilemap("images/Stage31/3_1_tilesheet.png", "images/Stage31/3_1_matrix.txt");
 		Stage::getInstance()->LoadGroundBlocks("images/Stage31/ground_blocks.txt");
 		Stage::getInstance()->setPlayerStart(8);
 		groundLine = 38;
+		// Camera
+		Camera::getInstance()->setX(Stage::getInstance()->getMapStart());
 		// Enemy
 		Stage::getInstance()->InitGrid("images/Stage31/grid_info.txt", "images/Stage31/cells_info.txt");
 		break;
-	// Stage 3-2
+#pragma endregion
 	case 1:
+		#pragma region Stage 3-2
 		// Map
 		Stage::getInstance()->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
 		Stage::getInstance()->LoadGroundBlocks("images/Stage32/ground_blocks.txt");
-		Stage::getInstance()->setPlayerStart(0);
 		Stage::getInstance()->setPlayerEnd(Stage::getInstance()->getMapEnd() - 16);
 		groundLine = 38;
+		// Camera
+		Camera::getInstance()->setX(Stage::getInstance()->getMapStart());
 		// Enemy
 		Stage::getInstance()->InitGrid("images/Stage32/grid_info.txt", "images/Stage32/cells_info.txt");
 		break;
-	// Stage 3-3
+#pragma endregion
 	case 2:
+		#pragma region Stage 3-3
 		// Map
 		Stage::getInstance()->LoadTilemap("images/Stage33/3_3_tilesheet.png", "images/Stage33/3_3_matrix.txt");
 		Stage::getInstance()->LoadGroundBlocks("images/Stage33/ground_blocks.txt");
 		Stage::getInstance()->setMapStart(512);
-		Stage::getInstance()->setPlayerStart(528);
-		groundLine = 38;
+		Stage::getInstance()->setPlayerStart(544);
+		groundLine = 22;
+		// Camera
+		Camera::getInstance()->setX(Stage::getInstance()->getMapStart());
 		// Enemy
 		Stage::getInstance()->InitGrid("images/Stage33/grid_info.txt", "images/Stage33/cells_info.txt");
 		break;
+#pragma endregion
 	}
 
 	// Player Ryu
 	Player::getInstance()->InitPlayer(Stage::getInstance()->getPlayerStart(), groundLine);
-	// Camera
-	Camera::getInstance()->trackPlayer(Player::getInstance());
 }
 
 void Game::run()
@@ -194,7 +200,8 @@ void Game::update()
 	Scorebar::getInstance()->Update();
 
 	// Đến cuối map -> chuyển stage
-	if (Player::getInstance()->getRight() >= Stage::getInstance()->getPlayerEnd())
+	if (Player::getInstance()->getRight() >= Stage::getInstance()->getPlayerEnd()
+		&& !Player::getInstance()->isJumping)
 	{
 		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
 		{
@@ -223,7 +230,12 @@ void Game::KeysControl()
 	// [R] restart stage
 	if (Key_Down(DIK_R))
 	{
-		init();
+		if (GetTickCount() - startCooldown_R > 500)
+		{
+			startCooldown_R = GetTickCount();
+			Stage::getInstance()->Release();
+			InitGame();
+		}
 	}
 	// [Q] to turn on invincibility
 	if (Key_Down(DIK_Q))
@@ -238,27 +250,44 @@ void Game::KeysControl()
 	// [1] [2] [3] to switch between stages
 	if (Key_Down(DIK_NUMPAD1))
 	{
-		stageIndex = 0; Stage::getInstance()->Release();
-		init();
+		if (stageIndex != 0)
+		{
+			stageIndex = 0;
+			Stage::getInstance()->Release();
+			InitGame();
+		}
 	}
 	if (Key_Down(DIK_NUMPAD2))
 	{
-		stageIndex = 1; Stage::getInstance()->Release();
-		init();
+		if (stageIndex != 1)
+		{
+			stageIndex = 1;
+			Stage::getInstance()->Release();
+			InitGame();
+		}
 	}
 	if (Key_Down(DIK_NUMPAD3))
 	{
-		stageIndex = 2; Stage::getInstance()->Release();
-		init();
+		if (stageIndex != 2)
+		{
+			stageIndex = 2;
+			Stage::getInstance()->Release();
+			InitGame();
+		}
 	}
 	if (Key_Down(DIK_NUMPAD4))
 	{
-		Stage::getInstance()->setPlayerEnd(0);
+		if (stageIndex == 1)
+		{
+			Player::getInstance()->setX(Stage::getInstance()->getPlayerEnd() - 320);
+			Player::getInstance()->setY(134);
+			Camera::getInstance()->trackPlayer(Player::getInstance());
+		}
 	}
 
 	// ******************************************************
 
-	// [LEFT ARROW] [RIGHT ARROW] di chuyển trái phải
+	#pragma region [LEFT] [RIGHT]
 	if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 	{
 		if (!Player::getInstance()->isKnockback && !Player::getInstance()->isClimbing)
@@ -290,13 +319,22 @@ void Game::KeysControl()
 			}
 		}
 	}
-	// [UP ARROW] [DOWN ARROW] trèo lên xuống
+#pragma endregion di chuyển trái phải
+
+	#pragma region [UP] [DOWN]
 	if (Key_Down(DIK_UPARROW) || Key_Down(DIK_DOWNARROW))
 	{
 		if (Player::getInstance()->isClimbing)
 		{
 			Player::getInstance()->isMoving = true;
 			Player::getInstance()->directionY = Key_Down(DIK_UPARROW) ? 1 : -1;
+
+			if (Player::getInstance()->getVelY() * Player::getInstance()->directionY < 0)
+			{
+				Player::getInstance()->setVelY(-Player::getInstance()->getVelY());
+				Player::getInstance()->directionChanged = true;
+			}
+
 			Player::getInstance()->SetStatus(PLAYER_CLIMBING, Player::getInstance()->directionX);
 		}
 	}
@@ -308,8 +346,9 @@ void Game::KeysControl()
 			Player::getInstance()->SetStatus(PLAYER_CLINGING, Player::getInstance()->directionX);
 		}
 	}
+#pragma endregion lên xuống khi leo trèo
 
-	// [Z] tấn công
+	#pragma region [Z]
 	if (Key_Down(DIK_Z))
 	{
 		// Không được tấn công lúc đang leo trèo
@@ -326,8 +365,9 @@ void Game::KeysControl()
 			}
 		}
 	}
+#pragma endregion tấn công
 
-	// [Space] [X] nhảy
+	#pragma region [Space] [X]
 	if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
 	{
 		if (Player::getInstance()->isClimbing)
@@ -350,20 +390,22 @@ void Game::KeysControl()
 			}
 		}
 	}
+#pragma endregion nhảy
 
-	// [C] use item
+	#pragma region [C]
 	if (Key_Down(DIK_C))
 	{
-		if (Player::getInstance()->hasItem)
+		if (!Player::getInstance()->isThrowing)
+		//if (Player::getInstance()->hasItem)
 		{
 			Player::getInstance()->getItem()->UseItem();
 			
-			// set animation dùng item
+			Player::getInstance()->SetStatus(PLAYER_ITEM_USE, Player::getInstance()->directionX);
 		}
 	}
+#pragma endregion dùng item
 
-
-	// [ESC] close game
+	#pragma region [ESC]
 	if (Key_Down(DIK_ESCAPE))
 	{
 		// giải phóng bàn phím
@@ -373,4 +415,5 @@ void Game::KeysControl()
 		end();
 		PostMessage(hWnd, WM_DESTROY, 0, 0);
 	}
+#pragma endregion thoát game
 }

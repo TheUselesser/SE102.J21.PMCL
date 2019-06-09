@@ -99,21 +99,7 @@ void Sprite::Draw(float x, float y, Rect * rect)
 
 	float xV, yV;
 	Camera::getInstance()->worldToView(x, y, xV, yV);
-
-	// Định làm giới hạn hình ảnh không vượt ra khỏi camera nhưng fail rồi
-	/*if (y > 176)
-	{
-		frame.top += y - 176;
-
-		if (frame.top > frame.bottom)
-		{
-			frame.top = frame.bottom;
-		}
-	}*/
-	if (rect->getBottom() <= Camera::getInstance()->getHeight())
-	{
-		spriteTexture.Draw(xV, yV, &frame);
-	}
+	spriteTexture.Draw(xV, yV, &frame);
 }
 
 void Sprite::Release()
@@ -148,7 +134,7 @@ LPDIRECT3DTEXTURE9 Sprite::LoadTexture(LPDIRECT3DDEVICE9 device, const char * fi
 		D3DPOOL_DEFAULT,
 		D3DX_DEFAULT,
 		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(255, 0, 255),			//Transparent color
+		D3DCOLOR_XRGB(0, 0, 0),				//Transparent color
 		&info,								//Image infomation
 		NULL,
 		&texture							//result

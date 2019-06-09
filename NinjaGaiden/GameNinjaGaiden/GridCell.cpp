@@ -8,6 +8,7 @@
 #include "Runner.h"
 #include "ItemContainer.h"
 #include "Player.h"
+#include "Boss3.h"
 
 #include<string>
 
@@ -123,6 +124,10 @@ void GridCell::InitObject(float x, float y, int objTypeID, int itemTypeID)
 		object->setObjectType(ITEM_ITEM_CONTAINER_4);
 		object->setItemTypeID(itemTypeID);
 		break;
+	case 33:
+		object = new Boss3(x, y);
+		object->setObjectType(ENEMY_BOSS_3);
+		break;
 	default:
 		break;
 	}
@@ -172,13 +177,19 @@ void GridCell::disableUpdate()
 	if (!isEmpty)
 		for (int i = 0; i < listSize; i++)
 		{
-			objectList[i]->isInCellsSet = false;
+			if (objectList[i]->isInCellsSet) objectList[i]->isInCellsSet = false;
 		}
 }
 
-
 void GridCell::Release()
 {
-	objectList.clear();
-	objectInfoList.clear();
+	isEmpty = true;
+
+	std::vector<GameObject*> objectListClone;
+	std::vector<D3DXVECTOR4*> objectInfoListClone;
+	
+	objectList.clear(); objectInfoList.clear();
+
+	objectList.swap(objectListClone);
+	objectInfoList.swap(objectInfoListClone);
 }

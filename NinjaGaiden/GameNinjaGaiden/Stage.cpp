@@ -18,6 +18,8 @@ Stage * Stage::getInstance()
 Stage::Stage()
 {
 	mapStart = playerStart = 0;
+	tilemap = new Tilemap();
+	grid = new Grid();
 }
 
 Stage::~Stage()
@@ -68,13 +70,13 @@ void Stage::setPlayerEnd(int playerEnd)
 
 void Stage::InitGrid(const char * gridInfoPath, const char * cellsInfoPath)
 {
-	grid = new Grid();
 	grid->readGridInfo(gridInfoPath, cellsInfoPath);
 	grid->InitGrid(Camera::getInstance());
 
 	if (!grid->isEmpty)
 	{
 		objectList = grid->GetObjectList(Camera::getInstance());
+
 		prevFirstCellPosition = grid->GetFirstCellPosition();
 		prevLastCellPosition = grid->GetLastCellPosition();
 	}
@@ -108,8 +110,6 @@ void Stage::Update(DWORD dt, Player * player)
 			// camera dịch qua phải => xóa object của cell bên trái
 			if (firstCellPosition.x > prevFirstCellPosition.x || lastCellPosition.x > prevLastCellPosition.x)
 			{
-				std::string msg = std::to_string(firstCellPosition.x);
-
 				grid->IgnoreLeft(Camera::getInstance());
 				if (lastCellPosition.x > prevLastCellPosition.x)
 				{
@@ -121,9 +121,13 @@ void Stage::Update(DWORD dt, Player * player)
 			{
 				grid->IgnoreRight(Camera::getInstance());
 				if (firstCellPosition.x < prevFirstCellPosition.x)
+				{
 					grid->AddLeft(Camera::getInstance(), Player::getInstance());
+				}
 			}
 
+			objectList.clear();
+			objectList.shrink_to_fit();
 			objectList = grid->GetObjectList(Camera::getInstance());
 			
 			prevFirstCellPosition = firstCellPosition;
@@ -161,7 +165,6 @@ void Stage::Update(DWORD dt, Player * player)
 
 void Stage::LoadTilemap(const char * imagePath, const char * matrixPath)
 {
-	tilemap = new Tilemap();
 	tilemap->LoadTilemap(imagePath, matrixPath);
 
 	mapStart = playerStart = 0;
@@ -181,11 +184,12 @@ void Stage::Draw(Camera * camera)
 void Stage::Release()
 {
 	// tilemap
-	delete tilemap;
+	tilemap->Release();
 	// groundblock;
 	delete groundBlocks;
 	// grid
 	grid->Release();
 	//	objectlist
 	objectList.clear();
+	objectList.shrink_to_fit();
 }

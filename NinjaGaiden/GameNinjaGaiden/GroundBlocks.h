@@ -16,5 +16,7 @@ public:
 	int getNumberOfBlocks();
 	GroundBlock * getGroundBlock(int index);
 	void Update(DWORD dt, GameObject &player);
+
+	void Release();
 };
 

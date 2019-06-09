@@ -4,7 +4,7 @@
 
 class Tilemap
 {
-	GameTexture * tilesheet = NULL;
+	GameTexture * tilesheet;
 	int tileSize;
 	int mapCols, mapRows;	// số hàng và cột của map	(tính theo tile)
 	int **matrix;	// ma trận các tile index hiển thị cho map;
@@ -17,6 +17,6 @@ public:
 
 	void LoadTilemap(const char * imagePath, const char * matrixPath);	// đường dẫn tilesheet và matrix
 	void Draw(Camera * camera);
-	void Release() {}
+	void Release();
 };
 

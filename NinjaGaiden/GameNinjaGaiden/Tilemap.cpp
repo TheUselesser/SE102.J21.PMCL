@@ -95,3 +95,14 @@ void Tilemap::Draw(Camera * camera)
 		}
 	}
 }
+
+void Tilemap::Release()
+{
+	delete tilesheet;
+
+	for (int row = 0; row < mapRows; row++)
+	{
+		delete[] matrix[row];
+	}
+	delete[] matrix;
+}

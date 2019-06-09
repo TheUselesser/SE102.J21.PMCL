@@ -2,7 +2,7 @@
 #include "Enemy.h"
 #include "CannonBullet.h"
 
-#define	DEFAULT_CANNONEER_WIDTH		24
+#define	DEFAULT_CANNONEER_WIDTH		28
 #define DEFAULT_CANNONEER_HEIGHT	32
 
 class Cannoneer :

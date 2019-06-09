@@ -41,6 +41,12 @@ GroundBlocks::GroundBlocks(const char * filePath)
 
 GroundBlocks::~GroundBlocks()
 {
+	/*for (int i = 0; i < numberOfBlocks; i++)
+	{
+		delete groundBlocks[i];
+	}
+	delete[] groundBlocks;
+	delete[] currentHeight;*/
 }
 
 int GroundBlocks::getNumberOfBlocks()
@@ -114,4 +120,8 @@ void GroundBlocks::Update(DWORD dt, GameObject &player)
 			if (player.getY() < 0) player.SetStatus(PLAYER_DIE);
 		}
 	}
+}
+
+void GroundBlocks::Release()
+{
 }

@@ -6,6 +6,7 @@ CannonBullet::CannonBullet()
 {
 	setSize(DEFAULT_CANNON_BULLET_WIDTH, DEFAULT_CANNON_BULLET_HEIGHT);
 	isExist = false;
+	startFire = -1;
 }
 
 CannonBullet::CannonBullet(float x, float y)
@@ -14,6 +15,7 @@ CannonBullet::CannonBullet(float x, float y)
 	setX(x);
 	setY(y);
 	isExist = false;
+	startFire = -1;
 }
 
 CannonBullet::~CannonBullet()
