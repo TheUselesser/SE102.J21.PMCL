@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "GameObject.h"
-#include "Item.h"
+#include "UsableItem.h"
 
 #define DEFAULT_VELOCITY_X	4
 #define DEFAULT_VELOCITY_Y	8
@@ -14,7 +14,7 @@
 // Mỗi lần nhảy cách nhau 1 tí xíu
 #define COOLDOWN_JUMP 300
 // bị đẩy lùi delay 0.3s
-#define KNOCKBACK_TIME 300
+#define KNOCKBACK_TIME 500
 // mỗi lần bất tử sẽ kéo dài 2.5s từ lúc bắt đầu bị knockback do va chạm enemy
 #define INVINCIBLE_TIME 2400
 // delay mỗi cái chớp chớp
@@ -47,7 +47,7 @@ class Player :
 	int HP;
 	int life;
 	int spiritualStr;
-	Item * item;	// nhớ là chỉ dùng cho các item có hiển thị trên UI nhé
+	UsableItem * item;	// nhớ là chỉ dùng cho các item có hiển thị trên UI nhé
 
 	// Người hãy quên em đi, vì em sử dụng singleton pattern
 	Player();
@@ -59,6 +59,7 @@ public:
 	bool isThrowing;
 	bool hasItem;
 
+	bool started = false;
 	// attack animation trick
 	bool X_moved;
 
@@ -91,8 +92,8 @@ public:
 	int getMaxHP() { return MAX_HP; }
 	void setSpiritualStrength(int spiritualStr);
 	int getSpiritualStrength() { return spiritualStr; }
-	void setItem(Item * item);
-	Item * getItem() { return item; }
+	void setItem(UsableItem * item);
+	UsableItem * getItem() { return item; }
 	/********** Advanced **********/
 	void addScore(int score);
 	void increase_HP(int HP = 1);

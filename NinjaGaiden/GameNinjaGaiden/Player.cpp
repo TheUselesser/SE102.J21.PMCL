@@ -16,9 +16,9 @@ Player * Player::getInstance()
 Player::Player()
 {
 	resetAllStats();
-	item = new Item();
 	hasItem = false;
 	isStopDrawing = false;
+	item = new UsableItem();
 }
 
 
@@ -38,6 +38,7 @@ void Player::setMaxClimbHeight(float maxClimbHeight)
 
 void Player::InitPlayer(float x, float y)
 {
+	started = false;
 	SetStatus(PLAYER_NULL);
 	SetStatus(PLAYER_STANDING);
 	setX(x);
@@ -292,10 +293,11 @@ void Player::Update(DWORD dt)
 	timer.tickPerAnim = dt;
 
 	#pragma region mapStart, mapEnd, cameraX, cameraWidth
+	Camera * camera = Camera::getInstance();
 	int mapStart = Stage::getInstance()->getMapStart();
 	int mapEnd = Stage::getInstance()->getMapEnd();
-	float cameraX = Camera::getInstance()->getX();
-	float cameraWidth = Camera::getInstance()->getWidth();
+	float cameraX = camera->getX();
+	float cameraWidth = camera->getWidth();
 #pragma endregion Lấy giới hạn map và camera
 
 	// Chỉ xử lý các trạng thái chủ động khi không bị knockback
@@ -445,17 +447,50 @@ void Player::Update(DWORD dt)
 		}
 		else
 		{
+			// trường hợp đặc biệt ^_^ phải ép kết thúc tấn công trước khi knockback
+			if (isAttacking && directionX == -1)
+			{
+				isAttacking = false;
+				isMovable = true;
+				if (X_moved)
+				{
+					moveX(16);
+					X_moved = false;
+				}
+				SetStatus(PLAYER_STANDING, directionX);
+			}
+
 			moveX(-DEFAULT_VELOCITY_X * directionX);
 
 			if (directionY > 0)
 			{
-				moveY(DEFAULT_VELOCITY_Y * 1.6f);
+				moveY(DEFAULT_VELOCITY_Y * 1.4f);
 			}
 			if (getY() > (maxHeight + minHeight) / 2)
 			{
 				directionY = -1;
 			}
 		}
+	}
+
+	// Update item
+	//	init item
+	if (item->isUsed)
+	{
+		item->directionX = directionX;
+		if (directionX > 0)
+		{
+			item->Init(getRight(), getTop() - 8 + item->getHeight() / 2);
+		}
+		else
+		{
+			item->Init(getLeft() - item->getWidth(), getTop() - 8 + item->getHeight() / 2);
+		}
+	}
+	//	draw item
+	if (item->isExist)
+	{
+		item->Update();
 	}
 
 	// ?
@@ -509,10 +544,11 @@ void Player::Update(DWORD dt)
 		getMidX() < mapEnd - cameraWidth / 2 && 
 		(status != PLAYER_ATTACK))
 	{
-		Camera::getInstance()->trackPlayer(this);
+		camera->trackPlayer(this);
 	}
 	// Kiểm tra giới hạn di chuyển
 	// giới hạn nhân vật trong map
+	if (started)
 	if (this->getRight() - this->getRealWidth() < mapStart && this->getRight() > mapStart)
 	{
 		this->setX(mapStart - this->getWidth() + this->getRealWidth());
@@ -520,11 +556,11 @@ void Player::Update(DWORD dt)
 	// giới hạn camera trong map
 	if (cameraX < mapStart)
 	{
-		Camera::getInstance()->setX(mapStart);
+		camera->setX(mapStart);
 	}
 	if (cameraX > mapEnd - cameraWidth)
 	{
-		Camera::getInstance()->setX(mapEnd - cameraWidth);
+		camera->setX(mapEnd - cameraWidth);
 	}
 
 	// Vẽ lên camera
@@ -558,12 +594,6 @@ void Player::setLife(int life)
 void Player::setSpiritualStrength(int spiritualStr)
 {
 	this->spiritualStr = spiritualStr;
-}
-
-void Player::setItem(Item * item)
-{
-	this->item = item;
-	hasItem = true;
 }
 
 void Player::addScore(int score)
@@ -600,6 +630,17 @@ void Player::decrease_spiritualStrength(int ss)
 {
 	this->spiritualStr -= ss;
 }
+#pragma endregion get/set Score, HP, life, Spiritual strength
+
+void Player::setItem(UsableItem * item)
+{
+	if (!hasItem)
+	{
+		hasItem = true;
+	}
+	delete this->item;
+	this->item = item;
+}
 
 void Player::resetAllStats()
 {
@@ -607,5 +648,9 @@ void Player::resetAllStats()
 	life = 2;	// ?
 	score = 0;
 	spiritualStr = 0;	// ?
+	//if (hasItem)
+	{
+		//delete item;
+		hasItem = false;
+	}
 }
-#pragma endregion get/set Score, HP, life, Spiritual strength

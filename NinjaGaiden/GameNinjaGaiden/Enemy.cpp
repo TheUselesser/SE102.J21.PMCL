@@ -30,7 +30,11 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 					{
 						decrease_HP();
 					}
-					else this->isExist = false;
+					else
+					{
+						Die();
+						this->isExist = false;
+					}
 				}
 			}
 			// player tấn công khi đang nhảy (xoay vòng vòng nên khỏi xét hướng)
@@ -40,7 +44,11 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 				{
 					decrease_HP();
 				}
-				else this->isExist = false;
+				else
+				{
+					Die();
+					this->isExist = false;
+				}
 			}
 		}
 	}
@@ -66,6 +74,16 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 			}
 		}
 	}
+}
+
+void Enemy::Die()	// [incompleted]
+{
+	/*setSize(48, 48);
+	sprite->Release();
+	sprite->SetAnimation(48, 48, 1, 1, 0, 0);
+	sprite->LoadTexture("images/enemies/die.png", D3DCOLOR_XRGB(0, 128, 128));
+	Draw();
+	isAlive = false;*/
 }
 
 void Enemy::setSpawned(bool isSpawned)

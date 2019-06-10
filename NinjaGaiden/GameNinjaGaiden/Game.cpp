@@ -105,52 +105,53 @@ void Game::InitGame()
 	timer.tickPerFrame = 1000 / FPS;
 
 	// Load stage
+	float groundLine;
 	switch (stageIndex)
 	{
 	case 0:
 		#pragma region Stage 3-1
 		// Map
-		Stage::getInstance()->LoadTilemap("images/Stage31/3_1_tilesheet.png", "images/Stage31/3_1_matrix.txt");
-		Stage::getInstance()->LoadGroundBlocks("images/Stage31/ground_blocks.txt");
-		Stage::getInstance()->setPlayerStart(8);
+		stage->LoadTilemap("images/Stage31/3_1_tilesheet.png", "images/Stage31/3_1_matrix.txt");
+		stage->LoadGroundBlocks("images/Stage31/ground_blocks.txt");
+		stage->setPlayerStart(16);
 		groundLine = 38;
 		// Camera
-		Camera::getInstance()->setX(Stage::getInstance()->getMapStart());
+		camera->setX(stage->getMapStart());
 		// Enemy
-		Stage::getInstance()->InitGrid("images/Stage31/grid_info.txt", "images/Stage31/cells_info.txt");
+		stage->InitGrid("images/Stage31/grid_info.txt", "images/Stage31/cells_info.txt");
 		break;
 #pragma endregion
 	case 1:
 		#pragma region Stage 3-2
 		// Map
-		Stage::getInstance()->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
-		Stage::getInstance()->LoadGroundBlocks("images/Stage32/ground_blocks.txt");
-		Stage::getInstance()->setPlayerEnd(Stage::getInstance()->getMapEnd() - 16);
+		stage->LoadTilemap("images/Stage32/3_2_tilesheet.png", "images/Stage32/3_2_matrix.txt");
+		stage->LoadGroundBlocks("images/Stage32/ground_blocks.txt");
+		stage->setPlayerEnd(stage->getMapEnd() - 16);
 		groundLine = 38;
 		// Camera
-		Camera::getInstance()->setX(Stage::getInstance()->getMapStart());
+		camera->setX(stage->getMapStart());
 		// Enemy
-		Stage::getInstance()->InitGrid("images/Stage32/grid_info.txt", "images/Stage32/cells_info.txt");
+		stage->InitGrid("images/Stage32/grid_info.txt", "images/Stage32/cells_info.txt");
 		break;
 #pragma endregion
 	case 2:
 		#pragma region Stage 3-3
 		// Map
-		Stage::getInstance()->LoadTilemap("images/Stage33/3_3_tilesheet.png", "images/Stage33/3_3_matrix.txt");
-		Stage::getInstance()->LoadGroundBlocks("images/Stage33/ground_blocks.txt");
-		Stage::getInstance()->setMapStart(512);
-		Stage::getInstance()->setPlayerStart(544);
+		stage->LoadTilemap("images/Stage33/3_3_tilesheet.png", "images/Stage33/3_3_matrix.txt");
+		stage->LoadGroundBlocks("images/Stage33/ground_blocks.txt");
+		stage->setMapStart(512);
+		stage->setPlayerStart(544);
 		groundLine = 22;
 		// Camera
-		Camera::getInstance()->setX(Stage::getInstance()->getMapStart());
+		camera->setX(stage->getMapStart());
 		// Enemy
-		Stage::getInstance()->InitGrid("images/Stage33/grid_info.txt", "images/Stage33/cells_info.txt");
+		stage->InitGrid("images/Stage33/grid_info.txt", "images/Stage33/cells_info.txt");
 		break;
 #pragma endregion
 	}
 
 	// Player Ryu
-	Player::getInstance()->InitPlayer(Stage::getInstance()->getPlayerStart(), groundLine);
+	Ryu->InitPlayer(stage->getPlayerStart() - 16, groundLine);
 }
 
 void Game::run()
@@ -188,20 +189,30 @@ void Game::run()
 void Game::update()
 {
 	// Vẽ tilemap
-	Stage::getInstance()->Draw(Camera::getInstance());
+	stage->Draw(camera);
 
 	// Update enemy trong stage
-	Stage::getInstance()->Update(300, Player::getInstance());
+	stage->Update(300, Ryu);
 
 	// Vẽ Ryu
-	Player::getInstance()->Update(60);
+	if (!Ryu->started)
+	{
+		Ryu->SetStatus(PLAYER_MOVING);
+		Ryu->moveX(2);
+
+		if (Ryu->getX() >= stage->getPlayerStart())
+		{
+			Ryu->started = true;
+		}
+	}
+	Ryu->Update(60);
 
 	// Vẽ Scorebar
 	Scorebar::getInstance()->Update();
 
 	// Đến cuối map -> chuyển stage
-	if (Player::getInstance()->getRight() >= Stage::getInstance()->getPlayerEnd()
-		&& !Player::getInstance()->isJumping)
+	if (Ryu->getRight() >= stage->getPlayerEnd()
+		&& !Ryu->isJumping)
 	{
 		if (stageIndex < NUMBER_OF_STAGES)	// Vượt qua tất cả stage
 		{
@@ -209,7 +220,7 @@ void Game::update()
 			if (!(stageIndex < NUMBER_OF_STAGES))	 // ^_^
 				stageIndex = 0;
 
-			Stage::getInstance()->Release();
+			stage->Release();
 			InitGame();
 		}
 	}
@@ -226,14 +237,13 @@ void Game::end()
 void Game::KeysControl()
 {
 	// ***** Will be deleted ********************************
-
 	// [R] restart stage
 	if (Key_Down(DIK_R))
 	{
 		if (GetTickCount() - startCooldown_R > 500)
 		{
 			startCooldown_R = GetTickCount();
-			Stage::getInstance()->Release();
+			stage->Release();
 			InitGame();
 		}
 	}
@@ -253,7 +263,7 @@ void Game::KeysControl()
 		if (stageIndex != 0)
 		{
 			stageIndex = 0;
-			Stage::getInstance()->Release();
+			stage->Release();
 			InitGame();
 		}
 	}
@@ -262,7 +272,7 @@ void Game::KeysControl()
 		if (stageIndex != 1)
 		{
 			stageIndex = 1;
-			Stage::getInstance()->Release();
+			stage->Release();
 			InitGame();
 		}
 	}
@@ -271,7 +281,7 @@ void Game::KeysControl()
 		if (stageIndex != 2)
 		{
 			stageIndex = 2;
-			Stage::getInstance()->Release();
+			stage->Release();
 			InitGame();
 		}
 	}
@@ -279,43 +289,42 @@ void Game::KeysControl()
 	{
 		if (stageIndex == 1)
 		{
-			Player::getInstance()->setX(Stage::getInstance()->getPlayerEnd() - 320);
-			Player::getInstance()->setY(134);
-			Camera::getInstance()->trackPlayer(Player::getInstance());
+			Ryu->setX(stage->getPlayerEnd() - 320);
+			Ryu->setY(134);
+			camera->trackPlayer(Ryu);
 		}
 	}
-
 	// ******************************************************
-
+	if (Ryu->started){
 	#pragma region [LEFT] [RIGHT]
 	if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 	{
-		if (!Player::getInstance()->isKnockback && !Player::getInstance()->isClimbing)
+		if (!Ryu->isKnockback && !Ryu->isClimbing)
 		{
-			Player::getInstance()->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
+			Ryu->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
 
-			if (Player::getInstance()->getVelX() * Player::getInstance()->directionX < 0)
+			if (Ryu->getVelX() * Ryu->directionX < 0)
 			{
-				Player::getInstance()->setVelX(-Player::getInstance()->getVelX());
-				Player::getInstance()->directionChanged = true;
+				Ryu->setVelX(-Ryu->getVelX());
+				Ryu->directionChanged = true;
 			}
 
-			Player::getInstance()->isMoving = true;
-			if (!Player::getInstance()->isJumping && !Player::getInstance()->isAttacking)
+			Ryu->isMoving = true;
+			if (!Ryu->isJumping && !Ryu->isAttacking)
 			{
-				Player::getInstance()->SetStatus(PLAYER_MOVING, Player::getInstance()->directionX);
+				Ryu->SetStatus(PLAYER_MOVING, Ryu->directionX);
 			}
 		}
 	}
 	// Không di chuyển
 	else
 	{
-		if (!Player::getInstance()->isClimbing)
+		if (!Ryu->isClimbing)
 		{
-			Player::getInstance()->isMoving = false;
-			if (!Player::getInstance()->isJumping && !Player::getInstance()->isKnockback)
+			Ryu->isMoving = false;
+			if (!Ryu->isJumping && !Ryu->isKnockback)
 			{
-				Player::getInstance()->SetStatus(PLAYER_STANDING, Player::getInstance()->directionX);
+				Ryu->SetStatus(PLAYER_STANDING, Ryu->directionX);
 			}
 		}
 	}
@@ -324,26 +333,26 @@ void Game::KeysControl()
 	#pragma region [UP] [DOWN]
 	if (Key_Down(DIK_UPARROW) || Key_Down(DIK_DOWNARROW))
 	{
-		if (Player::getInstance()->isClimbing)
+		if (Ryu->isClimbing)
 		{
-			Player::getInstance()->isMoving = true;
-			Player::getInstance()->directionY = Key_Down(DIK_UPARROW) ? 1 : -1;
+			Ryu->isMoving = true;
+			Ryu->directionY = Key_Down(DIK_UPARROW) ? 1 : -1;
 
-			if (Player::getInstance()->getVelY() * Player::getInstance()->directionY < 0)
+			if (Ryu->getVelY() * Ryu->directionY < 0)
 			{
-				Player::getInstance()->setVelY(-Player::getInstance()->getVelY());
-				Player::getInstance()->directionChanged = true;
+				Ryu->setVelY(-Ryu->getVelY());
+				Ryu->directionChanged = true;
 			}
 
-			Player::getInstance()->SetStatus(PLAYER_CLIMBING, Player::getInstance()->directionX);
+			Ryu->SetStatus(PLAYER_CLIMBING, Ryu->directionX);
 		}
 	}
 	else
 	{
-		if (Player::getInstance()->isClimbing)
+		if (Ryu->isClimbing)
 		{
-			Player::getInstance()->isMoving = false;
-			Player::getInstance()->SetStatus(PLAYER_CLINGING, Player::getInstance()->directionX);
+			Ryu->isMoving = false;
+			Ryu->SetStatus(PLAYER_CLINGING, Ryu->directionX);
 		}
 	}
 #pragma endregion lên xuống khi leo trèo
@@ -352,16 +361,16 @@ void Game::KeysControl()
 	if (Key_Down(DIK_Z))
 	{
 		// Không được tấn công lúc đang leo trèo
-		if (!Player::getInstance()->isClimbing)
-		if (!Player::getInstance()->isAttacking)
+		if (!Ryu->isClimbing && !Ryu->isKnockback)
+		if (!Ryu->isAttacking)
 		{
-			if (Player::getInstance()->isOnGround && !Player::getInstance()->isJumping)
+			if (Ryu->isOnGround && !Ryu->isJumping)
 			{
-				Player::getInstance()->SetStatus(PLAYER_ATTACK, Player::getInstance()->directionX);
+				Ryu->SetStatus(PLAYER_ATTACK, Ryu->directionX);
 			}
 			else
 			{
-				Player::getInstance()->SetStatus(PLAYER_JUMP_ATTACK, Player::getInstance()->directionX);
+				Ryu->SetStatus(PLAYER_JUMP_ATTACK, Ryu->directionX);
 			}
 		}
 	}
@@ -370,22 +379,22 @@ void Game::KeysControl()
 	#pragma region [Space] [X]
 	if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
 	{
-		if (Player::getInstance()->isClimbing)
+		if (Ryu->isClimbing)
 		{
 			// thiết lập sau khi thoát climbing
-			Player::getInstance()->isClimbing = false;
-			Player::getInstance()->setMinJumpHeight(Player::getInstance()->getBottom());
-			Player::getInstance()->setMaxJumpHeight(Player::getInstance()->getMinJumpHeight() + 48);
+			Ryu->isClimbing = false;
+			Ryu->setMinJumpHeight(Ryu->getBottom());
+			Ryu->setMaxJumpHeight(Ryu->getMinJumpHeight() + 48);
 		}
 
-		if (Player::getInstance()->isJumpable)
+		if (Ryu->isJumpable)
 		{
-			if (!Player::getInstance()->isAttacking && !Player::getInstance()->isKnockback)
+			if (!Ryu->isAttacking && !Ryu->isKnockback)
 			{
-				if (!Player::getInstance()->isJumping && Player::getInstance()->isOnGround)
+				if (!Ryu->isJumping && Ryu->isOnGround)
 				{
-					Player::getInstance()->directionY = 1;
-					Player::getInstance()->SetStatus(PLAYER_JUMPING, Player::getInstance()->directionX);
+					Ryu->directionY = 1;
+					Ryu->SetStatus(PLAYER_JUMPING, Ryu->directionX);
 				}
 			}
 		}
@@ -395,15 +404,17 @@ void Game::KeysControl()
 	#pragma region [C]
 	if (Key_Down(DIK_C))
 	{
-		if (!Player::getInstance()->isThrowing)
-		//if (Player::getInstance()->hasItem)
+		if (!Ryu->isAttacking)
+		if (!Ryu->isThrowing)
+		if (Ryu->hasItem)
+		if (!Ryu->getItem()->isExist)
 		{
-			Player::getInstance()->getItem()->UseItem();
-			
-			Player::getInstance()->SetStatus(PLAYER_ITEM_USE, Player::getInstance()->directionX);
+			Ryu->getItem()->UseItem();
 		}
 	}
 #pragma endregion dùng item
+
+	}
 
 	#pragma region [ESC]
 	if (Key_Down(DIK_ESCAPE))

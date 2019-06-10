@@ -37,6 +37,9 @@
     <Filter Include="2_Game Objects\21_Enemies\210_Bosses">
       <UniqueIdentifier>{95ef60bf-5fda-4fba-8cb0-52494b849bea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2_Game Objects\22_Items\220_Usable Items">
+      <UniqueIdentifier>{39256c95-39b8-4a5b-8d76-7a32c3ea8bad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winmain.cpp">
@@ -159,6 +162,15 @@
     <ClCompile Include="Boss3Bullet.cpp">
       <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
     </ClCompile>
+    <ClCompile Include="ThrowingStar.cpp">
+      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+    </ClCompile>
+    <ClCompile Include="WindmillThrowingStar.cpp">
+      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+    </ClCompile>
+    <ClCompile Include="UsableItem.cpp">
+      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXInput.h">
@@ -277,6 +289,15 @@
     </ClInclude>
     <ClInclude Include="Boss3Bullet.h">
       <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrowingStar.h">
+      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+    </ClInclude>
+    <ClInclude Include="WindmillThrowingStar.h">
+      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+    </ClInclude>
+    <ClInclude Include="UsableItem.h">
+      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -43,6 +43,7 @@ public:
 	void InitGrid(const char * gridInfoPath, const char * cellsInfoPath);
 	std::vector<GameObject*> GetObjectList();
 	std::vector<GameObject*> GetAllObjects();
+	GameObject * getBoss();
 
 	// Tilemap
 	void LoadTilemap(const char * imagePath, const char * matrixPath);

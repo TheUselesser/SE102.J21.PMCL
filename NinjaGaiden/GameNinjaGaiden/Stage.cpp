@@ -92,6 +92,17 @@ std::vector<GameObject*> Stage::GetAllObjects()
 	return grid->GetObjectList();
 }
 
+GameObject * Stage::getBoss()
+{
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		if (objectList[i]->isBoss())
+			return objectList[i];
+	}
+
+	return NULL;
+}
+
 void Stage::Update(DWORD dt, Player * player)
 {
 	// Update grid

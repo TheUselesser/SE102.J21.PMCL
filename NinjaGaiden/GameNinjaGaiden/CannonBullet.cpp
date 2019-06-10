@@ -9,21 +9,15 @@ CannonBullet::CannonBullet()
 	startFire = -1;
 }
 
-CannonBullet::CannonBullet(float x, float y)
-{
-	setSize(DEFAULT_CANNON_BULLET_WIDTH, DEFAULT_CANNON_BULLET_HEIGHT);
-	setX(x);
-	setY(y);
-	isExist = false;
-	startFire = -1;
-}
-
 CannonBullet::~CannonBullet()
 {
 }
 
-void CannonBullet::Init(GameObject * player)
+void CannonBullet::Init(float x, float y)
 {
+	setX(x);
+	setY(y);
+
 	startFire = GetTickCount();
 	SetStatus(ENEMY_STANDING);
 	isExist = true;

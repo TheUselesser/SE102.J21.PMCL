@@ -136,16 +136,15 @@ void Cannoneer::periodAttack(DWORD cooldown)
 		startCooldown = GetTickCount();
 
 		// Xử lý tấn công
+		bullet->directionX = directionX;
 		if (directionX > 0)
 		{
-			bullet = new CannonBullet(getRight(), getY());
+			bullet->Init(getRight(), getY());
 		}
 		else
 		{
-			bullet = new CannonBullet(getLeft() - bullet->getRealWidth(), getY());
+			bullet->Init(getLeft() - bullet->getRealWidth(), getY());
 		}
-		bullet->directionX = directionX;
-		bullet->Init(Player::getInstance());
 	}
 	// đã attack thì bắt đầu chờ cd
 	else

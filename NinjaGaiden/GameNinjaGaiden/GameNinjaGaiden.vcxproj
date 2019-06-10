@@ -154,6 +154,9 @@
     <ClCompile Include="ItemRestorePhysicalStrength.cpp" />
     <ClCompile Include="ItemThrowingStar.cpp" />
     <ClCompile Include="ItemTimeFreeze.cpp" />
+    <ClCompile Include="ThrowingStar.cpp" />
+    <ClCompile Include="UsableItem.cpp" />
+    <ClCompile Include="WindmillThrowingStar.cpp" />
     <ClCompile Include="ItemWindmillThrowingStar.cpp" />
     <ClCompile Include="MachineGunGuy.cpp" />
     <ClCompile Include="MovableRect.cpp" />
@@ -196,6 +199,9 @@
     <ClInclude Include="ItemRestorePhysicalStrength.h" />
     <ClInclude Include="ItemThrowingStar.h" />
     <ClInclude Include="ItemTimeFreeze.h" />
+    <ClInclude Include="ThrowingStar.h" />
+    <ClInclude Include="UsableItem.h" />
+    <ClInclude Include="WindmillThrowingStar.h" />
     <ClInclude Include="ItemWindmillThrowingStar.h" />
     <ClInclude Include="MachineGunGuy.h" />
     <ClInclude Include="MovableRect.h" />

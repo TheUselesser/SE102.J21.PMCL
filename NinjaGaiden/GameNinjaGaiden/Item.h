@@ -16,7 +16,7 @@ public:
 	virtual void Init(float x, float y, int itemTypeID) {}
 	virtual void Init(float x, float y, ITEM_TYPE itemType) {}
 
-	void Update(DWORD dt, GameObject &player);
+	virtual void Update(DWORD dt, GameObject &player);
 	virtual void CheckCollisionStatus(GameObject * player) {}
 
 	// for weapons only

@@ -31,6 +31,8 @@ protected:
 	// Dành cho mấy con có đòn đánh riêng
 	DWORD startCooldown;
 
+	bool isAlive = true;
+
 public:
 	bool directionChanged;
 
@@ -38,6 +40,7 @@ public:
 	~Enemy();
 
 	void CheckCollisionStatus(GameObject * player);
+	void Die();
 
 	virtual void setSpawned(bool isSpawned);
 	virtual void SetStatus(ENEMY_STATUS status);

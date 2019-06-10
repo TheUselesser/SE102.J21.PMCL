@@ -39,11 +39,16 @@ class Game
 
 	LPD3DXSPRITE spriteHandler;
 
+	// con trỏ player
+	Player * Ryu = Player::getInstance();
+	// con trỏ camera
+	Camera * camera = Camera::getInstance();
+	// con trỏ stage
+	Stage * stage = Stage::getInstance();
+
 	// Stage
 	int stageIndex = 0;
 	const int NUMBER_OF_STAGES = 3; // làm có 3 stage thôi
-
-	float groundLine;
 
 	Timer timer;
 

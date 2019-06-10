@@ -1,5 +1,6 @@
 ﻿#include "GroundBlock.h"
 #include "Collision.h"
+#include "Player.h"
 #include <math.h>
 
 #include "DXInput.h"
@@ -26,6 +27,7 @@ bool GroundBlock::blockMovingX()
 
 void GroundBlock::CheckCollisionStatus(GameObject * player)
 {
+	if (Player::getInstance()->started)
 	if (collisionTime < 1.0f)
 	{
 		if (this->blockMovingX())

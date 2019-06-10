@@ -15,10 +15,9 @@ public:
 	DWORD startFire;
 
 	CannonBullet();
-	CannonBullet(float x, float y);
 	~CannonBullet();
 
-	void Init(GameObject * player);
+	void Init(float x, float y);
 
 	void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);
