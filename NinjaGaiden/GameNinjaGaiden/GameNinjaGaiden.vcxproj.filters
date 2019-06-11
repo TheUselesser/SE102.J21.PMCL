@@ -37,7 +37,10 @@
     <Filter Include="2_Game Objects\21_Enemies\210_Bosses">
       <UniqueIdentifier>{95ef60bf-5fda-4fba-8cb0-52494b849bea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2_Game Objects\22_Items\220_Usable Items">
+    <Filter Include="2_Game Objects\22_Items\220_Drop Items">
+      <UniqueIdentifier>{1aa4a233-da0a-491f-b0bf-9dee823f1065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2_Game Objects\22_Items\220_Use Items">
       <UniqueIdentifier>{39256c95-39b8-4a5b-8d76-7a32c3ea8bad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -132,27 +135,6 @@
     <ClCompile Include="GroundBlocks.cpp">
       <Filter>2_Game Objects\20_</Filter>
     </ClCompile>
-    <ClCompile Include="ItemBonusPts.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemFireWheelArt.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemRestorePhysicalStrength.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemThrowingStar.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemTimeFreeze.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemWindmillThrowingStar.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemSpiritualStrengthPts.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
     <ClCompile Include="Boss3.cpp">
       <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
     </ClCompile>
@@ -163,13 +145,34 @@
       <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
     </ClCompile>
     <ClCompile Include="ThrowingStar.cpp">
-      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+      <Filter>2_Game Objects\22_Items\220_Use Items</Filter>
     </ClCompile>
     <ClCompile Include="WindmillThrowingStar.cpp">
-      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+      <Filter>2_Game Objects\22_Items\220_Use Items</Filter>
     </ClCompile>
     <ClCompile Include="UsableItem.cpp">
-      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+      <Filter>2_Game Objects\22_Items\220_Use Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemBonusPts.cpp">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemFireWheelArt.cpp">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemRestorePhysicalStrength.cpp">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemSpiritualStrengthPts.cpp">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemThrowingStar.cpp">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemTimeFreeze.cpp">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemWindmillThrowingStar.cpp">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,27 +263,6 @@
     <ClInclude Include="GroundBlocks.h">
       <Filter>2_Game Objects\20_</Filter>
     </ClInclude>
-    <ClInclude Include="ItemBonusPts.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemFireWheelArt.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemRestorePhysicalStrength.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemThrowingStar.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemTimeFreeze.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemWindmillThrowingStar.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemSpiritualStrengthPts.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
     <ClInclude Include="Boss3.h">
       <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
     </ClInclude>
@@ -291,13 +273,34 @@
       <Filter>2_Game Objects\21_Enemies\210_Bosses</Filter>
     </ClInclude>
     <ClInclude Include="ThrowingStar.h">
-      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+      <Filter>2_Game Objects\22_Items\220_Use Items</Filter>
     </ClInclude>
     <ClInclude Include="WindmillThrowingStar.h">
-      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+      <Filter>2_Game Objects\22_Items\220_Use Items</Filter>
     </ClInclude>
     <ClInclude Include="UsableItem.h">
-      <Filter>2_Game Objects\22_Items\220_Usable Items</Filter>
+      <Filter>2_Game Objects\22_Items\220_Use Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemBonusPts.h">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemFireWheelArt.h">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemRestorePhysicalStrength.h">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemSpiritualStrengthPts.h">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemThrowingStar.h">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemTimeFreeze.h">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemWindmillThrowingStar.h">
+      <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

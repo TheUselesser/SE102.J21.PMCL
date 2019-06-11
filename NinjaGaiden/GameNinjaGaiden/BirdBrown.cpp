@@ -31,8 +31,8 @@ void BirdBrown::Init(GameObject * player)
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	directionY = -1;
 
-	setVelX(DEFAULT_BIRD_BROWN_VELOCITY * directionX);
-	setVelY(2 * directionY);
+	setVelX(DEFAULT_BIRD_BROWN_VELOCITY_X * directionX);
+	setVelY(DEFAULT_BIRD_BROWN_VELOCITY_Y / 2 * directionY);
 
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
@@ -138,11 +138,11 @@ void BirdBrown::autoMove(float range, GameObject * player)
 		}
 		else if (getMidX() < playerMidX - playerRange)
 		{
-			setVelX(DEFAULT_BIRD_BROWN_VELOCITY);
+			setVelX(DEFAULT_BIRD_BROWN_VELOCITY_X);
 		}
 		else
 		{
-			setVelX(-DEFAULT_BIRD_BROWN_VELOCITY);
+			setVelX(-DEFAULT_BIRD_BROWN_VELOCITY_X);
 		}
 
 		// xét tâm chuyển động mới
@@ -164,11 +164,11 @@ void BirdBrown::autoMove(float range, GameObject * player)
 		}
 		else if (getMidY() < minY)
 		{
-			setVelY(DEFAULT_BIRD_BROWN_VELOCITY);
+			setVelY(DEFAULT_BIRD_BROWN_VELOCITY_Y);
 		}
 		else
 		{
-			setVelY(-DEFAULT_BIRD_BROWN_VELOCITY);
+			setVelY(-DEFAULT_BIRD_BROWN_VELOCITY_Y);
 		}
 	}
 	selfMovingX();

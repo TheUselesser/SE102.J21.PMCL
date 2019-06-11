@@ -298,124 +298,123 @@ void Game::KeysControl()
 	}
 	// ******************************************************
 	if (Ryu->started){
-	#pragma region [LEFT] [RIGHT]
-	if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
-	{
-		if (!Ryu->isKnockback && !Ryu->isClimbing)
+		#pragma region [LEFT] [RIGHT]
+		if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 		{
-			Ryu->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
-
-			if (Ryu->getVelX() * Ryu->directionX < 0)
+			if (!Ryu->isKnockback && !Ryu->isClimbing)
 			{
-				Ryu->setVelX(-Ryu->getVelX());
-				Ryu->directionChanged = true;
-			}
+				Ryu->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
 
-			Ryu->isMoving = true;
-			if (!Ryu->isJumping && !Ryu->isAttacking)
-			{
-				Ryu->SetStatus(PLAYER_MOVING, Ryu->directionX);
-			}
-		}
-	}
-	// Không di chuyển
-	else
-	{
-		if (!Ryu->isClimbing)
-		{
-			Ryu->isMoving = false;
-			if (!Ryu->isJumping && !Ryu->isKnockback)
-			{
-				Ryu->SetStatus(PLAYER_STANDING, Ryu->directionX);
-			}
-		}
-	}
-#pragma endregion di chuyển trái phải
-
-	#pragma region [UP] [DOWN]
-	if (Key_Down(DIK_UPARROW) || Key_Down(DIK_DOWNARROW))
-	{
-		if (Ryu->isClimbing)
-		{
-			Ryu->isMoving = true;
-			Ryu->directionY = Key_Down(DIK_UPARROW) ? 1 : -1;
-
-			if (Ryu->getVelY() * Ryu->directionY < 0)
-			{
-				Ryu->setVelY(-Ryu->getVelY());
-				Ryu->directionChanged = true;
-			}
-
-			Ryu->SetStatus(PLAYER_CLIMBING, Ryu->directionX);
-		}
-	}
-	else
-	{
-		if (Ryu->isClimbing)
-		{
-			Ryu->isMoving = false;
-			Ryu->SetStatus(PLAYER_CLINGING, Ryu->directionX);
-		}
-	}
-#pragma endregion lên xuống khi leo trèo
-
-	#pragma region [Z]
-	if (Key_Down(DIK_Z))
-	{
-		// Không được tấn công lúc đang leo trèo
-		if (!Ryu->isClimbing && !Ryu->isKnockback)
-		if (!Ryu->isAttacking)
-		{
-			if (Ryu->isOnGround && !Ryu->isJumping)
-			{
-				Ryu->SetStatus(PLAYER_ATTACK, Ryu->directionX);
-			}
-			else
-			{
-				Ryu->SetStatus(PLAYER_JUMP_ATTACK, Ryu->directionX);
-			}
-		}
-	}
-#pragma endregion tấn công
-
-	#pragma region [Space] [X]
-	if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
-	{
-		if (Ryu->isClimbing)
-		{
-			// thiết lập sau khi thoát climbing
-			Ryu->isClimbing = false;
-			Ryu->setMinJumpHeight(Ryu->getBottom());
-			Ryu->setMaxJumpHeight(Ryu->getMinJumpHeight() + 48);
-		}
-
-		if (Ryu->isJumpable)
-		{
-			if (!Ryu->isAttacking && !Ryu->isKnockback)
-			{
-				if (!Ryu->isJumping && Ryu->isOnGround)
+				if (Ryu->getVelX() * Ryu->directionX < 0)
 				{
-					Ryu->directionY = 1;
-					Ryu->SetStatus(PLAYER_JUMPING, Ryu->directionX);
+					Ryu->setVelX(-Ryu->getVelX());
+					Ryu->directionChanged = true;
+				}
+
+				Ryu->isMoving = true;
+				if (!Ryu->isJumping && !Ryu->isAttacking)
+				{
+					Ryu->SetStatus(PLAYER_MOVING, Ryu->directionX);
 				}
 			}
 		}
-	}
-#pragma endregion nhảy
-
-	#pragma region [C]
-	if (Key_Down(DIK_C))
-	{
-		if (!Ryu->isAttacking)
-		if (!Ryu->isThrowing)
-		if (Ryu->hasItem)
-		if (!Ryu->getItem()->isExist)
+		// Không di chuyển
+		else
 		{
-			Ryu->getItem()->UseItem();
+			if (!Ryu->isClimbing)
+			{
+				Ryu->isMoving = false;
+				if (!Ryu->isJumping && !Ryu->isKnockback)
+				{
+					Ryu->SetStatus(PLAYER_STANDING, Ryu->directionX);
+				}
+			}
 		}
-	}
-#pragma endregion dùng item
+	#pragma endregion di chuyển trái phải
 
+		#pragma region [UP] [DOWN]
+		if (Key_Down(DIK_UPARROW) || Key_Down(DIK_DOWNARROW))
+		{
+			if (Ryu->isClimbing)
+			{
+				Ryu->isMoving = true;
+				Ryu->directionY = Key_Down(DIK_UPARROW) ? 1 : -1;
+
+				if (Ryu->getVelY() * Ryu->directionY < 0)
+				{
+					Ryu->setVelY(-Ryu->getVelY());
+					Ryu->directionChanged = true;
+				}
+
+				Ryu->SetStatus(PLAYER_CLIMBING, Ryu->directionX);
+			}
+		}
+		else
+		{
+			if (Ryu->isClimbing)
+			{
+				Ryu->isMoving = false;
+				Ryu->SetStatus(PLAYER_CLINGING, Ryu->directionX);
+			}
+		}
+	#pragma endregion lên xuống khi leo trèo
+
+		#pragma region [Z]
+		if (Key_Down(DIK_Z))
+		{
+			// Không được tấn công lúc đang leo trèo
+			if (!Ryu->isClimbing && !Ryu->isKnockback)
+			if (!Ryu->isAttacking)
+			{
+				if (Ryu->isOnGround && !Ryu->isJumping)
+				{
+					Ryu->SetStatus(PLAYER_ATTACK, Ryu->directionX);
+				}
+				else
+				{
+					Ryu->SetStatus(PLAYER_JUMP_ATTACK, Ryu->directionX);
+				}
+			}
+		}
+	#pragma endregion tấn công
+
+		#pragma region [Space] [X]
+		if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
+		{
+			if (Ryu->isClimbing)
+			{
+				// thiết lập sau khi thoát climbing
+				Ryu->isClimbing = false;
+				Ryu->setMinJumpHeight(Ryu->getBottom());
+				Ryu->setMaxJumpHeight(Ryu->getMinJumpHeight() + 48);
+			}
+
+			if (Ryu->isJumpable)
+			{
+				if (!Ryu->isAttacking && !Ryu->isKnockback)
+				{
+					if (!Ryu->isJumping && Ryu->isOnGround)
+					{
+						Ryu->directionY = 1;
+						Ryu->SetStatus(PLAYER_JUMPING, Ryu->directionX);
+					}
+				}
+			}
+		}
+	#pragma endregion nhảy
+
+		#pragma region [C]
+		if (Key_Down(DIK_C))
+		{
+			if (!Ryu->isAttacking)
+			if (!Ryu->isThrowing)
+			if (Ryu->hasItem)
+			if (!Ryu->getItem()->isExist)
+			{
+				Ryu->getItem()->UseItem();
+			}
+		}
+	#pragma endregion dùng item
 	}
 
 	#pragma region [ESC]

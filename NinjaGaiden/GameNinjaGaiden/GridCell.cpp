@@ -124,6 +124,11 @@ void GridCell::InitObject(float x, float y, int objTypeID, int itemTypeID)
 		object->setObjectType(ITEM_ITEM_CONTAINER_4);
 		object->setItemTypeID(itemTypeID);
 		break;
+	case 25:
+		object = new ItemContainer(x, y);
+		object->setObjectType(ITEM_ITEM_CONTAINER_5);
+		object->setItemTypeID(itemTypeID);
+		break;
 	case 33:
 		object = new Boss3(x, y);
 		object->setObjectType(ENEMY_BOSS_3);

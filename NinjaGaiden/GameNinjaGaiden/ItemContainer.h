@@ -2,8 +2,8 @@
 #include "GameObject.h"
 #include "Item.h"
 
-#define DEFAULT_ITEM_CONTAINER_WIDTH	15
-#define DEFAULT_ITEM_CONTAINER_HEIGHT	14
+#define DEFAULT_ITEM_CONTAINER_WIDTH	16
+#define DEFAULT_ITEM_CONTAINER_HEIGHT	16
 
 class ItemContainer :
 	public GameObject

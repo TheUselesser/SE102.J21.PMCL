@@ -21,6 +21,8 @@ ItemContainer::ItemContainer(float x, float y)
 	isExist = true;
 	setCollisionType(COLLISION_TYPE_NOTHING);
 	isBroken = false;
+
+	item = new Item();
 }
 
 
@@ -42,25 +44,21 @@ void ItemContainer::Init(GameObject * player)
 {
 	startAnimation = true;
 
-	item = new Item();
-	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
-
 	//sprite->Release();
 	switch (objType)
 	{
-	case ITEM_ITEM_CONTAINER_1:
-		sprite->LoadTexture("images/items/ItemContainer4.png", D3DCOLOR_XRGB(255, 255, 255));
-		break;
-	case ITEM_ITEM_CONTAINER_2:
-		sprite->LoadTexture("images/items/ItemContainer4.png", D3DCOLOR_XRGB(255, 255, 255));
-		break;
-	case ITEM_ITEM_CONTAINER_3:
-		sprite->LoadTexture("images/items/ItemContainer4.png", D3DCOLOR_XRGB(255, 255, 255));
-		break;
 	case ITEM_ITEM_CONTAINER_4:
-		sprite->LoadTexture("images/items/ItemContainer4.png", D3DCOLOR_XRGB(255, 255, 255));
+		sprite->SetAnimation(getWidth(), getHeight(), 4, 2, 0, 1);
+		break;
+	case ITEM_ITEM_CONTAINER_5:
+		sprite->SetAnimation(getWidth(), getHeight(), 4, 2, 2, 3);
+		break;
+	default:
+		sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
 		break;
 	}
+
+	sprite->LoadTexture("images/items/ItemContainers.png", D3DCOLOR_XRGB(0, 128, 128));
 }
 
 void ItemContainer::CheckCollisionStatus(GameObject * player)
