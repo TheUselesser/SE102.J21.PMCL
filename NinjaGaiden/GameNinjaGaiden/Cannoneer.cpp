@@ -33,7 +33,7 @@ void Cannoneer::Init(GameObject * player)
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	
 	isAttacking = true;
-	startCooldown = GetTickCount();
+	startCooldown = GetTickCount() + 800;
 
 	status = ENEMY_STANDING;
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 0);

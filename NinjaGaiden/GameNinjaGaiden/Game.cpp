@@ -239,6 +239,15 @@ void Game::end()
 void Game::KeysControl()
 {
 	// ***** Will be deleted ********************************
+
+	if (Key_Down(DIK_LSHIFT) || Key_Down(DIK_RSHIFT))
+	{
+		Ryu->setVelX(16 * Ryu->directionX);
+	}
+	else
+	{
+		Ryu->setVelX(4 * Ryu->directionX);
+	}
 	// [R] restart stage
 	if (Key_Down(DIK_R))
 	{
@@ -258,6 +267,17 @@ void Game::KeysControl()
 	if (Key_Down(DIK_W))
 	{
 		allowHurtingPlayer = true;
+	}
+	// [B] test keys menu
+	if (Key_Down(DIK_B))
+	{
+		std::string k1 = "[Q] to turn on invincibility";
+		std::string k2 = "[W] to turn off invincibility";
+		std::string k3 = "[R] restart stage";
+		std::string k4 = "[1] [2] [3] to switch between stages";
+		std::string k5 = "Hold [SHIFT] to x4 move speed";
+		std::string msg = k1 + '\n' + k2 + '\n' + k3 + '\n' + k4 + '\n' + k5;
+		MessageBox(0, msg.c_str(), "Keys use for testing", 0);
 	}
 	// [1] [2] [3] to switch between stages
 	if (Key_Down(DIK_NUMPAD1))

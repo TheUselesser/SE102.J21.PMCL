@@ -123,12 +123,6 @@
     <ClCompile Include="Bat.cpp">
       <Filter>2_Game Objects\21_Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="ItemContainer.cpp">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>2_Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Scorebar.cpp">
       <Filter>1_Game Core</Filter>
     </ClCompile>
@@ -173,6 +167,12 @@
     </ClCompile>
     <ClCompile Include="ItemWindmillThrowingStar.cpp">
       <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>2_Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemContainer.cpp">
+      <Filter>2_Game Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,12 +251,6 @@
     <ClInclude Include="Bat.h">
       <Filter>2_Game Objects\21_Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="ItemContainer.h">
-      <Filter>2_Game Objects\22_Items</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>2_Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Scorebar.h">
       <Filter>1_Game Core</Filter>
     </ClInclude>
@@ -301,6 +295,12 @@
     </ClInclude>
     <ClInclude Include="ItemWindmillThrowingStar.h">
       <Filter>2_Game Objects\22_Items\220_Drop Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemContainer.h">
+      <Filter>2_Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>2_Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
