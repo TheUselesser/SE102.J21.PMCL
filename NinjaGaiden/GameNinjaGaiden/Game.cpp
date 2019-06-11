@@ -195,6 +195,7 @@ void Game::update()
 	stage->Update(300, Ryu);
 
 	// Vẽ Ryu
+	#pragma region Start Stage Animation
 	if (!Ryu->started)
 	{
 		Ryu->SetStatus(PLAYER_MOVING);
@@ -205,6 +206,7 @@ void Game::update()
 			Ryu->started = true;
 		}
 	}
+#pragma endregion
 	Ryu->Update(60);
 
 	// Vẽ Scorebar

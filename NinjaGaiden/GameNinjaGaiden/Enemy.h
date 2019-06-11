@@ -33,6 +33,7 @@ protected:
 
 	bool isAlive = true;
 
+	void getHitByPlayer();
 public:
 	bool directionChanged;
 

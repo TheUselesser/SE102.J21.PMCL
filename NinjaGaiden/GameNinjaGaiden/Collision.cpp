@@ -1,10 +1,6 @@
 ﻿#include "Collision.h"
 #include <iostream>
 
-#include "Camera.h"
-#include <string>
-#include "DXInput.h"
-
 
 Collision::Collision()
 {
@@ -157,34 +153,4 @@ void Collision::CollisionHandle(GameObject &box1, GameObject &box2)
 
 	box2.UpdateCollisionStatus(normalx, normaly, collisionTime);
 	box2.CheckCollisionStatus(&box1);
-}
-
-void Collision::NPOCollision(GameObject & object, GameObject & groundBlock)
-{
-	float normalx = 0.0f, normaly = 0.0f;
-	float collisionTime = 1.0f;
-
-	MovableRect broadphaseBox = GetSweptBroadphaseBox(object);
-	if (AABBCheck(broadphaseBox, groundBlock))
-	{
-		collisionTime = SweptAABB(object, groundBlock, normalx, normaly);
-	}
-
-
-
-	if (collisionTime < 1.0f)
-	{
-		if (object.getBottom() <= groundBlock.getTop())
-		{
-			object.isOnGround = true;
-			if (object.getBottom() < groundBlock.getTop())
-			{
-				object.setY(groundBlock.getTop() + object.getHeight());
-			}
-		}
-	}
-	else
-	{
-		object.isOnGround = false;
-	}
 }

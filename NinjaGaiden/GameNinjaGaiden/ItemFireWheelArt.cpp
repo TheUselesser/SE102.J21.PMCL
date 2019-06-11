@@ -43,7 +43,7 @@ void ItemFireWheelArt::CheckCollisionStatus(GameObject * player)
 {
 	if (this->isExist)
 	{
-		if (collisionTime > 1.0f && !player->isAttacking)
+		if (collisionTime < 1.0f && !player->isAttacking)
 		{
 			if (type == FIRE_WHEEL_ART)
 			{

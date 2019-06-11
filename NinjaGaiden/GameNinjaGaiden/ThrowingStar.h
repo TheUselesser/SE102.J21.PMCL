@@ -3,12 +3,12 @@
 
 #define DEFAULT_THROWING_STAR_WIDTH		8
 #define DEFAULT_THROWING_STAR_HEIGHT	8
-#define DEFAULT_THROWING_STAR_VELOCITY	8
+#define DEFAULT_THROWING_STAR_VELOCITY	12
 
 class ThrowingStar :
 	public UsableItem
 {
-	float range = 96;
+	float range = 84;
 	float spawnX;
 public:
 

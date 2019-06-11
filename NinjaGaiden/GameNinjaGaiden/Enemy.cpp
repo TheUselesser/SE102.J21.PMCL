@@ -14,8 +14,23 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::CheckCollisionStatus(GameObject * player)
+void Enemy::getHitByPlayer()
 {
+	if (isBoss())
+	{
+		decrease_HP();
+	}
+	else
+	{
+		Die();
+		this->isExist = false;
+	}
+}
+
+void Enemy::CheckCollisionStatus(GameObject * playerFake)	// nhập chơi thôi chứ chả xài
+{
+	Player * player = Player::getInstance();
+
 	// bị player tấn công
 	if (player->isAttacking)
 	{
@@ -26,31 +41,21 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 			{
 				if (player->directionX * (this->getLeft() >= player->getLeft() ? 1 : -1) > 0)
 				{
-					if (isBoss())
-					{
-						decrease_HP();
-					}
-					else
-					{
-						Die();
-						this->isExist = false;
-					}
+					getHitByPlayer();
 				}
 			}
 			// player tấn công khi đang nhảy (xoay vòng vòng nên khỏi xét hướng)
 			else
 			{
-				if (isBoss())
-				{
-					decrease_HP();
-				}
-				else
-				{
-					Die();
-					this->isExist = false;
-				}
+				getHitByPlayer();
 			}
 		}
+	}
+
+	// va chạm với item của player
+	if (player->getItem()->CollideEnemy(this))
+	{
+		getHitByPlayer();
 	}
 
 	// đập player (khi hắn không bất tử)
@@ -63,14 +68,13 @@ void Enemy::CheckCollisionStatus(GameObject * player)
 			player->directionX = this->getLeft() >= player->getLeft() ? 1 : -1;
 			player->SetStatus(PLAYER_KNOCKBACK, player->directionX);
 
-			// Giảm máu (Lúc đầu build dở nên giờ nhìn nó lủng củng vầy)
-			Player::getInstance()->decrease_HP();
+			player->decrease_HP();
 
 			if (getObjectType() == ENEMY_CANNON_BULLET ||
 				getObjectType() == ENEMY_BOSS_3_BULLET)
 			{
 				// giảm thêm 1 máu nữa là 2
-				Player::getInstance()->decrease_HP();
+				player->decrease_HP();
 			}
 		}
 	}

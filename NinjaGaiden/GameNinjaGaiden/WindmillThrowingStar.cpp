@@ -22,6 +22,7 @@ void WindmillThrowingStar::Init(float x, float y)
 {
 	setX(x);
 	setY(y);
+	spawnX = x;
 	isExist = true;
 	isUsed = false;
 	startExist = GetTickCount();
@@ -37,51 +38,67 @@ void WindmillThrowingStar::Update()
 	timer.tickPerAnim = 100;
 	autoMove();
 	Draw();
-}
-
-void WindmillThrowingStar::autoMove()	[incompleted]
-{
-	Player * player = Player::getInstance();
-	minY = player->getMidY();
-	maxY = minY + 96;
-
-	if (getMidX() >= spawnX - range && getMidX() <= spawnX + range)
-	{
-		if (!movingY)
-			selfMovingX();
-		else
-		{
-			if (getMidY() >= minY && getMidY() <= maxY)
-				selfMovingY();
-			else
-			{
-				directionY *= -1;
-				movingY = false;
-
-				if (getMidY() < minY)
-					setY(minY + getHeight() / 2);
-				else
-					setY(maxY + getHeight() / 2);
-
-
-			}
-		}
-	}
-	else
-	{
-		directionX *= -1;
-		movingY = true;
-
-		if (getMidX() < spawnX - range)
-			setX(spawnX - range - getWidth() / 2);
-		else
-			setX(spawnX + range - getWidth() / 2);
-
-		spawnX = player->getMidX();
-	}
 
 	if (GetTickCount() - startExist >= EXIST_TIME)
 	{
 		isExist = false;
+	}
+}
+
+void WindmillThrowingStar::autoMove()	//	[incompleted]
+{
+	Player * player = Player::getInstance();
+
+	selfMovingX();
+
+	// xét tâm chuyển động mới
+	if ((player->directionX == -1 && (getMidX() <= spawnX - range || 
+										getMidX() >= player->getMidX() + range)) ||
+		(player->directionX == 1 && (getMidX() >= spawnX + range ||
+										getMidX() <= player->getMidX() - range)))
+	{
+		spawnX = player->getMidX();
+	}
+
+	// bay qua bay lại
+	if (!(getMidX() >= spawnX - range && getMidX() <= spawnX + range))
+	{
+		if (getMidX() < spawnX - range)
+		{
+			directionX = 1;
+			setX(spawnX - range - getWidth() / 2);
+		}
+		else if (getMidX() > spawnX + range)
+		{
+			directionX = -1;
+			setX(spawnX + range - getWidth() / 2);
+		}
+		setVelX(DEFAULT_WINDMILL_THROWING_STAR_VELOCITY * directionX);
+	}
+
+	// bay lên bay xuống theo nhân vật
+	float Y = player->getMidY() + getHeight() / 2;
+	float velY = DEFAULT_WINDMILL_THROWING_STAR_VELOCITY / 2;
+	if ((directionX == 1 && getMidX() <= player->getMidX()) ||
+		(directionX == -1 && getMidX() >= player->getMidX()))
+	{
+		if (getMidY() > Y)
+		{
+			if (getMidY() - Y < velY)
+			{
+				moveY(-(getMidY() - Y));
+			}
+			else
+				moveY(-velY);
+		}
+		else if (getMidY() < Y)
+		{
+			if (Y - getMidY() < velY)	// ^_^
+			{
+				moveY(Y - getMidY());
+			}
+			else
+				moveY(velY);
+		}
 	}
 }

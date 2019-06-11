@@ -1,5 +1,6 @@
 #include "UsableItem.h"
 #include "Player.h"
+#include "Collision.h"
 
 
 UsableItem::UsableItem()
@@ -9,6 +10,24 @@ UsableItem::UsableItem()
 
 UsableItem::~UsableItem()
 {
+}
+
+bool UsableItem::CollideEnemy(GameObject * enemy)
+{
+	if (isExist)
+	{
+		Collision::CollisionHandle(*enemy, *this);
+		if (collisionTime < 1.0f)
+		{
+			if (type == UIT_THROWING_STAR)
+			{
+				isExist = false;
+			}
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 void UsableItem::UseItem()

@@ -3,12 +3,13 @@
 
 #define DEFAULT_BIRD_BROWN_WIDTH	18
 #define DEFAULT_BIRD_BROWN_HEIGHT	30
-#define DEFAULT_BIRD_BROWN_VELOCITY	4
+#define DEFAULT_BIRD_BROWN_VELOCITY	5
 
 class BirdBrown :
 	public Enemy
 {
 	float seekRange;
+	float playerMidX;
 	float playerRange;
 	bool playerIsInSeekRange;
 

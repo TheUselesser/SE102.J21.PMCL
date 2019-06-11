@@ -3,7 +3,7 @@
 
 #define DEFAULT_WINDMILL_THROWING_STAR_WIDTH	16
 #define DEFAULT_WINDMILL_THROWING_STAR_HEIGHT	16
-#define DEFAULT_WINDMILL_THROWING_STAR_VELOCITY	8
+#define DEFAULT_WINDMILL_THROWING_STAR_VELOCITY	12
 
 // thời gian phi tiêu windmill tồn tại
 #define EXIST_TIME 5000
@@ -11,11 +11,8 @@
 class WindmillThrowingStar :
 	public UsableItem
 {
-	float range = 72;
-	float spawnX, spawnY;
-	float minY, maxY;
-	float currentY, nextY;
-	bool movingY = false;
+	float range = 48;
+	float spawnX;
 
 	DWORD startExist;
 public:

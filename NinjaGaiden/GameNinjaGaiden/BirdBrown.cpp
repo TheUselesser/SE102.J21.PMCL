@@ -32,7 +32,7 @@ void BirdBrown::Init(GameObject * player)
 	directionY = -1;
 
 	setVelX(DEFAULT_BIRD_BROWN_VELOCITY * directionX);
-	setVelY(DEFAULT_BIRD_BROWN_VELOCITY * directionY);
+	setVelY(2 * directionY);
 
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
@@ -120,6 +120,7 @@ void BirdBrown::autoMove(float range, GameObject * player)
 		if (player->getRight() >= getMidX() - seekRange && player->getLeft() <= getMidX() + seekRange)
 		{
 			playerIsInSeekRange = true;
+			playerMidX = player->getMidX();
 		}
 	}
 	else
@@ -128,20 +129,29 @@ void BirdBrown::autoMove(float range, GameObject * player)
 		maxY = minY + getHeight();
 
 		// bay qua lại quanh player
-		if (getMidX() >= player->getMidX() - playerRange && getMidX() <= player->getMidX() + playerRange)
+		if (getMidX() >= playerMidX - playerRange && getMidX() <= playerMidX + playerRange)
 		{
-			if (getMidX() < player->getMidX() - playerRange || getMidX() > player->getMidX() + playerRange)
+			if (getMidX() < playerMidX - playerRange || getMidX() > playerMidX + playerRange)
 			{
 				setVelX(-getVelX());
 			}
 		}
-		else if (getMidX() < player->getMidX() - playerRange)
+		else if (getMidX() < playerMidX - playerRange)
 		{
 			setVelX(DEFAULT_BIRD_BROWN_VELOCITY);
 		}
 		else
 		{
 			setVelX(-DEFAULT_BIRD_BROWN_VELOCITY);
+		}
+
+		// xét tâm chuyển động mới
+		if ((player->directionX == -1 && (getMidX() <= playerMidX - playerRange ||
+			getMidX() >= player->getMidX() + playerRange)) ||
+			(player->directionX == 1 && (getMidX() >= playerMidX + playerRange ||
+				getMidX() <= player->getMidX() - playerRange)))
+		{
+			playerMidX = player->getMidX();
 		}
 
 		// bay lên bay xuống

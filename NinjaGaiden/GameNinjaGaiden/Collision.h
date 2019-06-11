@@ -12,9 +12,5 @@ public:
 	static float SweptAABB(MovableRect box1, MovableRect box2, float &normalX, float &normalY);
 	static bool AABBCheck(Rect box1, Rect box2);
 	static void CollisionHandle(GameObject &box1, GameObject &box2);
-	
-	// đặc cách
-	// check non-player-object với groundblock
-	static void NPOCollision(GameObject &object, GameObject &groundBlock);
 };
 

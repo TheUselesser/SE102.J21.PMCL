@@ -24,8 +24,6 @@ void ThrowingStar::Init(float x, float y)
 	spawnX = getMidX();
 	isExist = true;
 	isUsed = false;
-	//setObjectType(ENEMY_BOSS_3_BULLET);
-	//setCollisionType(COLLISION_TYPE_ENEMY);
 	setVelX(DEFAULT_THROWING_STAR_VELOCITY * directionX);
 }
 

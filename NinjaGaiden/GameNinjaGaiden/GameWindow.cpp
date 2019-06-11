@@ -5,9 +5,9 @@
 #define WINDOW_CLASSNAME "GameWindow"
 #define WINDOW_TITLE "Ninja Gaiden v6.9"
 
-// scale từ 256x216
-#define WINDOW_WIDTH 768
-#define WINDOW_HEIGHT 648
+// scale 2.5 backbuffer với height x1.05
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 567
 
 GameWindow::GameWindow()
 {
