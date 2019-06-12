@@ -30,17 +30,19 @@ void Cat::Init(GameObject * player)
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 	directionY = 1;
 	setVelX(DEFAULT_CAT_VELOCITY * directionX);
-	setVelY(DEFAULT_CAT_VELOCITY/2 * directionY);	// mai mốt có gravity thì sửa
+	setVelY(DEFAULT_CAT_VELOCITY/2 * directionY);
 
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
 	if (directionX > 0)
 	{
-		sprite->LoadTexture("images/enemies/Cat_right.png", D3DCOLOR_XRGB(255, 255, 255));
+		sprite->Release();
+		sprite->LoadTexture("images/enemies/Cat_right.png", D3DCOLOR_XRGB(255, 163, 177));
 	}
 	else
 	{
-		sprite->LoadTexture("images/enemies/Cat_left.png", D3DCOLOR_XRGB(255, 255, 255));
+		sprite->Release();
+		sprite->LoadTexture("images/enemies/Cat_left.png", D3DCOLOR_XRGB(255, 163, 177));
 	}
 }
 

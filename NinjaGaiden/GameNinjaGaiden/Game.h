@@ -43,6 +43,7 @@ class Game
 	Player * Ryu = Player::getInstance();
 	// con trỏ camera
 	Camera * camera = Camera::getInstance();
+
 	// con trỏ stage
 	Stage * stage = Stage::getInstance();
 

@@ -8,8 +8,6 @@
 class SwordMan :
 	public Enemy
 {
-
-
 public:
 	SwordMan();
 	SwordMan(float x, float y);

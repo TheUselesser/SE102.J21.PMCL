@@ -11,7 +11,7 @@
 class WindmillThrowingStar :
 	public UsableItem
 {
-	float range = 48;
+	float range = 80;
 	float spawnX;
 
 	DWORD startExist;

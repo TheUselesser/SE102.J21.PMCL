@@ -8,7 +8,7 @@
 class ThrowingStar :
 	public UsableItem
 {
-	float range = 84;
+	float range = 96;
 	float spawnX;
 public:
 

@@ -18,9 +18,10 @@ void CannonBullet::Init(float x, float y)
 	setX(x);
 	setY(y);
 
+	isExist = true;
+
 	startFire = GetTickCount();
 	SetStatus(ENEMY_STANDING);
-	isExist = true;
 	setObjectType(ENEMY_CANNON_BULLET);
 	setCollisionType(COLLISION_TYPE_ENEMY);
 }

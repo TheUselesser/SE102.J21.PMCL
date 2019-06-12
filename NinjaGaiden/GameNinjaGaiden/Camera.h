@@ -5,16 +5,17 @@
 #define	DEFAULT_CAMERA_WIDTH	256
 #define	DEFAULT_CAMERA_HEIGHT	176
 
+
+
 class Camera :
 	public MovableRect
 {
 	static Camera * instance;
 
-public:
-	static Camera * getInstance();
-
 	Camera();
 	~Camera();
+public:
+	static Camera * getInstance();
 
 	void trackPlayer(Player * player);
 

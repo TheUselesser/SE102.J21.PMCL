@@ -93,6 +93,7 @@ void Game::InitDirectX()
 
 	// backbuffer
 	d3ddev->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backbuffer);
+
 	D3DXCreateSprite(d3ddev, &spriteHandler);
 }
 
@@ -422,7 +423,7 @@ void Game::KeysControl()
 			}
 		}
 	#pragma endregion nhảy
-
+		
 		#pragma region [C]
 		if (Key_Down(DIK_C))
 		{

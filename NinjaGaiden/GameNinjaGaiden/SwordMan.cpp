@@ -24,7 +24,6 @@ SwordMan::~SwordMan()
 void SwordMan::Init(GameObject * player)
 {
 	isExist = true;
-	isOnGround = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
 
 	setX(spawnX);
@@ -32,7 +31,6 @@ void SwordMan::Init(GameObject * player)
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
 
 	setVelX(DEFAULT_SWORD_MAN_VELOCITY * directionX);
-	setVelY(8);
 	
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);

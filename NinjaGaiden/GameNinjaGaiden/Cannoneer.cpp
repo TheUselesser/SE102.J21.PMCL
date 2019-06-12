@@ -143,7 +143,7 @@ void Cannoneer::periodAttack(DWORD cooldown)
 		}
 		else
 		{
-			bullet->Init(getLeft() - bullet->getRealWidth(), getY());
+			bullet->Init(getLeft() - bullet->getWidth(), getY());
 		}
 	}
 	// đã attack thì bắt đầu chờ cd
