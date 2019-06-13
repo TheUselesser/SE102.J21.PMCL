@@ -108,7 +108,7 @@ public:
 
 	float e_nx = 0.0f, e_ny = 0.0f, e_collisionTime = 1.0f;
 
-	GameObject * currentBlock;
+	GameObject * currentBlock = NULL;
 
 	bool startAnimation;
 	int directionX, directionY;

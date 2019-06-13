@@ -170,26 +170,27 @@ std::vector<GameObject*> GridCell::getObjectList()
 void GridCell::enableUpdate(GameObject * player)
 {
 	if (!isEmpty)
+	{
 		for (int i = 0; i < listSize; i++)
 		{
-			objectList[i]->Init(player);
 			objectList[i]->isExist = true;
 			objectList[i]->isInCellsSet = true;
 		}
+	}
 }
 void GridCell::disableUpdate()
 {
 	if (!isEmpty)
+	{
 		for (int i = 0; i < listSize; i++)
 		{
 			if (objectList[i]->isInCellsSet) objectList[i]->isInCellsSet = false;
 		}
+	}
 }
 
 void GridCell::Release()
 {
-	isEmpty = true;
-
 	std::vector<GameObject*> objectListClone;
 	std::vector<D3DXVECTOR4*> objectInfoListClone;
 	

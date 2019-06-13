@@ -39,7 +39,6 @@ class Player :
 	DWORD startThrowing;
 
 	float minHeight, maxHeight;
-	bool maxHeightReached;
 	float minClimbHeight, maxClimbHeight;
 
 	/********** Này kia các thứ: **********/

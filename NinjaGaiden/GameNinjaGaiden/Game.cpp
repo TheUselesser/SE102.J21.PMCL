@@ -319,10 +319,11 @@ void Game::KeysControl()
 	}
 	// ******************************************************
 	if (Ryu->started){
+
 		#pragma region [LEFT] [RIGHT]
 		if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 		{
-			if (!Ryu->isKnockback && !Ryu->isClimbing)
+			if (!Ryu->isKnockback && !Ryu->isClimbing && !Ryu->isAttacking)
 			{
 				Ryu->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
 
@@ -342,7 +343,7 @@ void Game::KeysControl()
 		// Không di chuyển
 		else
 		{
-			if (!Ryu->isClimbing)
+			if (!Ryu->isClimbing && !Ryu->isAttacking)
 			{
 				Ryu->isMoving = false;
 				if (!Ryu->isJumping && !Ryu->isKnockback)
@@ -385,7 +386,7 @@ void Game::KeysControl()
 		{
 			// Không được tấn công lúc đang leo trèo
 			if (!Ryu->isClimbing && !Ryu->isKnockback)
-			if (!Ryu->isAttacking)
+			//if (!Ryu->isAttacking)
 			{
 				if (Ryu->isOnGround && !Ryu->isJumping)
 				{
@@ -400,27 +401,35 @@ void Game::KeysControl()
 	#pragma endregion tấn công
 
 		#pragma region [Space] [X]
-		if (Key_Down(DIK_SPACE) || Key_Down(DIK_X))
+		if ((Key_Down(DIK_SPACE) || Key_Down(DIK_X)) && !Ryu->isAttacking)
 		{
-			if (Ryu->isClimbing)
+			if (canJump)
 			{
-				// thiết lập sau khi thoát climbing
-				Ryu->isClimbing = false;
-				Ryu->setMinJumpHeight(Ryu->getBottom());
-				Ryu->setMaxJumpHeight(Ryu->getMinJumpHeight() + 48);
-			}
-
-			if (Ryu->isJumpable)
-			{
-				if (!Ryu->isAttacking && !Ryu->isKnockback)
+				if (Ryu->isClimbing)
 				{
-					if (!Ryu->isJumping && Ryu->isOnGround)
+					// thiết lập sau khi thoát climbing
+					Ryu->isClimbing = false;
+					Ryu->setMinJumpHeight(Ryu->getBottom());
+					Ryu->setMaxJumpHeight(Ryu->getMinJumpHeight() + 48);
+				}
+
+				if (Ryu->isJumpable)
+				{
+					if (!Ryu->isAttacking && !Ryu->isKnockback)
 					{
-						Ryu->directionY = 1;
-						Ryu->SetStatus(PLAYER_JUMPING, Ryu->directionX);
+						if (!Ryu->isJumping && Ryu->isOnGround)
+						{
+							Ryu->directionY = 1;
+							Ryu->SetStatus(PLAYER_JUMPING, Ryu->directionX);
+						}
 					}
 				}
 			}
+			canJump = false;
+		}
+		else
+		{
+			canJump = true;
 		}
 	#pragma endregion nhảy
 		

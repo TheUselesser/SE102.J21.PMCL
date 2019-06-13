@@ -238,24 +238,27 @@ void Grid::AddLeft(Camera * camera, GameObject * player)
 	cell_1 = &cell[firstRow][firstColumn];
 	cell_2 = &cell[firstRow + 1][firstColumn];
 
-	if (!cell_1->isEmpty)
+	cell_1->InitAllObjects();
+	cell_2->InitAllObjects();
+
 	for (int i = 0; i < cell_1->getObjectList().size(); i++)
 	{
 		if (!cell_1->getObjectList()[i]->isExist)
 		{
 			objects.push_back(cell_1->getObjectList()[i]);
-			cell_1->enableUpdate(player);
 		}
 	}
-	if (!cell_2->isEmpty)
+
 	for (int i = 0; i < cell_2->getObjectList().size(); i++)
 	{
 		if (!cell_2->getObjectList()[i]->isExist)
 		{
 			objects.push_back(cell_2->getObjectList()[i]);
-			cell_2->enableUpdate(player);
 		}
 	}
+
+	cell_1->enableUpdate(player);
+	cell_2->enableUpdate(player);
 }
 
 void Grid::AddRight(Camera * camera, GameObject * player)
@@ -264,25 +267,28 @@ void Grid::AddRight(Camera * camera, GameObject * player)
 	GridCell *cell_1, *cell_2;
 	cell_1 = &cell[lastRow][lastColumn];
 	cell_2 = &cell[lastRow - 1][lastColumn];
-	
-	if (!cell_1->isEmpty)
+
+	cell_1->InitAllObjects();
+	cell_2->InitAllObjects();
+
 	for (int i = 0; i < cell_1->getObjectList().size(); i++)
 	{
 		if (!cell_1->getObjectList()[i]->isExist)
 		{
 			objects.push_back(cell_1->getObjectList()[i]);
-			cell_1->enableUpdate(player);
 		}
 	}
-	if (!cell_2->isEmpty)
+
 	for (int i = 0; i < cell_2->getObjectList().size(); i++)
 	{
 		if (!cell_2->getObjectList()[i]->isExist)
 		{
 			objects.push_back(cell_2->getObjectList()[i]);
-			cell_2->enableUpdate(player);
 		}
 	}
+
+	cell_1->enableUpdate(player);
+	cell_2->enableUpdate(player);
 }
 
 void Grid::Release()

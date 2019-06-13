@@ -57,6 +57,7 @@ class Game
 	void InitGame();
 
 	DWORD startCooldown_R = GetTickCount();
+	bool canJump = true;
 public:
 	bool allowHurtingPlayer = true;
 

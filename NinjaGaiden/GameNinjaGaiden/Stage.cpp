@@ -148,21 +148,23 @@ void Stage::Update(DWORD dt, Player * player)
 		// lần lượt update các object
 		for (int i = 0; i < objectList.size(); i++)
 		{
-			if (objectList[i]->isExist)
+			GameObject * object = objectList[i];
+
+			if (object->isExist)
 			{
-				Collision::CollisionHandle(*player, *objectList[i]);
+				Collision::CollisionHandle(*player, *object);
 
 				for (int j = 0; j < groundBlocks->getNumberOfBlocks(); j++)
 				{
-					if (objectList[i]->getLeft() > groundBlocks->getGroundBlock(j)->getLeft() - objectList[i]->getWidth() &&
-						objectList[i]->getRight() < groundBlocks->getGroundBlock(j)->getRight() + objectList[i]->getWidth())
+					if (object->getLeft() > groundBlocks->getGroundBlock(j)->getLeft() - object->getWidth() &&
+						object->getRight() < groundBlocks->getGroundBlock(j)->getRight() + object->getWidth())
 					{
-						if (objectList[i]->getBottom() == groundBlocks->getGroundBlock(j)->getTop() && groundBlocks->getGroundBlock(j)->getWidth() > 16)
-							objectList[i]->currentBlock = groundBlocks->getGroundBlock(j);
+						if (object->getBottom() == groundBlocks->getGroundBlock(j)->getTop() && groundBlocks->getGroundBlock(j)->getWidth() > 16)
+							object->currentBlock = groundBlocks->getGroundBlock(j);
 					}
 				}
 
-				objectList[i]->Update(dt, *player);
+				object->Update(dt, *player);
 			}
 		}
 	}

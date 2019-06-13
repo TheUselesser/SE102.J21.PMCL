@@ -51,7 +51,6 @@ void Player::InitPlayer(float x, float y)
 
 	isMovable = true;
 	isMoving = directionChanged = startAnimation = isJumping = false;
-	maxHeightReached = false;
 	isOnGround = true;
 
 	isInvincible = false;
@@ -177,12 +176,13 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			#pragma region Show code
 			if (!isJumping && isOnGround) isMovable = false;
 			if (!isAttacking) startAttack = GetTickCount();
-			isAttacking = true;
+			if (!isAttacking) isAttacking = true;
 			
 			startAnimation = true;
 			setSize(40, 32);
 			realWidth = 20;
 			sprite->SetAnimation(getWidth(), getHeight(), 3, 3, 0, 2);
+			sprite->setCurrentAnimation(0);
 			if (direction > 0)
 			{
 				if (X_moved)
@@ -195,12 +195,12 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			}
 			else
 			{
-				sprite->Release();
 				if (!X_moved)
 				{
 					moveX(-16);
 					X_moved = true;
 				}
+				sprite->Release();
 				sprite->LoadTexture("images/Ryu_attack_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
@@ -260,6 +260,7 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 			break;
 #pragma endregion
 		case PLAYER_ITEM_USE:
+			#pragma region Show code
 			if (!isJumping && isOnGround) isMovable = false;
 			if (!isThrowing) startThrowing = GetTickCount();
 			isThrowing = true;
@@ -279,6 +280,7 @@ void Player::SetStatus(PLAYER_STATUS status, int direction)
 				sprite->LoadTexture("images/Ryu_throwing_left.png", D3DCOLOR_XRGB(255, 163, 177));
 			}
 			break;
+#pragma endregion
 		case PLAYER_DIE:
 			isDead = true;
 			break;
@@ -382,11 +384,7 @@ void Player::Update(DWORD dt)
 						X_moved = false;
 					}
 					SetStatus(PLAYER_STANDING, directionX);
-				}
-				else
-				{
-					SetStatus(PLAYER_ATTACK, directionX);
-				}
+				}		
 			}
 			// Khi trên không
 			else
