@@ -96,7 +96,17 @@ void Scorebar::Draw(int x, int y)
 	if (player->hasItem)
 	{
 		SetRect(&box, 0, 0, 16, 16);
-		gameTexture->LoadTexture("images/items/item_windmill_throwing_star.png");
+
+		switch (player->getItem()->getType())
+		{
+		case UIT_THROWING_STAR:
+			gameTexture->LoadTexture("images/items/item_throwing_star.png");
+			break;
+		case UIT_WINDMILL_THROWING_STAR:
+			gameTexture->LoadTexture("images/items/item_windmill_throwing_star.png");
+			break;
+		}
+
 		gameTexture->Draw(74, 16, &box);
 	}
 }

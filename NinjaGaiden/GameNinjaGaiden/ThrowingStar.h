@@ -5,6 +5,7 @@
 #define DEFAULT_THROWING_STAR_HEIGHT	8
 #define DEFAULT_THROWING_STAR_VELOCITY	12
 
+
 class ThrowingStar :
 	public UsableItem
 {
