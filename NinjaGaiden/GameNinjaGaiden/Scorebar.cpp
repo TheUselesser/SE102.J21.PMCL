@@ -1,29 +1,19 @@
 ﻿#include "Scorebar.h"
-#include "Game.h"
-
 #include <string>
-#include <sstream>
 
 
 
-int FONT_SIZE = 8;
-std::string Int2String(int x)
-{
-	std::string out_string;
-	std::stringstream ss;
-	ss << x;
-	out_string = ss.str();
-
-	return out_string;
-}
+int FONT_SIZE = 12;
 
 Scorebar::Scorebar()
 {
-	//playerHP = 10;//cần 1 hàm lấy máu của ryu 
-	score = 000000;
-	time = 1000;
-	playChance = 2;
+	player->setHP(1);
+	playChance = player->getLife();
+	playerHealth = player->getHP();
+
 	//1 vài biến khác nữa
+	time = 300;
+	gameTexture = new GameTexture();
 }
 
 Scorebar::~Scorebar()
@@ -42,58 +32,7 @@ Scorebar * Scorebar::getInstance()
 
 bool Scorebar::Init()
 {
-	gameTexture = new GameTexture();
-	//gameTexture->LoadTexture("images/Scorebar/newUI.png", D3DCOLOR_XRGB(255, 255, 255));
-	////load font
-	//FONT = NULL;
-	//HRESULT hr = D3DXCreateFont(
-	//	Game::getInstance()->get3DDevice(),
-	//	FONT_SIZE,
-	//	0,
-	//	FW_NORMAL,
-	//	1,
-	//	false,
-	//	DEFAULT_CHARSET,
-	//	OUT_DEFAULT_PRECIS,
-	//	ANTIALIASED_QUALITY,
-	//	FF_DONTCARE,
-	//	"Ninja Gaiden (NES)",
-	//	&FONT);
-	//if (!SUCCEEDED(hr))
-	//{
-	//	isInit = false;
-	//}
-
-	this->playerHP = 10;//có hàm get HP ở ryu 
-	this->bossHP = 10;// có hàm get HP ở boss
-
-	black = new Sprite();
-	black->LoadTexture("images/GameUI/black.png", D3DCOLOR_XRGB(255, 255, 255));
-
-	
-	playerHPList = new std::vector<Sprite*>();
-	for (int i = 0; i < 16; i++)
-	{
-		Sprite* sprite = new Sprite(120 + 12 * (i + 1), 67);
-		sprite->LoadTexture("images/GameUI/hp.png", D3DCOLOR_XRGB(255, 255, 255));
-		playerHPList->push_back(sprite);
-	}
-
-	bossHPList = new std::vector<Sprite*>();
-	for (int i = 0; i < 16; i++)
-	{
-		Sprite* sprite = new Sprite(120 + 12 * (i + 1), 67);
-		sprite->LoadTexture("images/GameUI/enemy_hp.png", D3DCOLOR_XRGB(255, 255, 255));
-		bossHPList->push_back(sprite);
-	}
-
-	emptyHPList = new std::vector<Sprite*>();
-	for (int i = 0; i < 16; i++)
-	{
-		Sprite* sprite = new Sprite(120 + 12 * (i + 1), 43);
-		sprite->LoadTexture("images/GameUI/empty_hp.png", D3DCOLOR_XRGB(255, 255, 255));
-		emptyHPList->push_back(sprite);
-	}
+	this->Hpbar = 5;
 
 	FONT = NULL;
 	AddFontResourceEx("", FR_PRIVATE, NULL);
@@ -113,60 +52,53 @@ bool Scorebar::Init()
 
 	if (!SUCCEEDED(result))
 		return false;
-	SetRect(Rect, 0, 20, 256, 40);
-	m = "SCORE_000000 TIME 0000 STAGE 00\n";
-	m += "PLAYER                =62\n";
-	m += "ENEMY                P=3\n";
 
+
+	m = "SCORE \n";
+	m += "TiME                =62\n";
+	m += "LIFE                P=3\n";
 
 	return true;
 }
 
 void Scorebar::Draw(int x, int y)
 {
-	gameTexture = new GameTexture();
-	SetRect(Rect, x, y, 256, 116);
-
+	RECT newRect;
+	SetRect(&newRect, x, y, 256, 100);
+	//vẽ text
 	if (FONT)
-		FONT->DrawTextA(NULL, m.c_str(), -1, Rect, DT_LEFT, D3DCOLOR_XRGB(255, 255, 255));
+		FONT->DrawTextA(NULL, m.c_str(), -1, &newRect, DT_LEFT, D3DCOLOR_XRGB(255, 255, 255));
 
-	black->Draw(black->getPosition(), Rect);
+	// 2 thanh empty hp cho boss + ryu
+	RECT box;
+	SetRect(&box, 0, 0, 4, 8);
+	gameTexture->LoadTexture("images/GameUI/empty_hp.png");
+	for (int i = 0; i < Hpbar * 20; i += 5)
+		gameTexture->Draw(135 + i, 14, &box);
+	gameTexture->LoadTexture("images/GameUI/empty_hp.png");
+	for (int i = 0; i < Hpbar * 20; i += 5)
+		gameTexture->Draw(135 + i, 26, &box);
+	// Thanh hp cho ryu
+	gameTexture->LoadTexture("images/GameUI/hp.png");
+	for (int i = 0; i < Hpbar * playerHealth; i += 5)
+		gameTexture->Draw(135 + i, 14, &box);
+	// Thanh hp cho boss
+	gameTexture->LoadTexture("images/GameUI/enemy_hp.png");
+	for (int i = 0; i < Hpbar * 20; i += 5)
+		gameTexture->Draw(135 + i, 26, &box);
 
+	// Khung item
+	SetRect(&box, 0, 0, 34, 21);
+	gameTexture->LoadTexture("images/GameUI/item_box_resize1.png");
+	gameTexture->Draw(65 , 14, &box);
 
-
-	for (std::vector<Sprite*>::iterator i = emptyHPList->begin(); i != emptyHPList->end(); i++)
+	// Icon item
+	if (player->hasItem)
 	{
-		SetRect(Rect, 0, 0, 8, 15);
-		(*i)->Draw((*i)->getPosition(), Rect);
-		D3DXVECTOR3 newPosition = (*i)->getPosition();
-		newPosition.y = 67;
-		(*i)->Draw(newPosition, Rect);
+		SetRect(&box, 0, 0, 16, 16);
+		gameTexture->LoadTexture("images/items/item_windmill_throwing_star.png");
+		gameTexture->Draw(74, 16, &box);
 	}
-
-
-	int count = 0;
-	for (std::vector<Sprite*>::iterator i = playerHPList->begin(); i != playerHPList->end(); i++)
-	{
-		if (count < playerHP)
-		{
-			SetRect(Rect, 0, 0, 8, 15);
-			(*i)->Draw((*i)->getPosition(), Rect);
-		}
-		count++;
-	}
-
-
-	count = 0;
-	for (std::vector<Sprite*>::iterator i = bossHPList->begin(); i != bossHPList->end(); i++)
-	{
-		if (count < bossHP)
-		{
-			SetRect(Rect, 0, 0, 8, 15);
-			(*i)->Draw((*i)->getPosition(), Rect);
-		}
-		count++;
-	}
-
 }
 
 void Scorebar::Update()
@@ -189,7 +121,50 @@ void Scorebar::Update()
 	}
 
 	// Làm cái gì khác nữa...
+	//update time
+	//time = gì đó
 
+	score = player->getScore();
+	std::string scoreString = std::to_string(score);
+	while (scoreString.length() < 8)
+		scoreString = "0" + scoreString;
+
+
+	std::string timeString = std::to_string(this->time);
+	while (timeString.length() < 4)
+		timeString = "0" + timeString;
+
+
+	std::string stageString = std::to_string(this->act);
+	stageString = "3 - " + stageString;
+
+	playChance = player->getLife();
+	std::string lifeString = std::to_string(this->playChance);
+	while (lifeString.length() < 2)
+		lifeString = "0" + lifeString;
+
+
+	m = "SCORE  " + scoreString + "       STAGE " + stageString + "\n";
+	m += "TIME      " + timeString + "               NINJA \n";
+	m += "P         " + lifeString + "                    BOSS \n";
+
+	playerHealth = player->getHP();
+	if (player->getHP() <= 0)
+	{
+		player->setHP(player->getMaxHP());
+		
+		if (playChance <= 0) {
+			player->setLife(3);
+		}
+		else
+		{
+			player->decrease_life();
+		}
+	}
+	else
+	{
+		playerHealth = player->getHP();
+	}
 
 	// Vẽ lên (0, 0) trên backbuffer
 	Draw(0, 0);

@@ -70,7 +70,8 @@ void Enemy::CheckCollisionStatus(GameObject * playerFake)	// nhập chơi thôi 
 
 			player->decrease_HP();
 
-			if (getObjectType() == ENEMY_CANNON_BULLET ||
+			if (getObjectType() == ENEMY_MACHINE_BULLET ||
+				getObjectType() == ENEMY_CANNON_BULLET ||
 				getObjectType() == ENEMY_BOSS_3_BULLET)
 			{
 				// giảm thêm 1 máu nữa là 2

@@ -26,6 +26,7 @@ void GameTexture::LoadTexture(const char * imagePath, D3DCOLOR transColor)
 		return;
 	}
 
+	Release();
 	result = D3DXCreateTextureFromFileEx(
 		d3ddev,
 		imagePath,

@@ -323,7 +323,7 @@ void Game::KeysControl()
 		#pragma region [LEFT] [RIGHT]
 		if (Key_Down(DIK_RIGHTARROW) || Key_Down(DIK_LEFTARROW))
 		{
-			if (!Ryu->isKnockback && !Ryu->isClimbing && !Ryu->isAttacking)
+			if (!Ryu->isKnockback && !Ryu->isClimbing)
 			{
 				Ryu->directionX = Key_Down(DIK_RIGHTARROW) ? 1 : -1;
 
@@ -343,10 +343,10 @@ void Game::KeysControl()
 		// Không di chuyển
 		else
 		{
-			if (!Ryu->isClimbing && !Ryu->isAttacking)
+			if (!Ryu->isClimbing)
 			{
 				Ryu->isMoving = false;
-				if (!Ryu->isJumping && !Ryu->isKnockback)
+				if (!Ryu->isJumping && !Ryu->isKnockback && !Ryu->isAttacking)
 				{
 					Ryu->SetStatus(PLAYER_STANDING, Ryu->directionX);
 				}

@@ -11,7 +11,7 @@ class MachineGunGuy :
 	MachineBullet * bullet;
 
 public:
-
+	
 	MachineGunGuy();
 	MachineGunGuy(float x, float y);
 	~MachineGunGuy();
@@ -21,6 +21,6 @@ public:
 	void SetStatus(ENEMY_STATUS status);
 	void Update(DWORD dt, GameObject &player);
 	void autoMove(float range);
-	//void periodAttack(DWORD cooldown);
+	void periodAttack(DWORD cooldown);
 };
 

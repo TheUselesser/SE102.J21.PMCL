@@ -13,7 +13,7 @@ MachineGunGuy::MachineGunGuy(float x, float y)
 	spawnY = y;
 	isExist = false;
 
-	//bullet = new MachineBullet();
+	bullet = new MachineBullet();
 }
 
 MachineGunGuy::~MachineGunGuy()
@@ -25,13 +25,12 @@ void MachineGunGuy::Init(GameObject * player)
 	isExist = true;
 	setCollisionType(COLLISION_TYPE_ENEMY);
 	setX(spawnX);
+	directionX = player->getMidX() > getMidX() ? 1 : -1;
 	setY(spawnY + getHeight());
-
-	directionX = player->getMidX() > getMidX() ? 1 : -1; // <<<<<<< Thêm cái này nè
 	setVelX(DEFAULT_MACHINE_GUN_GUY_VELOCITY * directionX);
 
 	isAttacking = true;
-	startCooldown = GetTickCount() + 800;
+	startCooldown = GetTickCount() +800;
 
 	SetStatus(ENEMY_STANDING);
 	sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 0, 1);
@@ -49,8 +48,6 @@ void MachineGunGuy::Init(GameObject * player)
 
 void MachineGunGuy::SetStatus(ENEMY_STATUS status)
 {
-	this->status = status;
-
 	switch (status)
 	{
 	case ENEMY_STANDING:
@@ -72,7 +69,6 @@ void MachineGunGuy::SetStatus(ENEMY_STATUS status)
 		}
 		break;
 	case ENEMY_ATTACKING:
-		startAnimation = true;
 		sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 2, 3);
 		if (getVelX() > 0)
 		{
@@ -95,10 +91,11 @@ void MachineGunGuy::Update(DWORD dt, GameObject &player)
 	timer.tickPerAnim = dt;
 	SetStatus(ENEMY_MOVING);
 	autoMove(32);
-
-	/*if (bullet->startFire != -1)
+	
+	if (bullet->startFire != -1)
 	{
 		SetStatus(ENEMY_ATTACKING);
+		setVelX(0);
 	}
 	else
 	{
@@ -116,8 +113,8 @@ void MachineGunGuy::Update(DWORD dt, GameObject &player)
 		{
 			isFreezing = false;
 		}
-	}*/
-
+	}
+	
 	Draw();
 }
 
@@ -132,39 +129,39 @@ void MachineGunGuy::autoMove(float range)
 	selfMovingX();
 }
 
-//void MachineGunGuy::periodAttack(DWORD cooldown)
-//{
-//	// isAttacking = false <=> sẵn sàng tấn công => thực hiện tấn công
-//	if (!isAttacking)
-//	{
-//		isAttacking = true;
-//		startCooldown = GetTickCount();
-//
-//		// Xử lý tấn công
-//		bullet->directionX = directionX;
-//		if (directionX > 0)
-//		{
-//			bullet->Init(getRight(), getY());
-//		}
-//		else
-//		{
-//			bullet->Init(getLeft() - bullet->getWidth(), getY());
-//		}
-//	}
-//	// đã attack thì bắt đầu chờ cd
-//	else
-//	{
-//		if (GetTickCount() - startCooldown >= cooldown)
-//		{
-//			isAttacking = false;
-//			bullet->isExist = false;
-//		}
-//
-//		// update viên đạn bay
-//		if (bullet->isExist)
-//		{
-//			Collision::CollisionHandle(*Player::getInstance(), *bullet);
-//			bullet->Update(0, *Player::getInstance());
-//		}
-//	}
-//}
+void MachineGunGuy::periodAttack(DWORD cooldown)
+{
+	// isAttacking = false <=> sẵn sàng tấn công => thực hiện tấn công
+	if (!isAttacking)
+	{
+		isAttacking = true;
+		startCooldown = GetTickCount();
+
+		// Xử lý tấn công
+		bullet->directionX = directionX;
+		if (directionX > 0)
+		{
+			bullet->Init(getRight(), getY());
+		}
+		else
+		{
+			bullet->Init(getLeft() - bullet->getWidth(), getY());
+		}
+	}
+	// đã attack thì bắt đầu chờ cd
+	else
+	{
+		if (GetTickCount() - startCooldown >= cooldown)
+		{
+			isAttacking = false;
+			bullet->isExist = false;
+		}
+
+		// update viên đạn bay
+		if (bullet->isExist)
+		{
+			Collision::CollisionHandle(*Player::getInstance(), *bullet);
+			bullet->Update(0, *Player::getInstance());
+		}
+	}
+}

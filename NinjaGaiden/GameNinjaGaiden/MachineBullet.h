@@ -5,7 +5,7 @@
 #define DEFAULT_MACHINEGUN_BULLET_HEIGHT 16
 #define DEFAULT_MACHINEGUN_BULLET_VELOCITY 8
 // thời gian tóe lửa 0.2s
-#define FIRE_TIME 300
+#define FIRE_TIME 200
 
 class MachineBullet :
 	public Enemy

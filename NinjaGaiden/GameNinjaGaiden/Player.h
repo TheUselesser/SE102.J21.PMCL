@@ -9,7 +9,7 @@
 #define DEFAULT_HEIGHT	32
 #define DEFAULT_JUMP_HEIGHT 56
 
-#define MAX_HP 16
+#define MAX_HP 20
 
 // Mỗi lần nhảy cách nhau 1 tí xíu
 #define COOLDOWN_JUMP 300

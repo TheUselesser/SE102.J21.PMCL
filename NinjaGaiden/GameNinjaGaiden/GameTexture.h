@@ -14,7 +14,7 @@ public:
 	GameTexture();
 	~GameTexture();
 
-	void LoadTexture(const char* imagePath, D3DCOLOR transColor = 0);
+	void LoadTexture(const char* imagePath, D3DCOLOR transColor = D3DCOLOR_XRGB(255, 255, 255));
 	void Draw(int x, int y, RECT *r = 0);
 	void Release();
 };
