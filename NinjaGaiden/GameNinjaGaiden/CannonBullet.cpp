@@ -15,6 +15,9 @@ CannonBullet::~CannonBullet()
 
 void CannonBullet::Init(float x, float y)
 {
+	isAlive = true;
+	setSize(DEFAULT_CANNON_BULLET_WIDTH, DEFAULT_CANNON_BULLET_HEIGHT);
+
 	setX(x);
 	setY(y);
 
@@ -68,11 +71,24 @@ void CannonBullet::Update(DWORD dt, GameObject & player)
 	if (startFire != -1)
 	if (GetTickCount() - startFire >= FIRE_TIME)
 	{
-		SetStatus(ENEMY_MOVING);
+		if (isAlive) SetStatus(ENEMY_MOVING);
 		startFire = -1;
 	}
 
-	autoMove(0);
+	if (isAlive)
+	{
+		autoMove(0);
+	}
+	else
+	{
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
+
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
+		{
+			isInvincible = false;
+			isExist = false;
+		}
+	}
 
 	Draw();
 }

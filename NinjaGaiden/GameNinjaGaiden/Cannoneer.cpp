@@ -11,6 +11,7 @@ Cannoneer::Cannoneer()
 
 Cannoneer::Cannoneer(float x, float y)
 {
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_CANNONEER_WIDTH, DEFAULT_CANNONEER_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -26,7 +27,9 @@ Cannoneer::~Cannoneer()
 void Cannoneer::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	setSize(DEFAULT_CANNONEER_WIDTH, DEFAULT_CANNONEER_HEIGHT);
+
 	directionChanged = false;
 	setX(spawnX);
 	setY(spawnY + getHeight());
@@ -92,27 +95,40 @@ void Cannoneer::SetStatus(ENEMY_STATUS status)
 
 void Cannoneer::Update(DWORD dt, GameObject & player)
 {
-	timer.tickPerAnim = dt;
+	if (isAlive)
+	{
+		timer.tickPerAnim = dt;
 
-	if (bullet->startFire != -1)
-	{
-		SetStatus(ENEMY_MOVING);
-	}
-	else
-	{
-		SetStatus(ENEMY_STANDING);
-	}
-
-	if (!isFreezing)
-	{
-		autoMove(0);
-		periodAttack(2000);
-	}
-	else
-	{
-		if (GetTickCount() - startFreezeTime >= freezeTime)
+		if (bullet->startFire != -1)
 		{
-			isFreezing = false;
+			SetStatus(ENEMY_MOVING);
+		}
+		else
+		{
+			SetStatus(ENEMY_STANDING);
+		}
+
+		if (!isFreezing)
+		{
+			autoMove(0);
+			periodAttack(2000);
+		}
+		else
+		{
+			if (GetTickCount() - startFreezeTime >= freezeTime)
+			{
+				isFreezing = false;
+			}
+		}
+	}
+	else
+	{
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
+
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
+		{
+			isInvincible = false;
+			isExist = false;
 		}
 	}
 
@@ -139,11 +155,11 @@ void Cannoneer::periodAttack(DWORD cooldown)
 		bullet->directionX = directionX;
 		if (directionX > 0)
 		{
-			bullet->Init(getRight(), getY());
+			bullet->Init(getRight(), getY() -1);
 		}
 		else
 		{
-			bullet->Init(getLeft() - bullet->getWidth(), getY());
+			bullet->Init(getLeft() - bullet->getRealWidth(), getY() -1);
 		}
 	}
 	// đã attack thì bắt đầu chờ cd

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "GameObject.h"
 
+#define DIE_ANIMATION_TIME	60
 
 enum ENEMY_STATUS
 {
@@ -8,6 +9,7 @@ enum ENEMY_STATUS
 	ENEMY_STANDING,
 	ENEMY_MOVING,
 	ENEMY_ATTACKING,
+	ENEMY_DIE,
 };
 
 enum ENEMY_MOVE_TYPE
@@ -42,7 +44,7 @@ public:
 	~Enemy();
 
 	void CheckCollisionStatus(GameObject * player);
-	void Die();
+	virtual void Die();
 
 	virtual void setSpawned(bool isSpawned);
 	virtual void SetStatus(ENEMY_STATUS status);

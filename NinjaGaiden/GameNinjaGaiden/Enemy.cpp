@@ -23,7 +23,6 @@ void Enemy::getHitByPlayer()
 	else
 	{
 		Die();
-		this->isExist = false;
 	}
 }
 
@@ -32,7 +31,7 @@ void Enemy::CheckCollisionStatus(GameObject * playerFake)	// nhập chơi thôi 
 	Player * player = Player::getInstance();
 
 	// bị player tấn công
-	if (player->isAttacking)
+	if (player->isAttacking && isAlive)
 	{
 		if (collisionTime < 1.0f)
 		{
@@ -59,7 +58,7 @@ void Enemy::CheckCollisionStatus(GameObject * playerFake)	// nhập chơi thôi 
 	}
 
 	// đập player (khi hắn không bất tử)
-	if (this->isExist && !player->isInvincible
+	if (this->isAlive && !player->isInvincible && (!player->isAttacking)
 		&& Game::getInstance()->allowHurtingPlayer)
 	{
 		if (collisionTime < 1.0f)
@@ -81,14 +80,31 @@ void Enemy::CheckCollisionStatus(GameObject * playerFake)	// nhập chơi thôi 
 	}
 }
 
-void Enemy::Die()	// [incompleted]
+void Enemy::Die()
 {
-	/*setSize(48, 48);
+	SetStatus(ENEMY_DIE);	// <- đáng lẽ phải xử lý trong đây, mà con nào cũng chết giống nhau nên lười sửa code từng con
+
+	#pragma region Show code
+	float realWidth, realHeight;
+	realWidth = getWidth();
+	realHeight = getHeight();
+
+	setSize(48, 48);
+	startAnimation = true;
+
+	setX(getX() - (getWidth() - realWidth) / 2);
+	setY(getY() + (getHeight() - realHeight) / 2);
+
+	sprite->SetAnimation(48, 48, 3, 3, 0, 2);
 	sprite->Release();
-	sprite->SetAnimation(48, 48, 1, 1, 0, 0);
 	sprite->LoadTexture("images/enemies/die.png", D3DCOLOR_XRGB(0, 128, 128));
-	Draw();
-	isAlive = false;*/
+
+	timer.startTime = GetTickCount();
+	sprite->setCurrentAnimation(0);
+
+	isInvincible = true;
+	isAlive = false;
+#pragma endregion
 }
 
 void Enemy::setSpawned(bool isSpawned)

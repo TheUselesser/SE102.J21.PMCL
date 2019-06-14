@@ -40,6 +40,16 @@ void ItemContainer::setItemTypeID(int id)
 	itemTypeID = id;
 }
 
+float ItemContainer::getItemBase()
+{
+	return itemBase;
+}
+
+void ItemContainer::setItemBase(float base)
+{
+	itemBase = base;
+}
+
 void ItemContainer::Init(GameObject * player)
 {
 	startAnimation = true;
@@ -74,14 +84,12 @@ void ItemContainer::CheckCollisionStatus(GameObject * player)
 			{
 				if (player->directionX * (this->getLeft() >= player->getLeft() ? 1 : -1) > 0)
 				{
-					//this->isExist = false;
 					this->isBroken = true;
 				}
 			}
 			// player tấn công khi đang nhảy (xoay vòng vòng nên khỏi xét hướng)
 			else
 			{
-				//this->isExist = false;
 				this->isBroken = true;
 			}
 
@@ -145,6 +153,7 @@ void ItemContainer::DropItem()
 		break;
 	}
 
+	item->setItemBase(itemBase);
 	item->Init(getX(), getY());
 }
 

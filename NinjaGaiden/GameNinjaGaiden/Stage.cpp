@@ -4,6 +4,7 @@
 #include <string>
 #include "DXInput.h"
 
+// Stage
 
 Stage * Stage::instance = NULL;
 Stage * Stage::getInstance()
@@ -108,11 +109,13 @@ void Stage::Update(DWORD dt, Player * player)
 	// Update grid
 	if (!grid->isEmpty)
 	{
+		// Cập nhật thông tin firstCell và lastCell
 		grid->UpdateCellsSet(Camera::getInstance());
 		D3DXVECTOR2 firstCellPosition = grid->GetFirstCellPosition();
 		D3DXVECTOR2	lastCellPosition = grid->GetLastCellPosition();
 
 		// Khi camera đi vào cell mới của grid thì load object của cell mới zô objectList 
+		#pragma region Show code
 		if (firstCellPosition.x != prevFirstCellPosition.x || firstCellPosition.y != prevFirstCellPosition.y ||
 			lastCellPosition.x != prevLastCellPosition.x || lastCellPosition.y != prevLastCellPosition.y)
 		{
@@ -144,8 +147,10 @@ void Stage::Update(DWORD dt, Player * player)
 			prevFirstCellPosition = firstCellPosition;
 			prevLastCellPosition = lastCellPosition;
 		}
+#pragma endregion
 
-		// lần lượt update các object
+		// update các object
+		#pragma region Show code
 		for (int i = 0; i < objectList.size(); i++)
 		{
 			GameObject * object = objectList[i];
@@ -154,6 +159,7 @@ void Stage::Update(DWORD dt, Player * player)
 			{
 				Collision::CollisionHandle(*player, *object);
 
+				// Xác định block đang đứng
 				for (int j = 0; j < groundBlocks->getNumberOfBlocks(); j++)
 				{
 					if (object->getLeft() > groundBlocks->getGroundBlock(j)->getLeft() - object->getWidth() &&
@@ -167,6 +173,7 @@ void Stage::Update(DWORD dt, Player * player)
 				object->Update(dt, *player);
 			}
 		}
+#pragma endregion
 	}
 
 	// Update ground

@@ -53,9 +53,6 @@ class Game
 
 	Timer timer;
 
-	void InitDirectX();
-	void InitGame();
-
 	DWORD startCooldown_R = GetTickCount();
 	bool canJump = true;
 public:
@@ -65,6 +62,9 @@ public:
 
 	Game();
 	~Game();
+
+	void InitDirectX();
+	void InitGame();
 
 	int getStageIndex() { return stageIndex; }
 	LPDIRECT3DDEVICE9 get3DDevice();

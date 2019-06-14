@@ -1,4 +1,7 @@
 ﻿#include "BirdBrown.h"
+#include <string>
+
+
 BirdBrown::BirdBrown()
 {
 	setSize(DEFAULT_BIRD_BROWN_WIDTH, DEFAULT_BIRD_BROWN_HEIGHT);
@@ -6,14 +9,14 @@ BirdBrown::BirdBrown()
 
 BirdBrown::BirdBrown(float x, float y)
 {
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_BIRD_BROWN_WIDTH, DEFAULT_BIRD_BROWN_HEIGHT);
 	spawnX = x;
 	spawnY = y;
 	isExist = false;
 
-	seekRange = 48;
+	seekRange = 36;
 	playerRange = 40;
-	playerIsInSeekRange = false;
 }
 
 BirdBrown::~BirdBrown()
@@ -23,12 +26,30 @@ BirdBrown::~BirdBrown()
 void BirdBrown::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	setSize(DEFAULT_BIRD_BROWN_WIDTH, DEFAULT_BIRD_BROWN_HEIGHT);
+
 	setX(spawnX);
 	setY(spawnY + getHeight());
 	maxY = getY();
 	minY = maxY - 32;
-	directionX = player->getMidX() <= getMidX() ? -1 : 1;
+	playerIsInSeekRange = false;
+
+	if (directionX) {
+		if (!spawnDirectionX)
+		{
+			spawnDirectionX = directionX;
+		}
+	}
+	if (spawnDirectionX)
+	{
+		directionX = spawnDirectionX;
+	}
+	else
+	{
+		directionX = player->getMidX() > getMidX() ? 1 : -1;
+	}
+
 	directionY = -1;
 
 	setVelX(DEFAULT_BIRD_BROWN_VELOCITY_X * directionX);
@@ -38,63 +59,73 @@ void BirdBrown::Init(GameObject * player)
 	sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
 	if (directionX > 0)
 	{
-		//sprite->Release();
+		sprite->Release();
 		sprite->LoadTexture("images/enemies/BirdBrown_right.png", D3DCOLOR_XRGB(255, 255, 255));
 	}
 	else
 	{
-		//sprite->Release();
+		sprite->Release();
 		sprite->LoadTexture("images/enemies/BirdBrown_left.png", D3DCOLOR_XRGB(255, 255, 255));
 	}
 }
 
 void BirdBrown::SetStatus(ENEMY_STATUS status)
 {
-	//if (this->status != status || directionChanged)
+	this->status = status;
+
+	switch (status)
 	{
-		this->status = status;
+	case ENEMY_STANDING:
+		startAnimation = false;
 
-		switch (status)
+		break;
+	case ENEMY_MOVING:
+		startAnimation = true;
+		sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
+		if (getVelX() > 0)
 		{
-		case ENEMY_STANDING:
-			startAnimation = false;
-
-			break;
-		case ENEMY_MOVING:
-			startAnimation = true;
-			sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
-			if (getVelX() > 0)
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/enemies/BirdBrown_right.png", D3DCOLOR_XRGB(255, 255, 255));
-			}
-			else
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/enemies/BirdBrown_left.png", D3DCOLOR_XRGB(255, 255, 255));
-			}
-			break;
-		default:
-			break;
+			sprite->Release();
+			sprite->LoadTexture("images/enemies/BirdBrown_right.png", D3DCOLOR_XRGB(255, 255, 255));
 		}
+		else
+		{
+			sprite->Release();
+			sprite->LoadTexture("images/enemies/BirdBrown_left.png", D3DCOLOR_XRGB(255, 255, 255));
+		}
+		break;
+	default:
+		break;
 	}
 }
 
 void BirdBrown::Update(DWORD dt, GameObject &player)
 {
-	timer.tickPerAnim = dt;
+	if (isAlive)
+	{
+		timer.tickPerAnim = dt;
 
-	SetStatus(ENEMY_MOVING);
+		SetStatus(ENEMY_MOVING);
 
-	if (!isFreezing)
-		autoMove(100, &player);
+		if (!isFreezing)
+			autoMove(100, &player);
+		else
+		{
+			startAnimation = false;
+
+			if (GetTickCount() - startFreezeTime >= freezeTime)
+			{
+				isFreezing = false;
+			}
+		}
+	}
 	else
 	{
-		startAnimation = false;
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
 
-		if (GetTickCount() - startFreezeTime >= freezeTime)
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
 		{
-			isFreezing = false;
+			isInvincible = false;
+			isExist = false;
 		}
 	}
 

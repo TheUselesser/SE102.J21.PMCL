@@ -162,6 +162,7 @@ public:
 
 	// ItemContainer
 	virtual void setItemTypeID(int id) {}
+	virtual void setItemBase(float base) {}
 
 	// General
 	virtual void Init();

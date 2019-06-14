@@ -17,6 +17,8 @@ public:
 	CannonBullet();
 	~CannonBullet();
 
+	float getRealWidth() { return DEFAULT_CANNON_BULLET_WIDTH; }
+
 	void Init(float x, float y);
 
 	void SetStatus(ENEMY_STATUS status);

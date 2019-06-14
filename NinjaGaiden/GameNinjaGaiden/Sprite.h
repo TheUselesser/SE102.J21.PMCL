@@ -21,8 +21,9 @@ class Sprite
 	D3DXVECTOR3 position;
 	LPDIRECT3DTEXTURE9 texture;
 	LPD3DXSPRITE spriteHandle;
-
 public:
+	bool lapDone = false;
+
 	Sprite();
 	Sprite(float x, float y);
 	~Sprite();

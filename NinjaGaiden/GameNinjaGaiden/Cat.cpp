@@ -7,6 +7,7 @@ Cat::Cat()
 Cat::Cat(float x, float y)
 {
 	moveType = MT_FROM_HIGHER_TO_LOWER_GROUND;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	isOnGround = true;
 	setSize(DEFAULT_CAT_WIDTH, DEFAULT_CAT_HEIGHT);
 	spawnX = x;
@@ -21,7 +22,9 @@ Cat::~Cat()
 void Cat::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	setSize(DEFAULT_CAT_WIDTH, DEFAULT_CAT_HEIGHT);
+
 	setX(spawnX);
 	setY(spawnY + getHeight());
 	currentGroundY = getY();
@@ -80,20 +83,33 @@ void Cat::SetStatus(ENEMY_STATUS status)
 
 void Cat::Update(DWORD dt, GameObject &player)
 {
-	timer.tickPerAnim = dt;
+	if (isAlive)
+	{
+		timer.tickPerAnim = dt;
 
-	MindTheGroundBlocks();
-	SetStatus(ENEMY_MOVING);
+		MindTheGroundBlocks();
+		SetStatus(ENEMY_MOVING);
 
-	if (!isFreezing)
-		autoMove(120);
+		if (!isFreezing)
+			autoMove(120);
+		else
+		{
+			startAnimation = false;
+
+			if (GetTickCount() - startFreezeTime >= freezeTime)
+			{
+				isFreezing = false;
+			}
+		}
+	}
 	else
 	{
-		startAnimation = false;
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
 
-		if (GetTickCount() - startFreezeTime >= freezeTime)
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
 		{
-			isFreezing = false;
+			isInvincible = false;
+			isExist = false;
 		}
 	}
 

@@ -14,6 +14,7 @@ class BirdBrown :
 	float playerRange;
 	bool playerIsInSeekRange;
 
+	int spawnDirectionX;
 public:
 	BirdBrown();
 	BirdBrown(float x, float y);

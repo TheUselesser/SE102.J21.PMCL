@@ -41,12 +41,12 @@ GroundBlocks::GroundBlocks(const char * filePath)
 
 GroundBlocks::~GroundBlocks()
 {
-	/*for (int i = 0; i < numberOfBlocks; i++)
+	for (int i = 0; i < numberOfBlocks; i++)
 	{
 		delete groundBlocks[i];
 	}
 	delete[] groundBlocks;
-	delete[] currentHeight;*/
+	delete[] currentHeight;
 }
 
 int GroundBlocks::getNumberOfBlocks()
@@ -97,7 +97,9 @@ void GroundBlocks::Update(DWORD dt, GameObject &player)
 						minHeight = currentHeight[i];
 						currentBlock = groundBlocks[i];
 						if (!player.isClimbing)
+						{
 							player.setMinJumpHeight(currentBlock->getTop());
+						}
 					}
 				}
 
@@ -120,8 +122,4 @@ void GroundBlocks::Update(DWORD dt, GameObject &player)
 			if (player.getY() < 0) player.SetStatus(PLAYER_DIE);
 		}
 	}
-}
-
-void GroundBlocks::Release()
-{
 }

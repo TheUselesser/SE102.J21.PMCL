@@ -10,6 +10,7 @@
 #define DEFAULT_JUMP_HEIGHT 56
 
 #define MAX_HP 20
+#define MAX_SPIRITUAL_STRENGTH_PTS 99
 
 // Mỗi lần nhảy cách nhau 1 tí xíu
 #define COOLDOWN_JUMP 300
@@ -20,8 +21,7 @@
 // delay mỗi cái chớp chớp
 #define BLINK_DELAY 100
 // mỗi đòn tấn công kéo dài 0.5s
-#define STAND_ATTACK_TIME 500
-#define JUMP_ATTACK_TIME 500
+#define ATTACK_TIME 500
 #define THROWING_TIME 250
 
 class Player :

@@ -72,6 +72,7 @@ void GameObject::Draw()
 		{
 			if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
 			{
+				sprite->lapDone = true;
 				sprite->setCurrentAnimation(sprite->getFirstAnimation());
 			}
 			else
@@ -86,7 +87,7 @@ void GameObject::Draw()
 	}
 
 	// vẽ object
-	sprite->Draw(getX(), getY(), this);
+	if (isExist) sprite->Draw(getX(), getY(), this);
 }
 
 void GameObject::Release()

@@ -10,6 +10,7 @@ Runner::Runner()
 Runner::Runner(float x, float y)
 {
 	moveType = MT_FROM_HIGHER_TO_LOWER_GROUND;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	isOnGround = true;
 	setSize(DEFAULT_RUNNER_WIDTH, DEFAULT_RUNNER_HEIGHT);
 	spawnX = x;
@@ -24,7 +25,9 @@ Runner::~Runner()
 void Runner::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	setSize(DEFAULT_RUNNER_WIDTH, DEFAULT_RUNNER_HEIGHT);
+
 	setX(spawnX);
 	setY(spawnY + getHeight());
 	currentGroundY = getY();
@@ -78,20 +81,33 @@ void Runner::SetStatus(ENEMY_STATUS status)
 
 void Runner::Update(DWORD dt, GameObject & player)
 {
-	timer.tickPerAnim = dt;
+	if (isAlive)
+	{
+		timer.tickPerAnim = dt;
 
-	MindTheGroundBlocks();
-	SetStatus(ENEMY_MOVING);
+		MindTheGroundBlocks();
+		SetStatus(ENEMY_MOVING);
 
-	if (!isFreezing)
-		autoMove(120);
+		if (!isFreezing)
+			autoMove(120);
+		else
+		{
+			startAnimation = false;
+
+			if (GetTickCount() - startFreezeTime >= freezeTime)
+			{
+				isFreezing = false;
+			}
+		}
+	}
 	else
 	{
-		startAnimation = false;
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
 
-		if (GetTickCount() - startFreezeTime >= freezeTime)
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
 		{
-			isFreezing = false;
+			isInvincible = false;
+			isExist = false;
 		}
 	}
 

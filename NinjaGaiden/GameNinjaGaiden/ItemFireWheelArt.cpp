@@ -47,6 +47,8 @@ void ItemFireWheelArt::CheckCollisionStatus(GameObject * player)
 		{
 			if (type == FIRE_WHEEL_ART)
 			{
+				// cái này làm gì nhỉ
+
 				isExist = false;
 			}
 			

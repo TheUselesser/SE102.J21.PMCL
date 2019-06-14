@@ -1,16 +1,12 @@
-﻿
-#include "Player.h"
-#include "Boss3.h"
+﻿#include "Boss3.h"
 #include "Collision.h"
 #include "math.h"
-
-#include "DXInput.h"
-#include <string>
 
 #define PI 3.14159265
 
 Boss3::Boss3()
 {
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_BOSS_3_WIDTH, DEFAULT_BOSS_3_HEIGHT);
 	HP = MAX_HP;
 
@@ -22,6 +18,7 @@ Boss3::Boss3()
 
 Boss3::Boss3(float x, float y)
 {
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_BOSS_3_WIDTH, DEFAULT_BOSS_3_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -41,7 +38,9 @@ Boss3::~Boss3()
 void Boss3::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	setSize(DEFAULT_BOSS_3_WIDTH, DEFAULT_BOSS_3_HEIGHT);
+
 	directionChanged = false;
 	isJumping = false;
 	setX(spawnX);
@@ -113,14 +112,27 @@ void Boss3::SetStatus(ENEMY_STATUS status)
 
 void Boss3::Update(DWORD dt, GameObject & player)
 {
-	timer.tickPerAnim = dt;
+	if (isAlive)
+	{
+		timer.tickPerAnim = dt;
 
-	autoMove(0);
-	periodAttack(COOLDOWN_JUMP);
+		autoMove(0);
+		periodAttack(BOSS_3_COOLDOWN_JUMP);
+	}
+	else
+	{
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
+
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
+		{
+			isInvincible = false;
+			isExist = false;
+		}
+	}
 
 	Draw();
 
-	if (HP == 0) isExist = false;
+	if (HP <= 0) Die();
 }
 
 void Boss3::autoMove(float range)
@@ -217,7 +229,53 @@ void Boss3::periodAttack(DWORD cooldown)
 	}
 }
 
+void Boss3::decrease_HP(int HP)
+{
+	if (!isInvincible)
+	{
+		this->HP -= HP * 10;
+
+		isInvincible = true;
+		startInvincible = GetTickCount();
+
+		if (this->HP <= 0)
+		{
+			//Die();
+		}
+	}
+	else
+	{
+		if (GetTickCount() - startInvincible >= invincibleTime)
+		{
+			isInvincible = false;
+		}
+	}
+}
+
+void Boss3::Die()
+{
+	float realWidth, realHeight;
+	realWidth = getWidth();
+	realHeight = getHeight();
+
+	setSize(48, 48);
+	startAnimation = true;
+
+	setX(getX() - (getWidth() - realWidth) / 2);
+	setY(getY() + (getHeight() - realHeight) / 2);
+
+	sprite->SetAnimation(48, 48, 3, 3, 0, 2);
+	sprite->Release();
+	sprite->LoadTexture("images/enemies/die.png", D3DCOLOR_XRGB(0, 128, 128));
+
+	timer.startTime = GetTickCount();
+	sprite->setCurrentAnimation(0);
+
+	isInvincible = true;
+	isAlive = false;
+}
+
 void Boss3::resetAllStats()
 {
-	HP = MAX_HP;
+	HP = BOSS_3_MAX_HP;
 }

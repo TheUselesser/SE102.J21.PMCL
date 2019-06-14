@@ -8,6 +8,7 @@ MachineGunGuy::MachineGunGuy()
 
 MachineGunGuy::MachineGunGuy(float x, float y)
 {
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_MACHINE_GUN_GUY_WIDTH, DEFAULT_MACHINE_GUN_GUY_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -23,7 +24,9 @@ MachineGunGuy::~MachineGunGuy()
 void MachineGunGuy::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	setSize(DEFAULT_MACHINE_GUN_GUY_WIDTH, DEFAULT_MACHINE_GUN_GUY_HEIGHT);
+
 	setX(spawnX);
 	directionX = player->getMidX() > getMidX() ? 1 : -1;
 	setY(spawnY + getHeight());
@@ -55,30 +58,42 @@ void MachineGunGuy::SetStatus(ENEMY_STATUS status)
 
 		break;
 	case ENEMY_MOVING:
+		setVelX(DEFAULT_MACHINE_GUN_GUY_VELOCITY * directionX);
+
 		startAnimation = true;
 		sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 0, 1);
-		if (getVelX() > 0)
+		if (directionChanged)
 		{
-			sprite->Release();
-			sprite->LoadTexture("images/enemies/MachineGunGuy_right.png", D3DCOLOR_XRGB(0, 128, 128));
-		}
-		else
-		{
-			sprite->Release();
-			sprite->LoadTexture("images/enemies/MachineGunGuy_left.png", D3DCOLOR_XRGB(0, 128, 128));
+			if (directionX > 0)
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/enemies/MachineGunGuy_right.png", D3DCOLOR_XRGB(0, 128, 128));
+			}
+			else
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/enemies/MachineGunGuy_left.png", D3DCOLOR_XRGB(0, 128, 128));
+			}
+			directionChanged = false;
 		}
 		break;
 	case ENEMY_ATTACKING:
+		setVelX(0);
+
 		sprite->SetAnimation(getWidth(), getHeight(), 4, 4, 2, 3);
-		if (getVelX() > 0)
+		if (directionChanged)
 		{
-			sprite->Release();
-			sprite->LoadTexture("images/enemies/MachineGunGuy_right.png", D3DCOLOR_XRGB(0, 128, 128));
-		}
-		else
-		{
-			sprite->Release();
-			sprite->LoadTexture("images/enemies/MachineGunGuy_left.png", D3DCOLOR_XRGB(0, 128, 128));
+			if (directionX > 0)
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/enemies/MachineGunGuy_right.png", D3DCOLOR_XRGB(0, 128, 128));
+			}
+			else
+			{
+				sprite->Release();
+				sprite->LoadTexture("images/enemies/MachineGunGuy_left.png", D3DCOLOR_XRGB(0, 128, 128));
+			}
+			directionChanged = false;
 		}
 		break;
 	default:
@@ -88,30 +103,40 @@ void MachineGunGuy::SetStatus(ENEMY_STATUS status)
 
 void MachineGunGuy::Update(DWORD dt, GameObject &player)
 {
-	timer.tickPerAnim = dt;
-	SetStatus(ENEMY_MOVING);
-	autoMove(32);
-	
-	if (bullet->startFire != -1)
+	if (isAlive)
 	{
-		SetStatus(ENEMY_ATTACKING);
-		setVelX(0);
-	}
-	else
-	{
-		SetStatus(ENEMY_MOVING);
-	}
+		timer.tickPerAnim = dt;
 
-	if (!isFreezing)
-	{
-		autoMove(32);
-		periodAttack(2000);
+		if (bullet->startFire != -1)
+		{
+			SetStatus(ENEMY_ATTACKING);
+		}
+		else
+		{
+			SetStatus(ENEMY_MOVING);
+		}
+
+		if (!isFreezing)
+		{
+			autoMove(32);
+			periodAttack(2000);
+		}
+		else
+		{
+			if (GetTickCount() - startFreezeTime >= freezeTime)
+			{
+				isFreezing = false;
+			}
+		}
 	}
 	else
 	{
-		if (GetTickCount() - startFreezeTime >= freezeTime)
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
+
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
 		{
-			isFreezing = false;
+			isInvincible = false;
+			isExist = false;
 		}
 	}
 	
@@ -120,12 +145,17 @@ void MachineGunGuy::Update(DWORD dt, GameObject &player)
 
 void MachineGunGuy::autoMove(float range)
 {
-	// ?i qua l?i ? ?i?m ban ??u ph?m vi range  |<---range---spawnX---range--->|
-	if (getX() <= spawnX - range || getX() >= spawnX + range - getWidth())
+	if (getX() <= spawnX - range)
 	{
-		setVelX(-getVelX());
+		directionX = 1;
 		directionChanged = true;
 	}
+	if (getX() >= spawnX + range - getWidth())
+	{
+		directionX = -1;
+		directionChanged = true;
+	}
+
 	selfMovingX();
 }
 
@@ -137,6 +167,11 @@ void MachineGunGuy::periodAttack(DWORD cooldown)
 		isAttacking = true;
 		startCooldown = GetTickCount();
 
+		// bắn theo hướng player
+		int temp = directionX;
+		directionX = Player::getInstance()->getMidX() > getMidX() ? 1 : -1;
+		if (temp * directionX < 0) directionChanged = true;
+
 		// Xử lý tấn công
 		bullet->directionX = directionX;
 		if (directionX > 0)
@@ -145,7 +180,7 @@ void MachineGunGuy::periodAttack(DWORD cooldown)
 		}
 		else
 		{
-			bullet->Init(getLeft() - bullet->getWidth(), getY());
+			bullet->Init(getLeft() - bullet->getRealWidth(), getY());
 		}
 	}
 	// đã attack thì bắt đầu chờ cd

@@ -4,6 +4,8 @@
 
 MachineBullet::MachineBullet()
 {
+	setObjectType(ENEMY_MACHINE_BULLET);
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_MACHINEGUN_BULLET_WIDTH, DEFAULT_MACHINEGUN_BULLET_HEIGHT);
 	isExist = false;
 	startFire = -1;
@@ -15,14 +17,15 @@ MachineBullet::~MachineBullet()
 
 void MachineBullet::Init(float x, float y)
 {
+	isAlive = true;
+	setSize(DEFAULT_MACHINEGUN_BULLET_WIDTH, DEFAULT_MACHINEGUN_BULLET_HEIGHT);
+
 	setX(x);
 	setY(y);
 
 	startFire = GetTickCount();
 	SetStatus(ENEMY_STANDING);
 	isExist = true;
-	setObjectType(ENEMY_MACHINE_BULLET);
-	setCollisionType(COLLISION_TYPE_ENEMY);
 }
 
 void MachineBullet::SetStatus(ENEMY_STATUS status)
@@ -65,12 +68,25 @@ void MachineBullet::SetStatus(ENEMY_STATUS status)
 void MachineBullet::Update(DWORD dt, GameObject & player)
 {
 	if (startFire != -1)
-		if (GetTickCount() - startFire >= FIRE_TIME)
-		{
+	if (GetTickCount() - startFire >= FIRE_TIME)
+	{
+		if (isAlive)
 			SetStatus(ENEMY_ATTACKING);
-			startFire = -1;
+		startFire = -1;
+	}
+
+	if (isAlive) autoMove(32);
+
+	if (!isAlive)
+	{
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
+
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
+		{
+			isInvincible = false;
+			isExist = false;
 		}
-	autoMove(32);
+	}
 
 	Draw();
 }

@@ -436,6 +436,9 @@ void Game::KeysControl()
 		#pragma region [C]
 		if (Key_Down(DIK_C))
 		{
+			// ^_^
+			if (!Ryu->isClimbing)
+			if (!Ryu->isKnockback)
 			if (!Ryu->isAttacking)
 			if (!Ryu->isThrowing)
 			if (Ryu->hasItem)

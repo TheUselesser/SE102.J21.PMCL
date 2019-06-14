@@ -1,5 +1,5 @@
 ﻿#include "ItemRestorePhysicalStrength.h"
-#include "Collision.h"
+#include "Player.h"
 
 ItemRestorePhysicalStrength::ItemRestorePhysicalStrength()
 {
@@ -47,6 +47,8 @@ void ItemRestorePhysicalStrength::CheckCollisionStatus(GameObject * player)
 		{
 			if (type == HP_RECOVER)
 			{
+				Player::getInstance()->setHP(MAX_HP);
+
 				isExist = false;
 			}
 		}

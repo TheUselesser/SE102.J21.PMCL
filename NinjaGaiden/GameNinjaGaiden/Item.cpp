@@ -95,8 +95,31 @@ void Item::setItemType(ITEM_TYPE itemType)
 	}
 }
 
+float Item::getItemBase()
+{
+	return base;
+}
+
+void Item::setItemBase(float base)
+{
+	this->base = base;
+}
+
 void Item::Update(DWORD dt, GameObject & player)
 {
+	// Rơi
+	if (getBottom() > base)
+	{
+		if (getBottom() - base > 6)
+		{
+			moveY(-6);
+		}
+		else
+		{
+			moveY(-(getBottom() - base));
+		}
+	}
+
 	Collision::CollisionHandle(player, *this);
 	Draw();
 }

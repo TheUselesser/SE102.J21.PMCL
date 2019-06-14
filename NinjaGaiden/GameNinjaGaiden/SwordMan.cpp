@@ -10,6 +10,7 @@ SwordMan::SwordMan()
 SwordMan::SwordMan(float x, float y)
 {
 	moveType = MT_ON_ONE_GROUND;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_SWORD_MAN_WIDTH, DEFAULT_SWORD_MAN_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -24,7 +25,9 @@ SwordMan::~SwordMan()
 void SwordMan::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	isInvincible = false;
+	setSize(DEFAULT_SWORD_MAN_WIDTH, DEFAULT_SWORD_MAN_HEIGHT);
 
 	setX(spawnX);
 	setY(spawnY + getHeight());
@@ -69,6 +72,9 @@ void SwordMan::SetStatus(ENEMY_STATUS status)
 			sprite->LoadTexture("images/enemies/SwordMan_left.png", D3DCOLOR_XRGB(255, 255, 255));
 		}
 		break;
+	case ENEMY_DIE:
+		
+		break;
 	default:
 		break;
 	}
@@ -76,20 +82,35 @@ void SwordMan::SetStatus(ENEMY_STATUS status)
 
 void SwordMan::Update(DWORD dt, GameObject &player)
 {
-	timer.tickPerAnim = dt;
+	if (isAlive)
+	{
+		timer.tickPerAnim = dt;
 
-	MindTheGroundBlocks();
-	SetStatus(ENEMY_MOVING);
+		MindTheGroundBlocks();
+		SetStatus(ENEMY_MOVING);
 
-	if (!isFreezing)
-		autoMove(0);
+		if (!isFreezing)
+		{
+			autoMove(0);
+		}
+		else
+		{
+			startAnimation = false;
+
+			if (GetTickCount() - startFreezeTime >= freezeTime)
+			{
+				isFreezing = false;
+			}
+		}
+	}
 	else
 	{
-		startAnimation = false;
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
 
-		if (GetTickCount() - startFreezeTime >= freezeTime)
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
 		{
-			isFreezing = false;
+			isInvincible = false;
+			isExist = false;
 		}
 	}
 

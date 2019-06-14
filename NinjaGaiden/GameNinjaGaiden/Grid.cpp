@@ -108,7 +108,9 @@ void Grid::readCellsInfo(const char * cellsInfoPath)
 	int objTypeID;
 	std::string nonsense = "";	// ^_^
 	float objX, objY;
-	int itemType;	// for item container only
+	// for item container only
+	int itemType;
+	int itemBase;
 
 	std::ifstream fs(cellsInfoPath);
 	if (!fs.is_open()) {
@@ -127,13 +129,13 @@ void Grid::readCellsInfo(const char * cellsInfoPath)
 
 				for (int i = 0; i < cell[row][col].getListSize();)
 				{
-					fs >> columnIndex >> rowIndex >> objTypeID >> nonsense >> objX >> objY >> itemType;
+					fs >> columnIndex >> rowIndex >> objTypeID >> nonsense >> objX >> objY >> itemType >> itemBase;
 
 					// check xem có đúng cell không
 					if (rowIndex == cell[row][col].getRowIndex() && columnIndex == cell[row][col].getColumnIndex())
 					{
 						// thêm objectInfo vào objectInfoList của cell
-						cell[row][col].addObjectInfo(objX, objY, objTypeID, itemType);
+						cell[row][col].addObjectInfo(objX, objY, objTypeID, itemType, itemBase);
 						i++;	// tự tin không sợ vòng lặp vô hạn
 					}
 				}
@@ -238,9 +240,6 @@ void Grid::AddLeft(Camera * camera, GameObject * player)
 	cell_1 = &cell[firstRow][firstColumn];
 	cell_2 = &cell[firstRow + 1][firstColumn];
 
-	cell_1->InitAllObjects();
-	cell_2->InitAllObjects();
-
 	for (int i = 0; i < cell_1->getObjectList().size(); i++)
 	{
 		if (!cell_1->getObjectList()[i]->isExist)
@@ -267,9 +266,6 @@ void Grid::AddRight(Camera * camera, GameObject * player)
 	GridCell *cell_1, *cell_2;
 	cell_1 = &cell[lastRow][lastColumn];
 	cell_2 = &cell[lastRow - 1][lastColumn];
-
-	cell_1->InitAllObjects();
-	cell_2->InitAllObjects();
 
 	for (int i = 0; i < cell_1->getObjectList().size(); i++)
 	{

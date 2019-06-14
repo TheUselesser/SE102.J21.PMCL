@@ -1,6 +1,6 @@
 ﻿#include "Scorebar.h"
-#include <string>
-
+#include "Stage.h"
+#include "Game.h"
 
 
 int FONT_SIZE = 12;
@@ -10,6 +10,7 @@ Scorebar::Scorebar()
 	player->setHP(1);
 	playChance = player->getLife();
 	playerHealth = player->getHP();
+	spiritualStr = player->getSpiritualStrength();
 
 	//1 vài biến khác nữa
 	time = 300;
@@ -84,8 +85,13 @@ void Scorebar::Draw(int x, int y)
 		gameTexture->Draw(135 + i, 14, &box);
 	// Thanh hp cho boss
 	gameTexture->LoadTexture("images/GameUI/enemy_hp.png");
-	for (int i = 0; i < Hpbar * 20; i += 5)
+	for (int i = 0; i < Hpbar * bossHealth; i += 5)
 		gameTexture->Draw(135 + i, 26, &box);
+
+	// Spiritual strength icon
+	SetRect(&box, 0, 0, 12, 12);
+	gameTexture->LoadTexture("images/GameUI/spiritual_strength_icon.png", D3DCOLOR_XRGB(92, 148, 252));
+	gameTexture->Draw(32, 24, &box);
 
 	// Khung item
 	SetRect(&box, 0, 0, 34, 21);
@@ -153,10 +159,15 @@ void Scorebar::Update()
 	while (lifeString.length() < 2)
 		lifeString = "0" + lifeString;
 
+	spiritualStr = player->getSpiritualStrength();
+	std::string spiritualStrengthString = std::to_string(this->spiritualStr);
+	if (spiritualStrengthString.length() < 2)
+		spiritualStrengthString = "0" + spiritualStrengthString;
+
 
 	m = "SCORE  " + scoreString + "       STAGE " + stageString + "\n";
 	m += "TIME      " + timeString + "               NINJA \n";
-	m += "P         " + lifeString + "                    BOSS \n";
+	m += "P  " + lifeString + "         " + spiritualStrengthString + "               BOSS \n";
 
 	playerHealth = player->getHP();
 	if (player->getHP() <= 0)
@@ -175,6 +186,11 @@ void Scorebar::Update()
 	{
 		playerHealth = player->getHP();
 	}
+
+	if (Stage::getInstance()->getBoss() != NULL)
+		bossHealth = Stage::getInstance()->getBoss()->getHP();
+	else
+		bossHealth = player->getMaxHP();
 
 	// Vẽ lên (0, 0) trên backbuffer
 	Draw(0, 0);

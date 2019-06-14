@@ -63,12 +63,13 @@ void GridCell::setListSize(int n)
 	this->listSize = n;
 }
 
-void GridCell::addObjectInfo(float x, float y, int objTypeID, int itemTypeID)
+void GridCell::addObjectInfo(float x, float y, int objTypeID, int itemTypeID, int itemBase)
 {
-	objectInfoList.push_back(new D3DXVECTOR4(x, y, objTypeID, itemTypeID));
+	objectInfoList.push_back(new D3DXVECTOR3(x, y, objTypeID));
+	itemInfoList.push_back(new D3DXVECTOR2(itemTypeID, itemBase));
 }
 
-void GridCell::InitObject(float x, float y, int objTypeID, int itemTypeID)
+void GridCell::InitObject(float x, float y, int objTypeID, int itemTypeID, int itemBase)
 {
 	GameObject * object = NULL;
 
@@ -87,6 +88,7 @@ void GridCell::InitObject(float x, float y, int objTypeID, int itemTypeID)
 		break;
 	case 5:
 		object = new BirdBrown(x, y);
+		object->directionX = itemTypeID;
 		object->setObjectType(ENEMY_BIRD_BROWN);
 		break;
 	case 6:
@@ -123,11 +125,13 @@ void GridCell::InitObject(float x, float y, int objTypeID, int itemTypeID)
 		object = new ItemContainer(x, y);
 		object->setObjectType(ITEM_ITEM_CONTAINER_4);
 		object->setItemTypeID(itemTypeID);
+		object->setItemBase(itemBase);
 		break;
 	case 25:
 		object = new ItemContainer(x, y);
 		object->setObjectType(ITEM_ITEM_CONTAINER_5);
 		object->setItemTypeID(itemTypeID);
+		object->setItemBase(itemBase);
 		break;
 	case 33:
 		object = new Boss3(x, y);
@@ -143,23 +147,27 @@ void GridCell::InitObject(float x, float y, int objTypeID, int itemTypeID)
 
 	objectList.push_back(object);
 }
-void GridCell::InitObject(D3DXVECTOR4 * objInfo)
+void GridCell::InitObject(D3DXVECTOR3 * objectInfo, D3DXVECTOR2 * itemInfo)
 {
-	InitObject(objInfo->x, objInfo->y, objInfo->z, objInfo->w);
+	InitObject(objectInfo->x, objectInfo->y, objectInfo->z, itemInfo->x, itemInfo->y);
 }
 void GridCell::InitAllObjects()
 {
 	if (!isEmpty)
 	for (int i = 0; i < listSize; i++)
 	{
-		InitObject(objectInfoList[i]);
+		InitObject(objectInfoList[i], itemInfoList[i]);
 	}
 }
 
 // getting
-std::vector<D3DXVECTOR4*> GridCell::getObjectInfoList()
+std::vector<D3DXVECTOR3*> GridCell::getObjectInfoList()
 {
 	return objectInfoList;
+}
+std::vector<D3DXVECTOR2*> GridCell::getItemInfoList()
+{
+	return itemInfoList;
 }
 std::vector<GameObject*> GridCell::getObjectList()
 {
@@ -173,6 +181,7 @@ void GridCell::enableUpdate(GameObject * player)
 	{
 		for (int i = 0; i < listSize; i++)
 		{
+			objectList[i]->Init(player);
 			objectList[i]->isExist = true;
 			objectList[i]->isInCellsSet = true;
 		}
@@ -192,10 +201,14 @@ void GridCell::disableUpdate()
 void GridCell::Release()
 {
 	std::vector<GameObject*> objectListClone;
-	std::vector<D3DXVECTOR4*> objectInfoListClone;
+	std::vector<D3DXVECTOR3*> objectInfoListClone;
+	std::vector<D3DXVECTOR2*> itemInfoListClone;
 	
-	objectList.clear(); objectInfoList.clear();
+	objectList.clear();
+	objectInfoList.clear();
+	itemInfoList.clear();
 
 	objectList.swap(objectListClone);
 	objectInfoList.swap(objectInfoListClone);
+	itemInfoList.swap(itemInfoListClone);
 }

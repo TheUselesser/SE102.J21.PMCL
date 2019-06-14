@@ -10,6 +10,7 @@ class ItemContainer :
 {
 	int itemTypeID;
 	Item * item;
+	float itemBase;
 	bool isBroken;
 public:
 	ItemContainer();
@@ -17,6 +18,7 @@ public:
 	~ItemContainer();
 
 	int getItemTypeID();	void setItemTypeID(int id);
+	float getItemBase();	void setItemBase(float base);
 
 	void DropItem();
 

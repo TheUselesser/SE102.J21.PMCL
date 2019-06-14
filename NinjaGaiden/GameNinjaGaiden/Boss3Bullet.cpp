@@ -15,6 +15,9 @@ Boss3Bullet::~Boss3Bullet()
 
 void Boss3Bullet::Init(float x, float y)
 {
+	isAlive = true;
+	setSize(DEFAULT_BOSS_3_BULLET_WIDTH, DEFAULT_BOSS_3_BULLET_HEIGHT);
+
 	setX(x);
 	setY(y);
 	isExist = true;
@@ -43,18 +46,31 @@ void Boss3Bullet::SetStatus(ENEMY_STATUS status)
 
 void Boss3Bullet::Update(DWORD dt, GameObject & player)
 {
-	SetStatus(ENEMY_MOVING);
-
-	if (!isMoving)
+	if (isAlive)
 	{
-		if (GetTickCount() - startDelay >= delayTime)
+		SetStatus(ENEMY_MOVING);
+
+		if (!isMoving)
 		{
-			isMoving = true;
+			if (GetTickCount() - startDelay >= delayTime)
+			{
+				isMoving = true;
+			}
+		}
+		else
+		{
+			autoMove(0);
 		}
 	}
 	else
 	{
-		autoMove(0);
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
+
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
+		{
+			isInvincible = false;
+			isExist = false;
+		}
 	}
 
 	Draw();

@@ -1,9 +1,6 @@
 ﻿#include "Player.h"
 #include "Game.h"
 
-#include "DXInput.h"
-#include <string>
-
 
 Player * Player::instance = NULL;
 Player * Player::getInstance()
@@ -17,6 +14,7 @@ Player::Player()
 {
 	resetAllStats();
 	hasItem = false;
+	isExist = true;
 	isStopDrawing = false;
 	item = new UsableItem();
 }
@@ -372,9 +370,9 @@ void Player::Update(DWORD dt)
 			// Khi đứng
 			if (isOnGround && !isJumping && !isClimbing)
 			{
-				timer.tickPerAnim = (DWORD) STAND_ATTACK_TIME / 3;
+				timer.tickPerAnim = (DWORD) ATTACK_TIME / 3;
 
-				if (GetTickCount() - startAttack >= STAND_ATTACK_TIME)
+				if (GetTickCount() - startAttack >= ATTACK_TIME)
 				{
 					isAttacking = false;
 					isMovable = true;
@@ -389,7 +387,7 @@ void Player::Update(DWORD dt)
 			// Khi trên không
 			else
 			{
-				if (GetTickCount() - startAttack >= JUMP_ATTACK_TIME || (isOnGround && !isJumping))
+				if (GetTickCount() - startAttack >= ATTACK_TIME || (isOnGround && !isJumping))
 				{
 					isAttacking = false;
 
@@ -568,8 +566,14 @@ void Player::Update(DWORD dt)
 	// Chết thì làm sao
 	if (isDead)
 	{
-		// thêm điều kiện nếu còn mạng thì mới init
-		if (isOnGround) Game::getInstance()->init();
+		isDead = false;
+
+		// thêm điều kiện nếu còn mạng thì mới sống lại đc
+		if (isOnGround)	// té
+		{
+			Stage::getInstance()->Release();
+			Game::getInstance()->InitGame();
+		}
 	}
 }
 
@@ -582,6 +586,11 @@ void Player::setScore(int score)
 void Player::setHP(int HP)
 {
 	this->HP = HP;
+
+	if (this->HP > MAX_HP)
+	{
+		setHP(MAX_HP);
+	}
 }
 
 void Player::setLife(int life)
@@ -592,6 +601,11 @@ void Player::setLife(int life)
 void Player::setSpiritualStrength(int spiritualStr)
 {
 	this->spiritualStr = spiritualStr;
+
+	if (this->HP > MAX_SPIRITUAL_STRENGTH_PTS)
+	{
+		setHP(MAX_SPIRITUAL_STRENGTH_PTS);
+	}
 }
 
 void Player::addScore(int score)
@@ -602,6 +616,11 @@ void Player::addScore(int score)
 void Player::increase_HP(int HP)
 {
 	this->HP += HP;
+
+	if (this->HP > MAX_HP)
+	{
+		setHP(MAX_HP);
+	}
 }
 
 void Player::decrease_HP(int HP)
@@ -622,6 +641,11 @@ void Player::decrease_life(int life)
 void Player::increase_spiritualStrength(int ss)
 {
 	this->spiritualStr += ss;
+
+	if (this->HP > MAX_SPIRITUAL_STRENGTH_PTS)
+	{
+		setHP(MAX_SPIRITUAL_STRENGTH_PTS);
+	}
 }
 
 void Player::decrease_spiritualStrength(int ss)

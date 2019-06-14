@@ -7,6 +7,7 @@ Banshee::Banshee()
 Banshee::Banshee(float x, float y)
 {
 	moveType = MT_ON_ONE_GROUND;
+	setCollisionType(COLLISION_TYPE_ENEMY);
 	setSize(DEFAULT_BANSHEE_WIDTH, DEFAULT_BANSHEE_HEIGHT);
 	spawnX = x;
 	spawnY = y;
@@ -20,7 +21,9 @@ Banshee::~Banshee()
 void Banshee::Init(GameObject * player)
 {
 	isExist = true;
-	setCollisionType(COLLISION_TYPE_ENEMY);
+	isAlive = true;
+	setSize(DEFAULT_BANSHEE_WIDTH, DEFAULT_BANSHEE_HEIGHT);
+
 	setX(spawnX);
 	setY(spawnY + getHeight());
 	directionX = player->getMidX() <= getMidX() ? -1 : 1;
@@ -42,52 +45,62 @@ void Banshee::Init(GameObject * player)
 
 void Banshee::SetStatus(ENEMY_STATUS status)
 {
-	//if (this->status != status || directionChanged)
+	this->status = status;
+
+	switch (status)
 	{
-		this->status = status;
+	case ENEMY_STANDING:
+		startAnimation = false;
 
-		switch (status)
+		break;
+	case ENEMY_MOVING:
+		startAnimation = true;
+		sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
+		if (getVelX() > 0)
 		{
-		case ENEMY_STANDING:
-			startAnimation = false;
-
-			break;
-		case ENEMY_MOVING:
-			startAnimation = true;
-			sprite->SetAnimation(getWidth(), getHeight(), 2, 2, 0, 1);
-			if (getVelX() > 0)
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/enemies/Banshee_right.png", D3DCOLOR_XRGB(255, 255, 255));
-			}
-			else
-			{
-				sprite->Release();
-				sprite->LoadTexture("images/enemies/Banshee_left.png", D3DCOLOR_XRGB(255, 255, 255));
-			}
-			break;
-		default:
-			break;
+			sprite->Release();
+			sprite->LoadTexture("images/enemies/Banshee_right.png", D3DCOLOR_XRGB(255, 255, 255));
 		}
+		else
+		{
+			sprite->Release();
+			sprite->LoadTexture("images/enemies/Banshee_left.png", D3DCOLOR_XRGB(255, 255, 255));
+		}
+		break;
+	default:
+		break;
 	}
 }
 
 void Banshee::Update(DWORD dt, GameObject &player)
 {
-	timer.tickPerAnim = dt;
+	if (isAlive)
+	{
+		timer.tickPerAnim = dt;
 
-	MindTheGroundBlocks();
-	SetStatus(ENEMY_MOVING);
+		MindTheGroundBlocks();
+		SetStatus(ENEMY_MOVING);
 
-	if (!isFreezing)
-		autoMove(80);
+		if (!isFreezing)
+			autoMove(80);
+		else
+		{
+			startAnimation = false;
+
+			if (GetTickCount() - startFreezeTime >= freezeTime)
+			{
+				isFreezing = false;
+			}
+		}
+	}
 	else
 	{
-		startAnimation = false;
+		timer.tickPerAnim = DIE_ANIMATION_TIME;
 
-		if (GetTickCount() - startFreezeTime >= freezeTime)
+		if (sprite->getCurrentAnimation() == sprite->getLastAnimation())
 		{
-			isFreezing = false;
+			isInvincible = false;
+			isExist = false;
 		}
 	}
 

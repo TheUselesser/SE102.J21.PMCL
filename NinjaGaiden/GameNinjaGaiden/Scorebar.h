@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include "GameTexture.h"
+#include <string>
 #include "Player.h"
-#include "Game.h"
-#include "Stage.h"
 
 class Scorebar
 {
@@ -14,6 +13,7 @@ class Scorebar
 	int bossHealth;
 	int playerHealth;
 	int maxHealth;
+	int spiritualStr;
 	int score;
 	int time;
 	int act;
@@ -31,8 +31,6 @@ class Scorebar
 public:
 
 	static Scorebar * getInstance();
-
-
 
 	bool Init();
 	void Draw(int x, int y);
