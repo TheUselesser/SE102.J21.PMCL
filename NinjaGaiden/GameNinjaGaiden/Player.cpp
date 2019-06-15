@@ -563,17 +563,33 @@ void Player::Update(DWORD dt)
 	if (!isStopDrawing)
 		Draw();
 
+	if (HP <= 0)
+	{
+		SetStatus(PLAYER_DIE);
+		isOnGround = true;
+	}
+
 	// Chết thì làm sao
 	if (isDead)
 	{
 		isDead = false;
-
 		// thêm điều kiện nếu còn mạng thì mới sống lại đc
 		if (isOnGround)	// té
 		{
 			Stage::getInstance()->Release();
 			Game::getInstance()->InitGame();
+			
+			// Chưa làm kỹ
+			HP = MAX_HP;
+			life -= 1;
+
+			
 		}
+	}
+
+	if (life < 0)
+	{
+		resetAllStats();
 	}
 }
 

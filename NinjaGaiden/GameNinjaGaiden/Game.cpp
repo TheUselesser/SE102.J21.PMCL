@@ -189,6 +189,8 @@ void Game::run()
 
 void Game::update()
 {
+	// Vẽ Scorebar
+	Scorebar::getInstance()->Update();
 	// Vẽ tilemap
 	stage->Draw(camera);
 
@@ -210,8 +212,6 @@ void Game::update()
 #pragma endregion
 	Ryu->Update(60);
 
-	// Vẽ Scorebar
-	Scorebar::getInstance()->Update();
 
 	// Đến cuối map -> chuyển stage
 	if (Ryu->getRight() >= stage->getPlayerEnd()
@@ -275,9 +275,10 @@ void Game::KeysControl()
 		std::string k1 = "[Q] to turn on invincibility";
 		std::string k2 = "[W] to turn off invincibility";
 		std::string k3 = "[R] restart stage";
-		std::string k4 = "[1] [2] [3] to switch between stages";
-		std::string k5 = "Hold [SHIFT] to x4 move speed";
-		std::string msg = k1 + '\n' + k2 + '\n' + k3 + '\n' + k4 + '\n' + k5;
+		std::string k4 = "Numpad [1] [2] [3] to switch between stages";
+		std::string k5 = "Numpad [4] to jump to the end of stage 3-2 while in stage 3-2";
+		std::string k6 = "Hold [SHIFT] to x4 move speed";
+		std::string msg = k1 + '\n' + k2 + '\n' + k3 + '\n' + k4 + '\n' + k5 + '\n' + k6;
 		MessageBox(0, msg.c_str(), "Keys use for testing", 0);
 	}
 	// [1] [2] [3] to switch between stages

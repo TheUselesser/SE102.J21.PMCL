@@ -28,7 +28,7 @@ bool GroundBlock::blockMovingX()
 void GroundBlock::CheckCollisionStatus(GameObject * player)
 {
 	if (Player::getInstance()->started)
-	if (collisionTime < 1.0f)
+	//if (collisionTime < 1.0f)
 	{
 		if (this->blockMovingX())
 		{
@@ -39,6 +39,7 @@ void GroundBlock::CheckCollisionStatus(GameObject * player)
 				{
 					player->setX(this->getLeft() - player->getRealWidth());
 				}
+
 				// va chạm bên phải block
 				if (player->getRight() - player->getRealWidth() < this->getRight() && player->getRight() > this->getRight())
 				{

@@ -233,7 +233,7 @@ void Boss3::decrease_HP(int HP)
 {
 	if (!isInvincible)
 	{
-		this->HP -= HP * 10;
+		this->HP -= HP * 5;
 
 		isInvincible = true;
 		startInvincible = GetTickCount();

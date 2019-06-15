@@ -1,8 +1,6 @@
 ﻿#include "Stage.h"
 #include "Game.h"
-#include <fstream>
-#include <string>
-#include "DXInput.h"
+
 
 // Stage
 

@@ -1,4 +1,4 @@
-﻿#include "GridCell.h"
+﻿ #include "GridCell.h"
 #include "Banshee.h"
 #include "BirdBrown.h"
 #include "MachineGunGuy.h"

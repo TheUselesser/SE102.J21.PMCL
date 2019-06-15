@@ -30,6 +30,7 @@ float Collision::SweptAABB(MovableRect box1, MovableRect box2, float & normalx, 
 	{
 		normalx = 0.0f;
 		normaly = 1.0f;	// mình thích áp đặt cho nó là dạng va chạm từ trên xuống (box1 ở trên box2)
+
 		return 0.0f;	// collisionTime = 0 luôn;
 	}
 

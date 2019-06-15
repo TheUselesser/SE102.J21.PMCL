@@ -169,24 +169,10 @@ void Scorebar::Update()
 	m += "TIME      " + timeString + "               NINJA \n";
 	m += "P  " + lifeString + "         " + spiritualStrengthString + "               BOSS \n";
 
+	// cập nhật máu Player
 	playerHealth = player->getHP();
-	if (player->getHP() <= 0)
-	{
-		player->setHP(player->getMaxHP());
-		
-		if (playChance <= 0) {
-			player->setLife(3);
-		}
-		else
-		{
-			player->decrease_life();
-		}
-	}
-	else
-	{
-		playerHealth = player->getHP();
-	}
 
+	// cập nhật máu boss
 	if (Stage::getInstance()->getBoss() != NULL)
 		bossHealth = Stage::getInstance()->getBoss()->getHP();
 	else
