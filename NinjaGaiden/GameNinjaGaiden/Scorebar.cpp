@@ -36,7 +36,7 @@ bool Scorebar::Init()
 	this->Hpbar = 5;
 
 	FONT = NULL;
-	AddFontResourceEx("", FR_PRIVATE, NULL);
+	AddFontResourceEx("Font/NinjaGaiden.ttf", FR_PRIVATE, NULL);
 	HRESULT result = D3DXCreateFont(
 		Game::getInstance()->get3DDevice(),
 		FONT_SIZE,
